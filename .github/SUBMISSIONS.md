@@ -38,8 +38,21 @@
 
 ## 启用前的设置(一次性)
 
-1. **仓库 Settings → Actions → General → Workflow permissions**:勾选
+1. **先建这 4 个标签**(名字必须一模一样):`gallery-submission`、`server-submission`、
+   `author-submission`、`work-submission`。**GitHub 不会自动创建**表单里不存在的标签,
+   缺了标签,表单开的 issue 不会被打标 → 工作流 `if` 不匹配 → 整个 run 显示 **Skipped**。
+   ```bash
+   gh label create gallery-submission -c FFB000
+   gh label create server-submission  -c 00A0FF
+   gh label create author-submission  -c 8B5CF6
+   gh label create work-submission    -c 22C55E
+   ```
+   (或网页:Issues → Labels → New label。)工作流也监听 `labeled`,所以给旧 issue
+   手动补标签能重新触发——但标签得先存在。
+2. **允许 Action 开 PR**:仓库 Settings → Actions → General → Workflow permissions,勾选
    **“Allow GitHub Actions to create and approve pull requests”**,否则 Action 无权开 PR。
-2. 在 `src/data/site.js` 把 `repo` 填成 `'owner/repo'`,四个投稿按钮才会指向 Issue 表单
-   (留空则按钮保持普通占位状态)。
-3. 投稿**强制需要 GitHub 账号**(拖图上传 / 提 issue 都要登录)——这是设计上的门槛。
+   > 若此项**灰色不可勾**,是被**组织**策略锁住了:去 Organization → Settings → Actions →
+   > General 里开(需组织 Owner)。或改用 PAT / GitHub App token 传给 create-pull-request 绕过。
+3. `src/data/site.js` 的 `repo` 需填成 `'owner/repo'`(本仓库已填
+   `AssettoCN/assettocn.github.io`),四个投稿按钮才会指向 Issue 表单;留空则按钮保持占位状态。
+4. 投稿**强制需要 GitHub 账号**(拖图上传 / 提 issue 都要登录)——这是设计上的门槛。

@@ -96,7 +96,7 @@ desc:
 → 填一个 Issue 表单 → GitHub Action 自动转成对应的 `src/content/**/<id>.yaml`
 (截图/作品还会下载图片),并开一个待审核 PR,你合并即上线。启用只需在
 `src/data/site.js` 填 `repo: 'owner/repo'`,并在仓库设置里允许 Actions 创建 PR。
-投稿强制需要 GitHub 账号。细节见 **`.github/README.md`**。
+投稿强制需要 GitHub 账号。细节见 **`.github/SUBMISSIONS.md`**。
 
 ## 双语约定
 

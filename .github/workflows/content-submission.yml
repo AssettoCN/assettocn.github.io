@@ -5,7 +5,9 @@ name: Content submission → PR
 # PR is the moderation step; the site rebuilds from the new content.
 on:
   issues:
-    types: [opened, edited]
+    # labeled: 让维护者给旧 issue 补标签也能重新触发(标签需先在仓库存在,
+    # 见 SUBMISSIONS.md;GitHub 不会自动创建 issue 表单里不存在的标签)。
+    types: [opened, edited, labeled]
 
 permissions:
   contents: write

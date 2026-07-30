@@ -146,7 +146,7 @@ downloads any image (gallery/work) into `public/images/<dir>/`, writes the
 `src/content/<dir>/<id>.yaml`, and opens a PR via `peter-evans/create-pull-request`.
 Merging the PR is the moderation step. Works are validated against existing
 authors. Each list page's submit/apply button links to its form when `SITE.repo`
-is set (`issueFormUrl()` in `src/data/site.js`). See `.github/README.md` for setup.
+is set (`issueFormUrl()` in `src/data/site.js`). See `.github/SUBMISSIONS.md` for setup.
 
 ## Adding / Editing Content
 See **`EDITING.md`** for the full "change X → edit file Y" table. In short:

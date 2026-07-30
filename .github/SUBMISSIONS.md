@@ -47,8 +47,8 @@
    gh label create author-submission  -c 8B5CF6
    gh label create work-submission    -c 22C55E
    ```
-   (或网页:Issues → Labels → New label。)工作流也监听 `labeled`,所以给旧 issue
-   手动补标签能重新触发——但标签得先存在。
+   (或网页:Issues → Labels → New label。)标签建好后,**新**从表单开的 issue 会
+   自动带标签;要对某个 issue 重新触发,**编辑一下该 issue**(工作流监听 `edited`)。
 2. **允许 Action 开 PR**:仓库 Settings → Actions → General → Workflow permissions,勾选
    **“Allow GitHub Actions to create and approve pull requests”**,否则 Action 无权开 PR。
    > 若此项**灰色不可勾**,是被**组织**策略锁住了:去 Organization → Settings → Actions →

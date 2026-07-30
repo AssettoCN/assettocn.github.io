@@ -1,0 +1,16 @@
+order: 1003
+initials: "t"
+tint: "--color-accent-200"
+ink: "--color-accent-900"
+name:
+  zh: "test"
+  en: "test"
+handle: "@test"
+skills:
+  zh:
+    - "test"
+  en:
+    - "test"
+bio:
+  zh: "test"
+  en: "test"

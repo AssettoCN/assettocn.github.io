@@ -1,0 +1,59 @@
+---
+import ImageSlot from '../ImageSlot.astro';
+import Icon from '../Icon.astro';
+import { UI } from '../../data/ui.js';
+import { getGallery } from '../../lib/content.js';
+import { issueFormUrl } from '../../data/site.js';
+
+const { lang } = Astro.props;
+const ui = UI[lang];
+const shots = await getGallery(lang);
+// When a GitHub repo is configured, "submit a shot" opens the Issue Form that
+// the Action turns into a gallery PR; otherwise it stays an inert placeholder.
+const submitUrl = issueFormUrl('gallery-submission.yml');
+---
+<div class="shell fade-in page-head">
+  <div class="list-head">
+    <div>
+      <h1 class="page-title">{ui.galleryPage.title}</h1>
+      <p class="text-muted list-head__sub">{ui.galleryPage.sub}</p>
+    </div>
+    {submitUrl ? (
+      <a class="btn btn-primary list-head__action" href={submitUrl} target="_blank" rel="noopener">
+        <Icon name="image-plus" size={16} />
+        {ui.galleryPage.submit}
+      </a>
+    ) : (
+      <button type="button" class="btn btn-primary list-head__action">
+        <Icon name="image-plus" size={16} />
+        {ui.galleryPage.submit}
+      </button>
+    )}
+  </div>
+  <div class="gallery-masonry">
+    {shots.map((s) => (
+      <figure class="card elev-sm gallery-shot">
+        <div class="gallery-shot__media" style={`aspect-ratio: ${s.ratio};`}>
+          <ImageSlot src={s.cover} seed={s.title} placeholder={s.coverPlaceholder} />
+        </div>
+        <figcaption class="gallery-shot__cap">
+          <span class="gallery-shot__title">{s.title}</span>
+          <span class="text-muted gallery-shot__by">{s.by}</span>
+        </figcaption>
+      </figure>
+    ))}
+  </div>
+</div>
+
+<style>
+  .gallery-masonry { columns: 3; column-gap: var(--space-4); }
+  .gallery-shot { padding: 0; overflow: hidden; break-inside: avoid; margin: 0 0 var(--space-4); gap: 0; transition: box-shadow .16s ease; }
+  .gallery-shot:hover { box-shadow: var(--shadow-md); }
+  .gallery-shot__media { width: 100%; }
+  .gallery-shot__cap { padding: var(--space-3); display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); }
+  .gallery-shot__title { font-size: 14px; font-weight: 600; }
+  .gallery-shot__by { font-size: 12px; }
+
+  @media (max-width: 860px) { .gallery-masonry { columns: 2; } }
+  @media (max-width: 560px) { .gallery-masonry { columns: 1; } }
+</style>

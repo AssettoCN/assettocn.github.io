@@ -1,0 +1,38 @@
+---
+import SectionHead from './SectionHead.astro';
+import ServerCard from './ServerCard.astro';
+import { UI } from '../data/ui.js';
+import { getServers } from '../lib/content.js';
+import { localizePath, ROUTES } from '../lib/i18n.js';
+
+const { lang } = Astro.props;
+const ui = UI[lang];
+const servers = (await getServers(lang)).slice(0, 3);
+const moreHref = localizePath(lang, ROUTES.servers);
+---
+<section class="snap-section home-sec servers-sec">
+  <div class="home-inner">
+    <SectionHead
+      index="03"
+      eyebrow={ui.nav.servers}
+      title={ui.serversPage.title}
+      sub={ui.serversPage.sub}
+      moreHref={moreHref}
+      moreLabel={ui.featured.more}
+    />
+    <div class="servers-sec__grid">
+      {servers.map((s, i) => (
+        <div data-reveal data-reveal-delay={i}>
+          <ServerCard server={s} lang={lang} preview />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .servers-sec__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+  .servers-sec__grid > div { display: flex; }
+  .servers-sec__grid > div > :global(.server-card) { width: 100%; }
+  @media (max-width: 860px) { .servers-sec__grid { grid-template-columns: 1fr; } }
+</style>

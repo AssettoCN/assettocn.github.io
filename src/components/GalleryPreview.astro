@@ -1,0 +1,38 @@
+---
+import SectionHead from './SectionHead.astro';
+import ImageSlot from './ImageSlot.astro';
+import { UI } from '../data/ui.js';
+import { getGallery } from '../lib/content.js';
+import { localizePath, ROUTES } from '../lib/i18n.js';
+
+const { lang } = Astro.props;
+const ui = UI[lang];
+const shots = (await getGallery(lang)).slice(0, 5);
+const moreHref = localizePath(lang, ROUTES.gallery);
+---
+<section class="snap-section home-sec home-sec--surface gallery-sec">
+  <div class="home-inner">
+    <SectionHead
+      index="04"
+      eyebrow={ui.nav.gallery}
+      title={ui.galleryPage.title}
+      sub={ui.galleryPage.sub}
+      moreHref={moreHref}
+      moreLabel={ui.featured.more}
+    />
+    <div class="gallery-sec__grid" data-reveal>
+      {shots.map((s) => (
+        <div class="gallery-sec__tile">
+          <ImageSlot src={s.cover} seed={s.title} placeholder={s.coverPlaceholder} />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .gallery-sec__grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-3); }
+  .gallery-sec__tile { border: 1px solid var(--color-divider); border-radius: var(--radius-md); overflow: hidden; aspect-ratio: 3/4; }
+  @media (max-width: 860px) { .gallery-sec__grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 560px) { .gallery-sec__grid { grid-template-columns: repeat(2, 1fr); } }
+</style>

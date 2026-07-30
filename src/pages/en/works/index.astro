@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import WorksPage from '../../../components/pages/WorksPage.astro';
+import { UI } from '../../../data/ui.js';
+
+const lang = 'en';
+const ui = UI[lang];
+---
+<BaseLayout lang={lang} section="works" path="/works" title={ui.nav.works} description={ui.worksPage.sub}>
+  <WorksPage lang={lang} />
+</BaseLayout>

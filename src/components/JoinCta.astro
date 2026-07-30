@@ -1,0 +1,70 @@
+---
+import BrandMark from './BrandMark.astro';
+import { UI } from '../data/ui.js';
+import { localizePath, ROUTES } from '../lib/i18n.js';
+
+const { lang } = Astro.props;
+const ui = UI[lang];
+const j = ui.join;
+const authorsHref = localizePath(lang, ROUTES.authors);
+const worksHref = localizePath(lang, ROUTES.works);
+const serversHref = localizePath(lang, ROUTES.servers);
+const galleryHref = localizePath(lang, ROUTES.gallery);
+
+const quickLinks = [
+  { label: ui.nav.servers, href: serversHref },
+  { label: ui.nav.gallery, href: galleryHref },
+  { label: j.docs, href: 'https://docs.assetto.cn', external: true },
+  { label: 'Wiki', href: 'https://wiki.assetto.cn', external: true },
+];
+---
+<section class="snap-section home-sec join-sec">
+  <div class="home-inner">
+    <div class="join" data-reveal>
+      <span class="join__watermark" aria-hidden="true"><BrandMark width={420} /></span>
+      <div class="join__inner">
+        <div class="join__eyebrow">/ 05 — JOIN</div>
+        <h2 class="join__title">{j.title}</h2>
+        <p class="join__sub text-muted">{j.sub}</p>
+        <div class="join__cta">
+          <a class="btn btn-primary join__btn" href={authorsHref}>{j.ctaA}</a>
+          <a class="btn btn-secondary join__btn" href={worksHref}>{j.ctaB}</a>
+        </div>
+        <div class="join__links">
+          {quickLinks.map((l) => (
+            <a
+              class="join__link"
+              href={l.href}
+              target={l.external ? '_blank' : undefined}
+              rel={l.external ? 'noopener' : undefined}
+            ><span class="join__link-arrow" aria-hidden="true">→</span>{l.label}</a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .join {
+    position: relative; overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
+    border-radius: var(--radius-lg); padding: var(--space-8);
+    background: linear-gradient(150deg, color-mix(in srgb, var(--color-accent) 10%, var(--color-surface)), var(--color-surface) 60%);
+  }
+  .join__watermark { position: absolute; right: -40px; bottom: -70px; width: 420px; max-width: 60%; opacity: .06; z-index: 0; line-height: 0; }
+  .join__watermark :global(svg) { width: 100%; height: auto; }
+  .join__inner { position: relative; z-index: 1; }
+  .join__eyebrow { font-family: var(--font-body); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--color-accent); margin-bottom: var(--space-4); }
+  .join__title { font-family: var(--font-heading); font-size: clamp(40px, 6vw, 68px); line-height: 1; margin: 0 0 var(--space-4); max-width: 18ch; }
+  .join__sub { font-size: 17px; max-width: 50ch; margin: 0 0 var(--space-6); }
+  .join__cta { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+  .join__btn { min-height: 48px; padding-inline: 28px; font-size: 14px; letter-spacing: .06em; text-transform: uppercase; }
+  .join__links {
+    display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-6);
+    margin-top: var(--space-8); padding-top: var(--space-6); border-top: 1px solid var(--color-divider);
+  }
+  .join__link { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--color-text); text-decoration: none; }
+  .join__link:hover { color: var(--color-accent); }
+  .join__link-arrow { color: var(--color-accent); }
+</style>

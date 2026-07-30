@@ -1,0 +1,8 @@
+order: 1
+name:   { zh: ACN 公共巡航服, en: ACN Public Cruise }
+region: { zh: 华东 · 上海, en: East · Shanghai }
+mode:   { zh: 自由巡航, en: Free roam }
+players: 22
+max: 30
+ping: '32ms'
+online: true

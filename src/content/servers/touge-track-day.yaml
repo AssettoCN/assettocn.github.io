@@ -1,0 +1,8 @@
+order: 2
+name:   { zh: 触底赛道日, en: Touge Track Day }
+region: { zh: 华南 · 广州, en: South · Guangzhou }
+mode:   { zh: 山道竞速, en: Touge racing }
+players: 14
+max: 24
+ping: '45ms'
+online: true

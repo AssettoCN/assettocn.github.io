@@ -1,0 +1,89 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { localizePath } from '../lib/i18n.js';
+
+/**
+ * Site chrome + <head>. Every page renders through this.
+ * Props:
+ *   lang        'zh' | 'en'
+ *   section     active nav item: 'home' | 'authors' | 'works' | null
+ *   path        canonical (locale-agnostic) path, e.g. '/authors/turbocat'
+ *   title       document title (page-specific part)
+ *   description meta description
+ *   snap        true on the home route → enables full-page scroll-snap
+ */
+const { lang, section = null, path = '/', title, description, snap = false } = Astro.props;
+
+const site = Astro.site ?? new URL('http://localhost:4321');
+const zhUrl = new URL(localizePath('zh', path), site).href;
+const enUrl = new URL(localizePath('en', path), site).href;
+const canonicalUrl = new URL(localizePath(lang, path), site).href;
+const fullTitle = title ? `${title} · AssettoCN` : 'AssettoCN · Assetto Corsa 中文社区';
+---
+<!doctype html>
+<html lang={lang === 'zh' ? 'zh-CN' : 'en'} data-snap={snap ? '' : undefined}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      // No-flash theme: apply the saved (or system) theme before first paint,
+      // and flag `.js` so scroll-reveal CSS can safely start hidden.
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        try {
+          var saved = localStorage.getItem('acn-theme');
+          var theme = saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          d.dataset.theme = theme;
+        } catch (e) { d.dataset.theme = 'light'; }
+      })();
+    </script>
+    <title>{fullTitle}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" hreflang="zh-Hans" href={zhUrl} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="x-default" href={zhUrl} />
+    <meta name="theme-color" content="#e2001a" />
+    <meta property="og:title" content={fullTitle} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content={lang === 'zh' ? 'zh_CN' : 'en_US'} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  </head>
+  <body>
+    <Nav lang={lang} section={section} path={path} />
+    <main>
+      <slot />
+    </main>
+    <Footer lang={lang} />
+    <script is:inline>
+      // Scroll reveal — reveal-once as elements enter the viewport.
+      (function () {
+        var els = document.querySelectorAll('[data-reveal]');
+        if (!els.length) return;
+        var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduce || !('IntersectionObserver' in window)) {
+          els.forEach(function (el) { el.classList.add('is-in'); });
+          return;
+        }
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (!en.isIntersecting) return;
+            var el = en.target;
+            var step = parseInt(el.getAttribute('data-reveal-delay') || '0', 10);
+            el.style.transitionDelay = (step * 90) + 'ms';
+            el.classList.add('is-in');
+            io.unobserve(el);
+          });
+        }, { rootMargin: '0px 0px -8% 0px' });
+        els.forEach(function (el) { io.observe(el); });
+      })();
+    </script>
+  </body>
+</html>

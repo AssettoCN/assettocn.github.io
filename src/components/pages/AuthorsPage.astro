@@ -1,0 +1,40 @@
+---
+import AuthorCard from '../AuthorCard.astro';
+import Icon from '../Icon.astro';
+import { UI } from '../../data/ui.js';
+import { getAuthors } from '../../lib/content.js';
+import { issueFormUrl } from '../../data/site.js';
+
+const { lang } = Astro.props;
+const ui = UI[lang];
+const authors = await getAuthors(lang);
+const submitUrl = issueFormUrl('author-submission.yml');
+---
+<div class="shell fade-in page-head">
+  <div class="list-head">
+    <div>
+      <h1 class="page-title">{ui.authorsPage.title}</h1>
+      <p class="text-muted list-head__sub">{ui.authorsPage.sub}</p>
+    </div>
+    {submitUrl ? (
+      <a class="btn btn-primary list-head__action" href={submitUrl} target="_blank" rel="noopener">
+        <Icon name="plus" size={16} />
+        {ui.authorsPage.submit}
+      </a>
+    ) : (
+      <button type="button" class="btn btn-primary list-head__action">
+        <Icon name="plus" size={16} />
+        {ui.authorsPage.submit}
+      </button>
+    )}
+  </div>
+  <div class="authors-grid">
+    {authors.map((a) => <AuthorCard author={a} lang={lang} />)}
+  </div>
+</div>
+
+<style>
+  .authors-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+  @media (max-width: 860px) { .authors-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .authors-grid { grid-template-columns: 1fr; } }
+</style>

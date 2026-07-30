@@ -1,0 +1,62 @@
+---
+import BrandMark from './BrandMark.astro';
+import { UI } from '../data/ui.js';
+const { lang } = Astro.props;
+const ui = UI[lang];
+const cols = ui.footerLinks.cols;
+---
+<footer class="acn-footer">
+  <div class="acn-footer__top">
+    <div class="acn-footer__brand">
+      <span class="nav-brand acn-footer__logo">
+        <BrandMark width={34} />
+        AssettoCN
+      </span>
+      <p class="text-muted acn-footer__blurb">{ui.footerLinks.blurb}</p>
+    </div>
+    {cols.map((col) => (
+      <div class="acn-footer__col">
+        <div class="acn-footer__coltitle">{col.title}</div>
+        {col.links.map((lk) => {
+          const external = lk.href.startsWith('http');
+          return (
+            <a
+              class="acn-footer__link"
+              href={lk.href}
+              target={external ? '_blank' : undefined}
+              rel={external ? 'noopener noreferrer' : undefined}
+            >{lk.label}</a>
+          );
+        })}
+      </div>
+    ))}
+  </div>
+  <div class="acn-footer__bottom">
+    <span class="text-muted" style="font-size:13px;">{ui.footer}</span>
+  </div>
+</footer>
+
+<style>
+  .acn-footer { border-top: 1px solid var(--color-divider); margin-top: var(--space-8); background: var(--color-surface); }
+  .acn-footer__top {
+    max-width: 1200px; margin: 0 auto;
+    padding: var(--space-8) var(--space-6) var(--space-6);
+    display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: var(--space-6);
+  }
+  .acn-footer__logo { font-size: 18px; display: inline-flex; align-items: center; gap: 11px; }
+  .acn-footer__blurb { font-size: 13px; line-height: 1.6; margin: var(--space-2) 0 0; max-width: 30ch; }
+  .acn-footer__col { display: flex; flex-direction: column; gap: 10px; }
+  .acn-footer__coltitle { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--color-neutral-600); }
+  .acn-footer__link { font-size: 14px; color: var(--color-text); text-decoration: none; width: fit-content; }
+  .acn-footer__link:hover { color: var(--color-accent); }
+  .acn-footer__bottom { border-top: 1px solid var(--color-divider); }
+  .acn-footer__bottom > span { display: block; max-width: 1200px; margin: 0 auto; padding: var(--space-3) var(--space-6); }
+
+  @media (max-width: 760px) {
+    .acn-footer__top { grid-template-columns: 1fr 1fr; }
+    .acn-footer__brand { grid-column: 1 / -1; }
+  }
+  @media (max-width: 460px) {
+    .acn-footer__top { grid-template-columns: 1fr; }
+  }
+</style>

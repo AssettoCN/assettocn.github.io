@@ -1,0 +1,81 @@
+---
+import WorkRow from '../WorkRow.astro';
+import Icon from '../Icon.astro';
+import { UI } from '../../data/ui.js';
+import { getWorks, workFilters } from '../../lib/content.js';
+import { issueFormUrl } from '../../data/site.js';
+
+const { lang } = Astro.props;
+const ui = UI[lang];
+const works = await getWorks(lang);
+const filters = workFilters(lang);
+const submitUrl = issueFormUrl('work-submission.yml');
+---
+<div class="shell fade-in page-head">
+  <div class="list-head">
+    <div>
+      <h1 class="page-title">{ui.worksPage.title}</h1>
+      <p class="text-muted list-head__sub">{ui.worksPage.sub}</p>
+    </div>
+    {submitUrl ? (
+      <a class="btn btn-primary list-head__action" href={submitUrl} target="_blank" rel="noopener">
+        <Icon name="plus" size={16} />
+        {ui.worksPage.submit}
+      </a>
+    ) : (
+      <button type="button" class="btn btn-primary list-head__action">
+        <Icon name="plus" size={16} />
+        {ui.worksPage.submit}
+      </button>
+    )}
+  </div>
+
+  <div class="works-filters" role="group" aria-label={ui.worksPage.title}>
+    {filters.map((f) => (
+      <button
+        type="button"
+        class:list={['btn', f.key === 'all' ? 'btn-primary' : 'btn-secondary', 'works-filter']}
+        data-filter={f.key}
+        aria-pressed={f.key === 'all' ? 'true' : 'false'}
+      >{f.label}</button>
+    ))}
+  </div>
+
+  <div id="works-list" class="list-stack">
+    {works.map((w) => <WorkRow work={w} lang={lang} />)}
+  </div>
+</div>
+
+<style>
+  .works-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: var(--space-8); }
+  .works-filter { min-height: 34px; }
+</style>
+
+<script>
+  // Client-side type filter. All works are server-rendered (good for SEO and
+  // no-JS fallback); this only shows/hides them.
+  function initWorksFilter() {
+    const buttons = document.querySelectorAll('.works-filter');
+    const items = document.querySelectorAll('#works-list [data-type]');
+    if (!buttons.length) return;
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const filter = btn.getAttribute('data-filter');
+        buttons.forEach((b) => {
+          const active = b === btn;
+          b.classList.toggle('btn-primary', active);
+          b.classList.toggle('btn-secondary', !active);
+          b.setAttribute('aria-pressed', String(active));
+        });
+        items.forEach((item) => {
+          const show = filter === 'all' || item.getAttribute('data-type') === filter;
+          (item as HTMLElement).style.display = show ? '' : 'none';
+        });
+      });
+    });
+  }
+
+  initWorksFilter();
+  document.addEventListener('astro:page-load', initWorksFilter);
+</script>

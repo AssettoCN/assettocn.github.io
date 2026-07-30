@@ -1,0 +1,10 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HomePage from '../../components/pages/HomePage.astro';
+import { UI } from '../../data/ui.js';
+
+const lang = 'en';
+---
+<BaseLayout lang={lang} section="home" path="/" description={UI[lang].hero.sub} snap>
+  <HomePage lang={lang} />
+</BaseLayout>

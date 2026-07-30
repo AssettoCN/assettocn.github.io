@@ -1,0 +1,296 @@
+/* ============================================================================
+   AssettoCN global stylesheet.
+
+   Layered exactly like the prototype:
+   1. Organic design-system tokens  (fonts, spacing, radius, base colors)
+   2. Assetto Corsa retheme         (overrides the COLOR tokens: white ground,
+                                      near-black ink, AC red accent) — the same
+                                      override the prototype carried in <helmet>
+   3. Organic component classes      (.btn, .card, .tag, .nav, …)
+   Component-specific layout (hero, stat grid, work rows) lives in each
+   .astro component's scoped <style>.
+   ========================================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Caprasimo:wght@400&family=Figtree:wght@400;600;700&display=swap');
+
+/* ── 1. Organic tokens ───────────────────────────────────────────────────── */
+:root {
+  --color-bg: #f5ead8;
+  --color-surface: #ebddc5;
+  --color-text: #201e1d;
+  --color-accent: #c67139;
+  --color-accent-2: #7a8a5e;
+  --color-divider: color-mix(in srgb, #201e1d 16%, transparent);
+
+  --color-neutral-100: #f9f4ed;
+  --color-neutral-200: #eee7db;
+  --color-neutral-300: #dcd3c4;
+  --color-neutral-400: #c0b6a5;
+  --color-neutral-500: #a19786;
+  --color-neutral-600: #82796a;
+  --color-neutral-700: #645c50;
+  --color-neutral-800: #474238;
+  --color-neutral-900: #2e2b25;
+
+  --color-accent-100: #fff2eb;
+  --color-accent-200: #ffe1d0;
+  --color-accent-300: #ffc6a5;
+  --color-accent-400: #f6a06b;
+  --color-accent-500: #d67f48;
+  --color-accent-600: #b2622d;
+  --color-accent-700: #8c491a;
+  --color-accent-800: #643312;
+  --color-accent-900: #402310;
+
+  --color-accent-2-100: #f0fae1;
+  --color-accent-2-200: #e1eecc;
+  --color-accent-2-300: #ccdbb2;
+  --color-accent-2-400: #aebf92;
+  --color-accent-2-500: #8fa073;
+  --color-accent-2-600: #728157;
+  --color-accent-2-700: #56633f;
+  --color-accent-2-800: #3d472b;
+  --color-accent-2-900: #272e1b;
+
+  --font-heading: "Caprasimo", system-ui, sans-serif;
+  --font-heading-weight: 400;
+  --font-body: "Figtree", system-ui, sans-serif;
+
+  --space-1: 4.4px;
+  --space-2: 8.8px;
+  --space-3: 13.2px;
+  --space-4: 17.6px;
+  --space-6: 26.4px;
+  --space-8: 35.2px;
+
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 28px;
+
+  --shadow-sm: 0 1px 2px color-mix(in srgb, #2e2b25 14%, transparent);
+  --shadow-md: 0 3px 10px color-mix(in srgb, #2e2b25 16%, transparent);
+  --shadow-lg: 0 12px 32px color-mix(in srgb, #2e2b25 22%, transparent);
+}
+
+/* ── 2. Assetto Corsa retheme (white ground, near-black ink, AC red) ─────── */
+:root {
+  --color-bg: #ffffff;
+  --color-surface: #f3f3f5;
+  --color-text: #16161a;
+  --color-accent: #e2001a;
+  --color-accent-2: #45484d;
+  --color-divider: color-mix(in srgb, #16161a 13%, transparent);
+
+  --color-neutral-100: #f6f6f7;
+  --color-neutral-200: #ececee;
+  --color-neutral-300: #dcdde0;
+  --color-neutral-400: #bcbec3;
+  --color-neutral-500: #97999f;
+  --color-neutral-600: #74767c;
+  --color-neutral-700: #55575c;
+  --color-neutral-800: #38393d;
+  --color-neutral-900: #202124;
+
+  --color-accent-100: #ffe9ea;
+  --color-accent-200: #ffccce;
+  --color-accent-300: #ff9aa0;
+  --color-accent-400: #f5555f;
+  --color-accent-500: #e2001a;
+  --color-accent-600: #c0001a;
+  --color-accent-700: #98001a;
+  --color-accent-800: #6d0014;
+  --color-accent-900: #45000d;
+
+  --color-accent-2-100: #ececed;
+  --color-accent-2-200: #dadbdd;
+  --color-accent-2-300: #b6b8bc;
+  --color-accent-2-400: #8a8d93;
+  --color-accent-2-500: #5f6268;
+  --color-accent-2-600: #45484d;
+  --color-accent-2-700: #303236;
+  --color-accent-2-800: #1f2124;
+  --color-accent-2-900: #141518;
+
+  --shadow-sm: 0 1px 2px rgba(20, 20, 25, .12);
+  --shadow-md: 0 3px 12px rgba(20, 20, 25, .14);
+  --shadow-lg: 0 16px 40px rgba(20, 20, 25, .20);
+}
+
+/* ── 2b. Dark theme (toggled via data-theme="dark" on <html>) ─────────────── */
+/* Ported from the prototype's .acn[data-theme="dark"] ramp. The no-flash
+   inline script in BaseLayout sets data-theme before first paint. */
+html[data-theme='dark'] {
+  --color-bg: #0e0c0c;
+  --color-surface: #161415;
+  --color-text: #f2efec;
+  --color-divider: rgba(242, 239, 236, .13);
+
+  --color-neutral-100: #161415;
+  --color-neutral-200: #1f1d1e;
+  --color-neutral-300: #2b2829;
+  --color-neutral-400: #3d393b;
+  --color-neutral-500: #5c5759;
+  --color-neutral-600: #7d787a;
+  --color-neutral-700: #9e999b;
+  --color-neutral-800: #c4c0c1;
+  --color-neutral-900: #e7e4e4;
+
+  --color-accent: #e2001a;
+  --color-accent-100: #340a0d;
+  --color-accent-200: #4d0d11;
+  --color-accent-300: #6f131a;
+  --color-accent-400: #9c1a24;
+  --color-accent-500: #e2001a;
+  --color-accent-600: #e6414c;
+  --color-accent-700: #ef7079;
+  --color-accent-800: #f6a3aa;
+  --color-accent-900: #fcd4d8;
+
+  --color-accent-2-100: #1a1c1e;
+  --color-accent-2-200: #232629;
+  --color-accent-2-300: #31353a;
+  --color-accent-2-400: #454b52;
+  --color-accent-2-500: #666d76;
+  --color-accent-2-600: #868d96;
+  --color-accent-2-700: #a6acb4;
+  --color-accent-2-800: #c8ccd1;
+  --color-accent-2-900: #e9ebee;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .5);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, .55);
+  --shadow-lg: 0 24px 55px rgba(0, 0, 0, .65);
+}
+
+html { color-scheme: light; }
+html[data-theme='dark'] { color-scheme: dark; }
+
+/* ── 3. Base + Organic component classes ─────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  font-weight: 400;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  margin: 0 0 var(--space-2);
+}
+h1 { font-size: 42px; }
+h2 { font-size: 32px; }
+h3 { font-size: 25px; }
+h4 { font-size: 20px; }
+h5 { font-size: 16px; }
+h6 { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+p { margin: 0 0 var(--space-3); }
+a { color: var(--color-accent); text-underline-offset: 3px; }
+img { display: block; max-width: 100%; }
+figure { margin: 0; }
+.text-muted { color: color-mix(in srgb, var(--color-text) 55%, transparent); }
+:focus { outline: none; }
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+::selection { background: color-mix(in srgb, var(--color-accent) 30%, transparent); }
+
+.hr { height: 1px; border: 0; margin: var(--space-4) 0; background: var(--color-divider); }
+
+/* buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  cursor: pointer; text-decoration: none;
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 14px; line-height: 1.2; color: var(--color-text);
+  background: transparent; border: 1px solid transparent;
+  padding: var(--space-2) calc(var(--space-3) * 1.2);
+  border-radius: var(--radius-md);
+}
+.btn svg { display: block; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-primary { background: var(--color-accent); color: #fff; }
+.btn-primary:hover { background: var(--color-accent-600); }
+.btn-primary:active { background: var(--color-accent-700); }
+.btn-secondary { border-color: var(--color-divider); }
+.btn-secondary:hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
+.btn-secondary:active { background: color-mix(in srgb, var(--color-text) 14%, transparent); }
+.btn-ghost { color: var(--color-accent); padding-inline: var(--space-1); }
+.btn-ghost:hover { background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
+.btn-ghost:active { background: color-mix(in srgb, var(--color-accent) 18%, transparent); }
+.btn-block { width: 100%; }
+
+/* cards */
+.card {
+  display: flex; flex-direction: column; gap: var(--space-2);
+  padding: var(--space-3); border-radius: var(--radius-md); background: var(--color-surface);
+}
+.card-kicker { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent); }
+.card-title { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 17px; line-height: 1.2; }
+.card-body { margin: 0; font-size: 13px; opacity: 0.8; flex: 1; }
+.card-meta { display: flex; align-items: center; gap: 6px; font-size: 11px; color: color-mix(in srgb, var(--color-text) 50%, transparent); }
+.elev-sm { box-shadow: var(--shadow-sm); }
+.elev-md { box-shadow: var(--shadow-md); }
+.elev-lg { box-shadow: var(--shadow-lg); }
+
+/* tags */
+.tag { display: inline-flex; align-items: center; font-size: 11px; letter-spacing: 0.02em; padding: 3px 10px; border-radius: calc(var(--radius-md) * 0.75); }
+.tag-accent { background: var(--color-accent-100); color: var(--color-accent-800); }
+.tag-accent-2 { background: var(--color-accent-2-100); color: var(--color-accent-2-800); }
+.tag-neutral { background: var(--color-neutral-100); color: var(--color-neutral-800); }
+.tag-outline { border: 1px solid var(--color-accent); color: var(--color-accent); }
+
+/* navigation */
+.nav { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-3) var(--space-4); border-bottom: none; }
+.nav-brand { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 18px; margin-right: auto; }
+.nav a { color: inherit; text-decoration: none; font-size: 14px; }
+.nav a:hover, .nav a[aria-current='page'] { color: var(--color-accent); }
+
+.washed { filter: saturate(0.6) contrast(0.85) brightness(1.1) opacity(0.94); }
+
+/* rounded frame: soften cards, pill the small controls */
+.card { border-radius: calc(var(--radius-lg) * 1.15); }
+.btn, .tag { border-radius: 999px; }
+
+/* shared page shell + entrance animation */
+.shell { max-width: 1200px; margin: 0 auto; padding: 0 var(--space-6) var(--space-8); }
+
+/* home landing sections — full-viewport bands, centered content */
+.home-sec { min-height: calc(100vh - 64px); display: flex; align-items: center; }
+.home-sec--surface { background: var(--color-surface); }
+.home-inner { width: 100%; max-width: 1200px; margin: 0 auto; padding: var(--space-8) var(--space-6); }
+
+/* list-page headers + vertical stacks (authors / works) */
+.page-head { padding-top: var(--space-8); }
+.page-title { font-size: clamp(34px, 5vw, 46px); margin-bottom: var(--space-2); }
+.page-sub { font-size: 17px; margin-bottom: var(--space-8); }
+.list-stack { display: flex; flex-direction: column; gap: var(--space-3); }
+
+/* list-page header with an optional right-aligned action (submit / apply) */
+.list-head { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-6); flex-wrap: wrap; margin-bottom: var(--space-8); }
+.list-head .page-title { margin-bottom: var(--space-2); }
+.list-head__sub { font-size: 17px; margin: 0; max-width: 56ch; }
+.list-head__action { min-height: 46px; padding-inline: 24px; font-size: 15px; white-space: nowrap; }
+@keyframes acnFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.fade-in { animation: acnFade .35s ease both; }
+
+/* Home is a single-page scroll-snap landing; other pages scroll normally.
+   BaseLayout adds data-snap to <html> only on the home route. */
+html[data-snap] { scroll-snap-type: y proximity; scroll-padding-top: 64px; }
+.snap-section { scroll-snap-align: start; }
+
+/* Scroll reveal — progressive enhancement. The head script adds `.js` to
+   <html>; only then do reveal targets start hidden, so no-JS keeps them visible. */
+.js [data-reveal] { opacity: 0; transform: translateY(20px); }
+.js [data-reveal].is-in {
+  opacity: 1; transform: none;
+  transition: opacity .6s cubic-bezier(.22,.61,.36,1), transform .6s cubic-bezier(.22,.61,.36,1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in { animation: none; }
+  html[data-snap] { scroll-snap-type: none; }
+  .js [data-reveal] { opacity: 1; transform: none; }
+  .js [data-reveal].is-in { transition: none; }
+}

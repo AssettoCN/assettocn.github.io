@@ -1,0 +1,49 @@
+name: Deploy to GitHub Pages
+
+# 把 Astro 静态站构建后发布到 GitHub Pages。
+# 组织站仓库(assettocn.github.io)发布在根路径 https://assettocn.github.io/。
+# 生效前需在仓库 Settings → Pages 把 Source 设为 "GitHub Actions"。
+# Builds the Astro static site and publishes it to GitHub Pages.
+
+on:
+  # 推到默认分支即自动构建上线(main 或 master 都触发)
+  push:
+    branches: [main, master]
+  # 也支持在 Actions 页面手动触发一次
+  workflow_dispatch:
+
+# Pages 部署所需的最小权限
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同一时间只跑一个部署;不打断进行中的发布(等它完成)
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 官方 Astro action:自动识别包管理器、装依赖、astro build、
+      # 并把 dist/ 打包成 Pages artifact。node-version 显式固定为 20。
+      - name: Build with Astro
+        uses: withastro/action@v3
+        with:
+          node-version: 20
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,58 @@
+---
+import Icon from './Icon.astro';
+import BrandMark from './BrandMark.astro';
+import { UI } from '../data/ui.js';
+import { localizePath, ROUTES } from '../lib/i18n.js';
+
+// `author` is an already-resolved author object (see lib/content.js).
+// `preview` = home-landing variant (skills pinned to the bottom, no work-count footer).
+const { author, lang, preview = false } = Astro.props;
+const ui = UI[lang];
+const href = localizePath(lang, ROUTES.author(author.id));
+---
+<a class:list={['card', 'elev-sm', 'author-card', { 'author-card--preview': preview }]} href={href}>
+  <div class="author-card__head">
+    <div class="author-card__avatar" style={author.avatarStyle}>
+      {author.official ? <BrandMark width={30} /> : author.initials}
+    </div>
+    <div>
+      <div class="author-card__namerow">
+        <span class="card-title author-card__name">{author.name}</span>
+        {author.official && <span class="tag author-card__badge">{ui.official}</span>}
+      </div>
+      <div class="text-muted author-card__handle">{author.handle}</div>
+    </div>
+  </div>
+  <p class="card-body author-card__bio">{author.bio}</p>
+  <div class="author-card__skills">
+    {author.skills.map((sk) => <span class="tag tag-accent-2">{sk}</span>)}
+  </div>
+  {!preview && (
+    <div class="card-meta author-card__foot">
+      <span>{author.workCount} {ui.detail.worksUnit}</span>
+      <span class="author-card__view">{ui.detail.view}<Icon name="arrow-right" size={14} /></span>
+    </div>
+  )}
+</a>
+
+<style>
+  .author-card {
+    gap: var(--space-3); cursor: pointer; text-decoration: none; color: inherit;
+    transition: transform .16s ease, box-shadow .16s ease;
+  }
+  .author-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+  .author-card__head { display: flex; gap: var(--space-3); align-items: center; }
+  .author-card__namerow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .author-card__name { font-size: 19px; }
+  .author-card__badge {
+    background: var(--color-accent); color: #fff;
+    font-size: 10.5px; font-weight: 700; letter-spacing: .04em;
+    padding: 2px 8px; text-transform: uppercase;
+  }
+  .author-card__handle { font-size: 13px; }
+  .author-card__bio { font-size: 14px; }
+  .author-card__skills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .author-card--preview .author-card__skills { margin-top: auto; }
+  .author-card__foot { justify-content: space-between; margin-top: var(--space-1); }
+  .author-card__view { display: inline-flex; align-items: center; gap: 4px; color: var(--color-accent-700); }
+</style>

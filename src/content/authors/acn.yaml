@@ -1,0 +1,19 @@
+order: 0                       # 官方账号,置顶于作者列表
+initials: CN                    # 官方作者用 Logo 头像,这个只是兜底
+tint: '--color-accent-100'
+ink: '--color-accent-700'
+name: { zh: AssettoCN 官方, en: AssettoCN Official }
+handle: '@acn'
+skills:
+  zh: [社区整合, 官方工具, 资料维护]
+  en: [Community packs, Official tools, Curation]
+bio:
+  zh: >-
+    AssettoCN 官方发布账号 —— 社区整合包、官方工具与资料由这里统一维护与更新。
+  en: >-
+    The official AssettoCN account — community modpacks, official tools and
+    curated resources are maintained and updated here.
+links:
+  - { label: 官网 / Site, url: 'https://assetto.cn' }
+  - { label: 文档中心 / Docs, url: 'https://docs.assetto.cn' }
+  - { label: GitHub, url: '#' }

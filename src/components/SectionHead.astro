@@ -1,0 +1,38 @@
+---
+/**
+ * Shared home-section header: "/ 0N" index + eyebrow + title (+ optional sub),
+ * with an optional "more →" link on the right. Mirrors the prototype's section
+ * headers on the single-page home landing.
+ */
+const { index, eyebrow, title, sub, moreHref, moreLabel } = Astro.props;
+---
+<div class="sec-head" data-reveal>
+  <div class="sec-head__lead">
+    <span class="sec-head__idx">/ {index}</span>
+    <div>
+      <div class="sec-head__eyebrow">{eyebrow}</div>
+      <h2 class="sec-head__title">{title}</h2>
+      {sub && <p class="sec-head__sub text-muted">{sub}</p>}
+    </div>
+  </div>
+  {moreHref && (
+    <a class="btn btn-secondary sec-head__more" href={moreHref}>{moreLabel} →</a>
+  )}
+</div>
+
+<style>
+  .sec-head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: var(--space-6); flex-wrap: wrap;
+    border-top: 1px solid var(--color-divider);
+    padding-top: var(--space-4); margin-bottom: var(--space-8);
+  }
+  .sec-head__lead { display: flex; align-items: baseline; gap: 18px; }
+  .sec-head__idx { font-family: var(--font-body); font-size: 14px; color: var(--color-accent); letter-spacing: .06em; }
+  .sec-head__eyebrow { font-family: var(--font-body); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--color-neutral-600); margin-bottom: 8px; }
+  .sec-head__title { font-size: 44px; margin: 0 0 8px; }
+  .sec-head__sub { font-size: 15px; margin: 0; max-width: 48ch; }
+  .sec-head__more { min-height: 44px; padding-inline: 20px; font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
+
+  @media (max-width: 560px) { .sec-head__title { font-size: 34px; } }
+</style>

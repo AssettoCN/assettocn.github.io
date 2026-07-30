@@ -1,0 +1,8 @@
+order: 4
+name:   { zh: 漂移训练场, en: Drift Arena }
+region: { zh: 西南 · 成都, en: West · Chengdu }
+mode:   { zh: 漂移练习, en: Drift practice }
+players: 0
+max: 20
+ping: '—'
+online: false

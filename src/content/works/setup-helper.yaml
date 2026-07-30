@@ -1,0 +1,14 @@
+order: 3
+authorId: apexpoet
+type: tool
+version: 'v1.2'
+updated: '2026-03'
+downloads: '22.0k'
+rating: '4.6'
+title: { zh: 一键调校助手, en: One-Click Setup Helper }
+desc:
+  zh: >-
+    根据赛道与车辆自动生成基础调校方案的工具,附带参数说明,适合新手快速上手。
+  en: >-
+    A tool that auto-generates baseline setups per track and car, with annotated
+    parameters for newcomers.

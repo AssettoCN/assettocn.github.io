@@ -1,0 +1,60 @@
+name: 服务器收录 / Server listing
+description: 申请把你的 Assetto Corsa 服务器收录到社区列表 / Apply to list your server
+title: "[Server] "
+labels: ["server-submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        填好下面几项、提交后会自动生成一个 Pull Request,维护者审核合并后服务器
+        就会出现在列表里(收录时默认标记为在线、当前人数 0)。
+        Submitting opens a PR automatically; a maintainer merges it to list your server.
+  - type: input
+    id: name_zh
+    attributes:
+      label: 服务器名称(中文)
+      placeholder: ACN 公共巡航服
+    validations:
+      required: true
+  - type: input
+    id: name_en
+    attributes:
+      label: Server name (English)
+      placeholder: ACN Public Cruise
+    validations:
+      required: true
+  - type: input
+    id: region_zh
+    attributes:
+      label: 区域(中文)
+      placeholder: 华东 · 上海
+    validations:
+      required: true
+  - type: input
+    id: region_en
+    attributes:
+      label: Region (English)
+      placeholder: East · Shanghai
+    validations:
+      required: true
+  - type: input
+    id: mode_zh
+    attributes:
+      label: 模式(中文)
+      placeholder: 自由巡航
+    validations:
+      required: true
+  - type: input
+    id: mode_en
+    attributes:
+      label: Mode (English)
+      placeholder: Free roam
+    validations:
+      required: true
+  - type: input
+    id: max
+    attributes:
+      label: 最大人数 / Max players
+      placeholder: "30"
+    validations:
+      required: true

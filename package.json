@@ -1,0 +1,21 @@
+{
+  "name": "assettocn",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AssettoCN — Assetto Corsa 中文社区主页 (community homepage). Astro static site with zh/en i18n.",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^5.13.0"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-arm64-gnu": "4.62.2"
+  }
+}

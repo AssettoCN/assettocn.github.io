@@ -1,0 +1,54 @@
+name: 截图投稿 / Gallery submission
+description: 投稿一张 Assetto Corsa 游戏截图到社区画廊 / Submit a screenshot to the community gallery
+title: "[Gallery] "
+labels: ["gallery-submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢投稿!填好下面几项、提交后会自动生成一个 Pull Request,维护者审核合并后
+        截图就会出现在画廊里。
+        Thanks! Fill this in — submitting opens a pull request automatically; once a
+        maintainer merges it, your shot shows up in the gallery.
+  - type: input
+    id: title_zh
+    attributes:
+      label: 标题(中文) / Title (中文)
+      placeholder: 晨雾北环
+    validations:
+      required: true
+  - type: input
+    id: title_en
+    attributes:
+      label: Title (English)
+      placeholder: Misty Nordschleife
+    validations:
+      required: true
+  - type: input
+    id: by
+    attributes:
+      label: 投稿者 / Your handle
+      description: 会显示在截图下方 / shown under the shot, e.g. @yourname
+      placeholder: "@yourname"
+    validations:
+      required: true
+  - type: dropdown
+    id: ratio
+    attributes:
+      label: 画面比例 / Aspect ratio
+      options:
+        - "4/3"
+        - "1/1"
+        - "3/4"
+        - "16/9"
+      default: 0
+    validations:
+      required: true
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: 截图 / Screenshot
+      description: 把图片直接拖进这个输入框上传(GitHub 会自动生成链接)。/ Drag & drop the image here to upload.
+      placeholder: 拖入图片… / drop image here…
+    validations:
+      required: true

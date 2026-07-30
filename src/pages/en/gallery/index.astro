@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import GalleryPage from '../../../components/pages/GalleryPage.astro';
+import { UI } from '../../../data/ui.js';
+
+const lang = 'en';
+const ui = UI[lang];
+---
+<BaseLayout lang={lang} section="gallery" path="/gallery" title={ui.nav.gallery} description={ui.galleryPage.sub}>
+  <GalleryPage lang={lang} />
+</BaseLayout>

@@ -1,0 +1,56 @@
+---
+import Icon from './Icon.astro';
+import { UI } from '../data/ui.js';
+
+// `server` is an already-resolved server object (see lib/content.js → getServers).
+// `preview` = home-landing variant (capacity bar, but no connect button).
+const { server: s, lang, preview = false } = Astro.props;
+const ui = UI[lang];
+---
+<div class="card elev-sm server-card">
+  <div class="server-card__head">
+    <div>
+      <div class="card-title server-card__name">{s.name}</div>
+      <div class="text-muted server-card__loc">{s.region} · {s.mode}</div>
+    </div>
+    <span class="server-card__status" style={`color: ${s.statusColor};`}>
+      <span class="server-card__dot" aria-hidden="true"></span>{s.statusLabel}
+    </span>
+  </div>
+  <div class="server-card__stats">
+    <div>
+      <div class="text-muted server-card__label">{ui.serversPage.players}</div>
+      <div class="server-card__val server-card__val--accent">{s.playersLabel}</div>
+    </div>
+    <div>
+      <div class="text-muted server-card__label">{ui.serversPage.ping}</div>
+      <div class="server-card__val">{s.ping}</div>
+    </div>
+  </div>
+  <div class="server-card__bar">
+    <div class="server-card__fill" style={`width: ${s.pct}%; background: ${s.statusColor};`}></div>
+  </div>
+  {!preview && (
+    <button type="button" class:list={[s.btnCls, 'server-card__btn']} disabled={s.disabled}>
+      <Icon name="external" size={15} />
+      {ui.serversPage.connect}
+    </button>
+  )}
+</div>
+
+<style>
+  .server-card { gap: var(--space-3); transition: box-shadow .16s ease, border-color .18s ease; border: 1px solid var(--color-divider); }
+  .server-card:hover { border-color: color-mix(in srgb, var(--color-accent) 55%, transparent); box-shadow: var(--shadow-md); }
+  .server-card__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); }
+  .server-card__name { font-size: 20px; font-weight: 800; }
+  .server-card__loc { font-size: 13px; margin-top: 2px; }
+  .server-card__status { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+  .server-card__dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; display: inline-block; }
+  .server-card__stats { display: flex; gap: var(--space-6); padding: var(--space-1) 0; }
+  .server-card__label { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+  .server-card__val { font-family: var(--font-heading); font-size: 22px; }
+  .server-card__val--accent { color: var(--color-accent); }
+  .server-card__bar { height: 6px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden; }
+  .server-card__fill { height: 100%; border-radius: 999px; transition: width .4s ease; }
+  .server-card__btn { min-height: 42px; justify-content: center; }
+</style>

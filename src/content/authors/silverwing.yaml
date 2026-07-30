@@ -1,0 +1,22 @@
+order: 1
+initials: 银
+tint: '--color-accent-2-300'
+ink: '--color-accent-2-900'
+name: { zh: 银翼, en: SilverWing }
+handle: '@silverwing'
+dl: '210k'
+rating: '4.9'
+skills:
+  zh: [赛道建模, 激光扫描, 光照烘焙]
+  en: [Track modeling, Laser scan, Lighting bake]
+bio:
+  zh: >-
+    专注高精度赛道复刻,作品以激光扫描数据为基础,还原真实路面起伏、路缘与周边环境细节。加入 ACN 三年,累计发布十余条赛道。
+  en: >-
+    Focused on high-fidelity track recreations built from laser-scan data —
+    faithful surface undulation, kerbs and surrounding detail. Three years in
+    ACN, a dozen tracks published.
+links:
+  - { label: GitHub, url: '#' }
+  - { label: Bilibili, url: '#' }
+  - { label: 个人主页, url: '#' }

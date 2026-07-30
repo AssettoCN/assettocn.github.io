@@ -1,0 +1,92 @@
+---
+import BrandMark from './BrandMark.astro';
+import Icon from './Icon.astro';
+import { UI } from '../data/ui.js';
+import { localizePath, otherLocale, ROUTES } from '../lib/i18n.js';
+
+// section: 'home' | 'authors' | 'works' | 'servers' | 'gallery' | null
+// path:    canonical (locale-agnostic) path, so the language toggle jumps to the
+//          same page in the other locale.
+const { lang, section = null, path = '/' } = Astro.props;
+const ui = UI[lang];
+
+const links = [
+  { key: 'home', label: ui.nav.home, href: localizePath(lang, ROUTES.home) },
+  { key: 'authors', label: ui.nav.authors, href: localizePath(lang, ROUTES.authors) },
+  { key: 'works', label: ui.nav.works, href: localizePath(lang, ROUTES.works) },
+  { key: 'servers', label: ui.nav.servers, href: localizePath(lang, ROUTES.servers) },
+  { key: 'gallery', label: ui.nav.gallery, href: localizePath(lang, ROUTES.gallery) },
+];
+const langHref = localizePath(otherLocale(lang), path);
+---
+<div class="nav acn-nav">
+  <a class="nav-brand acn-brand" href={links[0].href}>
+    <BrandMark width={34} />
+    AssettoCN
+  </a>
+  {links.map((l) => (
+    <a href={l.href} aria-current={section === l.key ? 'page' : undefined}>{l.label}</a>
+  ))}
+  <button type="button" class="acn-theme" data-theme-toggle aria-label="Toggle dark mode">
+    <span class="acn-theme__ico acn-theme__ico--sun"><Icon name="sun" size={16} /></span>
+    <span class="acn-theme__ico acn-theme__ico--moon"><Icon name="moon" size={16} /></span>
+  </button>
+  <a class="btn btn-secondary acn-lang" href={langHref} hreflang={otherLocale(lang)} rel="alternate">
+    <Icon name="globe" size={15} />
+    {ui.langLabel}
+  </a>
+</div>
+
+<script is:inline>
+  // Theme toggle — flips data-theme on <html> and persists to localStorage.
+  document.querySelectorAll('[data-theme-toggle]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var d = document.documentElement;
+      var next = d.dataset.theme === 'dark' ? 'light' : 'dark';
+      d.dataset.theme = next;
+      try { localStorage.setItem('acn-theme', next); } catch (e) {}
+    });
+  });
+</script>
+
+<style>
+  .acn-nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: color-mix(in srgb, var(--color-bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-inline: var(--space-6);
+    flex-wrap: wrap;
+    row-gap: var(--space-2);
+  }
+  .acn-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    text-decoration: none;
+    color: inherit;
+  }
+  .acn-lang { min-height: 34px; }
+
+  .acn-theme {
+    display: inline-grid; place-items: center;
+    width: 38px; height: 38px; padding: 0;
+    color: var(--color-text); background: transparent;
+    border: 1px solid var(--color-divider); border-radius: 999px;
+    cursor: pointer; transition: border-color .16s ease;
+  }
+  .acn-theme:hover { border-color: var(--color-accent); }
+  /* Light shows the moon (→ go dark); dark shows the sun (→ go light). */
+  .acn-theme__ico { display: none; line-height: 0; }
+  .acn-theme__ico--moon { display: inline-flex; }
+  :global(html[data-theme='dark']) .acn-theme__ico--moon { display: none; }
+  :global(html[data-theme='dark']) .acn-theme__ico--sun { display: inline-flex; }
+
+  @media (max-width: 640px) {
+    .acn-nav { gap: var(--space-3); }
+    .acn-brand { margin-right: auto; }
+  }
+</style>

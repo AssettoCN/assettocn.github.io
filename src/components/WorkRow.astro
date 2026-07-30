@@ -1,0 +1,69 @@
+---
+import ImageSlot from './ImageSlot.astro';
+import Icon from './Icon.astro';
+import { UI } from '../data/ui.js';
+import { localizePath, ROUTES } from '../lib/i18n.js';
+
+// `work` is an already-resolved work object (see lib/content.js → resolveWork).
+// `type` (raw key) is exposed as a data attribute so the works page can filter
+// client-side without re-rendering.
+const { work, lang } = Astro.props;
+const ui = UI[lang];
+const authorHref = localizePath(lang, ROUTES.author(work.authorId));
+---
+<article class="card elev-sm work-row" data-type={work.type}>
+  <div class="work-row__cover">
+    <ImageSlot src={work.cover} seed={work.title} placeholder={work.typeLabel} />
+  </div>
+  <div class="work-row__body">
+    <div class="work-row__meta">
+      {work.official && <span class="tag work-row__official">{ui.official}</span>}
+      <span class:list={['tag', work.tagClass]}>{work.typeLabel}</span>
+      <span class="text-muted" style="font-size:12px;">{work.version} · {work.updated}</span>
+      <span class="work-row__rating">
+        <Icon name="star" size={14} />
+        {work.rating}
+      </span>
+    </div>
+    <h3 class="card-title work-row__title">{work.title}</h3>
+    <div class="text-muted work-row__by">
+      by <a href={authorHref} class="work-row__author">{work.authorName}</a>
+    </div>
+    <p class="work-row__desc">{work.desc}</p>
+  </div>
+</article>
+
+<style>
+  .work-row {
+    flex-direction: row; align-items: stretch; gap: var(--space-4);
+    padding: var(--space-3); transition: box-shadow .16s ease;
+  }
+  .work-row:hover { box-shadow: var(--shadow-md); }
+  .work-row__cover {
+    width: 190px; flex: none; aspect-ratio: 4/3;
+    border-radius: var(--radius-md); overflow: hidden;
+  }
+  .work-row__body {
+    flex: 1; display: flex; flex-direction: column; gap: var(--space-2);
+    padding: var(--space-1) var(--space-2) var(--space-1) 0; min-width: 0;
+  }
+  .work-row__meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .work-row__official {
+    background: var(--color-accent); color: #fff;
+    font-size: 10.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+  }
+  .work-row__rating {
+    margin-left: auto; display: inline-flex; align-items: center; gap: 4px;
+    color: var(--color-accent-700); font-size: 13px;
+  }
+  .work-row__title { font-size: 22px; line-height: 1.15; margin: 0; }
+  .work-row__by { font-size: 13px; }
+  .work-row__author { cursor: pointer; color: var(--color-accent-700); text-decoration: none; }
+  .work-row__author:hover { text-decoration: underline; }
+  .work-row__desc { font-size: 15px; line-height: 1.65; margin: 0; text-wrap: pretty; }
+
+  @media (max-width: 640px) {
+    .work-row { flex-direction: column; }
+    .work-row__cover { width: 100%; }
+  }
+</style>

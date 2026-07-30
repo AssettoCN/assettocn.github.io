@@ -1,0 +1,42 @@
+---
+import SectionHead from './SectionHead.astro';
+import { UI } from '../data/ui.js';
+const { lang } = Astro.props;
+const p = UI[lang].pillars;
+
+const items = [
+  { num: '01', title: p.p1t, body: p.p1b },
+  { num: '02', title: p.p2t, body: p.p2b },
+  { num: '03', title: p.p3t, body: p.p3b },
+];
+---
+<section class="snap-section home-sec">
+  <div class="home-inner">
+    <SectionHead index="01" eyebrow="MISSION" title={p.title} />
+    <div class="pillars__grid">
+      {items.map((it, i) => (
+        <div class="pillar" data-reveal data-reveal-delay={i}>
+          <div class="pillar__num">{it.num}</div>
+          <div class="pillar__title">{it.title}</div>
+          <p class="pillar__body text-muted">{it.body}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .pillars__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+  .pillar {
+    display: flex; flex-direction: column;
+    padding: var(--space-6); border: 1px solid var(--color-divider);
+    background: var(--color-surface); border-radius: calc(var(--radius-lg) * 1.15);
+    transition: border-color .18s ease, transform .18s ease;
+  }
+  .pillar:hover { border-color: color-mix(in srgb, var(--color-accent) 55%, transparent); transform: translateY(-4px); }
+  .pillar__num { font-family: var(--font-heading); font-size: 38px; line-height: 1; margin-bottom: var(--space-4); color: color-mix(in srgb, var(--color-accent) 85%, var(--color-text)); }
+  .pillar__title { font-size: 21px; font-weight: 800; margin-bottom: var(--space-2); }
+  .pillar__body { font-size: 14.5px; line-height: 1.65; margin: 0; }
+
+  @media (max-width: 860px) { .pillars__grid { grid-template-columns: 1fr; } }
+</style>

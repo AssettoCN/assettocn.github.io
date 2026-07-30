@@ -1,0 +1,75 @@
+name: 作品投稿 / Work submission
+description: 投稿一件作品(工具/应用/教程/文档/资料)到社区作品页 / Submit a work
+title: "[Work] "
+labels: ["work-submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        填好下面几项、提交后会自动生成一个 Pull Request,维护者审核合并后作品就会
+        出现在作品页。**作者必须已经收录**——请先用「作者入驻」提交作者。
+        The author must already be listed — submit the author first if needed.
+  - type: input
+    id: author
+    attributes:
+      label: 作者 id 或 handle / Author (id or @handle)
+      description: 必须对应已收录的作者(如 silverwing 或 @silverwing)/ must match a listed author
+      placeholder: "@silverwing"
+    validations:
+      required: true
+  - type: dropdown
+    id: type
+    attributes:
+      label: 类型 / Type
+      options:
+        - tool
+        - app
+        - guide
+        - doc
+        - data
+      default: 0
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: 版本 / Version
+      placeholder: v1.0
+    validations:
+      required: true
+  - type: input
+    id: title_zh
+    attributes:
+      label: 标题(中文)
+      placeholder: 一键调校助手
+    validations:
+      required: true
+  - type: input
+    id: title_en
+    attributes:
+      label: Title (English)
+      placeholder: One-Click Setup Helper
+    validations:
+      required: true
+  - type: textarea
+    id: desc_zh
+    attributes:
+      label: 描述(中文)
+      placeholder: 根据赛道与车辆自动生成基础调校方案……
+    validations:
+      required: true
+  - type: textarea
+    id: desc_en
+    attributes:
+      label: Description (English)
+      placeholder: Auto-generates baseline setups per track and car…
+    validations:
+      required: true
+  - type: textarea
+    id: cover
+    attributes:
+      label: 封面图(可选) / Cover image (optional)
+      description: 可把封面图拖进来上传 / drag a cover image here
+      placeholder: 拖入图片… / drop image here…
+    validations:
+      required: false

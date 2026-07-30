@@ -1,0 +1,66 @@
+---
+/**
+ * Image slot. Renders a real <img> when `src` is given; otherwise a designed,
+ * theme-aware **generative cover** — a tinted block (from the same avatar
+ * palette) with a big translucent monogram + a small label. Deterministic:
+ * the same `seed` always yields the same colour + letter, so a wall of
+ * cover-less works reads as intentional, varied cards rather than blanks.
+ *
+ * Props:
+ *   src?         image URL — when present, renders <img> (with `washed` filter)
+ *   alt?         alt text (defaults to the label)
+ *   placeholder? label shown on the generative cover
+ *   seed?        colour + monogram seed (defaults to the label / alt)
+ *   washed?      apply the design's desaturating filter to real images (default true)
+ */
+const { src, alt, placeholder = '', seed, washed = true, class: className } = Astro.props;
+
+// Palette pairs [tint, ink] — reused from author avatars; both have light+dark
+// definitions in global.css, so the cover adapts to the active theme for free.
+const PALETTE = [
+  ['--color-accent-2-300', '--color-accent-2-900'],
+  ['--color-accent-300', '--color-accent-900'],
+  ['--color-accent-2-200', '--color-accent-2-900'],
+  ['--color-accent-200', '--color-accent-900'],
+  ['--color-neutral-300', '--color-neutral-900'],
+];
+function hash(s) { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return Math.abs(h); }
+const seedStr = String(seed ?? placeholder ?? alt ?? '');
+const [tint, ink] = PALETTE[hash(seedStr) % PALETTE.length];
+const mark = (Array.from(seedStr.trim())[0] || '?').toUpperCase();
+---
+<div class:list={['image-slot', className]}>
+  {src ? (
+    <img src={src} alt={alt ?? placeholder} class:list={[washed && 'washed']} loading="lazy" />
+  ) : (
+    <div class="image-slot__gen" style={`--gen-tint: var(${tint}); --gen-ink: var(${ink});`}>
+      <span class="image-slot__gen-mark" aria-hidden="true">{mark}</span>
+      {placeholder && <span class="image-slot__gen-label">{placeholder}</span>}
+    </div>
+  )}
+</div>
+
+<style>
+  .image-slot { width: 100%; height: 100%; }
+  .image-slot img { width: 100%; height: 100%; object-fit: cover; }
+
+  .image-slot__gen {
+    width: 100%; height: 100%; min-height: 120px;
+    position: relative; overflow: hidden;
+    display: grid; place-items: center; padding: var(--space-4);
+    background: var(--gen-tint); color: var(--gen-ink); text-align: center;
+    container-type: size;
+  }
+  .image-slot__gen-mark {
+    position: absolute; right: -2%; bottom: -14%;
+    font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+    line-height: 1; opacity: .26; user-select: none;
+    font-size: clamp(64px, 30vw, 160px); /* fallback */
+    font-size: 62cqmin;                  /* scales to the box when supported */
+  }
+  .image-slot__gen-label {
+    position: relative; z-index: 1;
+    font-size: 13px; font-weight: 700; letter-spacing: .02em;
+    max-width: 90%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+</style>

@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import AuthorsPage from '../../../components/pages/AuthorsPage.astro';
+import { UI } from '../../../data/ui.js';
+
+const lang = 'en';
+const ui = UI[lang];
+---
+<BaseLayout lang={lang} section="authors" path="/authors" title={ui.nav.authors} description={ui.authorsPage.sub}>
+  <AuthorsPage lang={lang} />
+</BaseLayout>

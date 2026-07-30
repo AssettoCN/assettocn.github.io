@@ -1,0 +1,111 @@
+---
+import WorkRow from '../WorkRow.astro';
+import Icon from '../Icon.astro';
+import BrandMark from '../BrandMark.astro';
+import { UI } from '../../data/ui.js';
+import { getAuthor, worksByAuthor } from '../../lib/content.js';
+import { localizePath, ROUTES } from '../../lib/i18n.js';
+
+const { lang, id } = Astro.props;
+const ui = UI[lang];
+const sel = await getAuthor(id, lang);
+const selWorks = await worksByAuthor(id, lang);
+const authorsHref = localizePath(lang, ROUTES.authors);
+---
+<div class="shell fade-in" style="padding-top: var(--space-6);">
+  <a class="btn btn-ghost detail-back" href={authorsHref}>
+    <Icon name="arrow-left" size={15} />
+    {ui.detail.back}
+  </a>
+
+  <header class="detail-hero">
+    <span class="detail-hero__blob" aria-hidden="true"></span>
+    <div class="detail-hero__avatar" style={sel.avatarStyleLg}>
+      {sel.official ? <BrandMark width={52} /> : sel.initials}
+    </div>
+    <div class="detail-hero__info">
+      <div class="detail-hero__namerow">
+        <h1 class="detail-hero__name">{sel.name}</h1>
+        {sel.official && <span class="tag detail-hero__badge">{ui.official}</span>}
+      </div>
+      <div class="text-muted detail-hero__handle">{sel.handle}</div>
+      <div class="detail-hero__skills">
+        {sel.skills.map((sk) => <span class="tag tag-accent-2">{sk}</span>)}
+      </div>
+      <div class="detail-hero__stats">
+        <div>
+          <div class="detail-stat__n">{sel.workCount}</div>
+          <div class="text-muted detail-stat__l">{ui.detail.statsWorks}</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="detail-cols">
+    <div>
+      <h4 class="detail-h">{ui.detail.aboutTitle}</h4>
+      <p class="detail-about">{sel.bio}</p>
+    </div>
+    <div>
+      <h4 class="detail-h">{ui.detail.linksTitle}</h4>
+      <div class="detail-links">
+        {sel.links.map((lk) => (
+          <a
+            class="btn btn-secondary detail-link"
+            href={lk.url || '#'}
+            target={lk.url && lk.url !== '#' ? '_blank' : undefined}
+            rel={lk.url && lk.url !== '#' ? 'noopener noreferrer' : undefined}
+          >
+            <span>{lk.label}</span>
+            <Icon name="external" size={15} />
+          </a>
+        ))}
+        <button class="btn btn-primary detail-follow">{ui.detail.follow}</button>
+      </div>
+    </div>
+  </div>
+
+  <h4 class="detail-works-title">{ui.detail.worksTitle}</h4>
+  <div class="list-stack">
+    {selWorks.map((w) => <WorkRow work={w} lang={lang} />)}
+  </div>
+</div>
+
+<style>
+  .detail-back { margin: var(--space-2) 0 var(--space-6); padding-left: 0; }
+
+  .detail-hero {
+    background: var(--color-surface); border-radius: var(--radius-lg); padding: var(--space-8);
+    display: grid; grid-template-columns: auto 1fr; gap: var(--space-6); align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .detail-hero__blob {
+    position: absolute; right: -40px; top: -40px; width: 180px; height: 180px;
+    border-radius: 50%; background: color-mix(in srgb, var(--color-accent-200) 55%, transparent);
+  }
+  .detail-hero__info { position: relative; z-index: 1; }
+  .detail-hero__namerow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .detail-hero__name { font-size: clamp(30px, 4.5vw, 40px); margin: 0; }
+  .detail-hero__badge {
+    background: var(--color-accent); color: #fff;
+    font-size: 12px; font-weight: 700; letter-spacing: .04em; padding: 3px 10px; text-transform: uppercase;
+  }
+  .detail-hero__handle { font-size: 15px; margin-bottom: var(--space-3); }
+  .detail-hero__skills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: var(--space-4); }
+  .detail-hero__stats { display: flex; gap: var(--space-8); flex-wrap: wrap; }
+  .detail-stat__n { font-family: var(--font-heading); font-size: 26px; color: var(--color-accent); }
+  .detail-stat__l { font-size: 12px; }
+
+  .detail-cols { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--space-6); margin-top: var(--space-6); }
+  .detail-h { font-size: 18px; margin-bottom: var(--space-2); }
+  .detail-about { font-size: 15px; line-height: 1.7; }
+  .detail-links { display: flex; flex-direction: column; gap: var(--space-2); }
+  .detail-link { justify-content: space-between; }
+  .detail-follow { margin-top: var(--space-2); }
+  .detail-works-title { font-size: 22px; margin: var(--space-8) 0 var(--space-4); }
+
+  @media (max-width: 720px) {
+    .detail-hero { grid-template-columns: 1fr; justify-items: start; }
+    .detail-cols { grid-template-columns: 1fr; }
+  }
+</style>

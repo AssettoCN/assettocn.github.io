@@ -1,0 +1,78 @@
+name: 作者入驻 / Author profile
+description: 申请把某位创作者收录到社区作者页 / Add a creator to the authors page
+title: "[Author] "
+labels: ["author-submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        填好下面几项、提交后会自动生成一个 Pull Request,维护者审核合并后作者页就会
+        出现这位创作者。头像底色会自动分配,提交作品请另用「作品投稿」。
+        Submitting opens a PR; a maintainer merges it to add the author.
+  - type: input
+    id: name_zh
+    attributes:
+      label: 名字(中文)
+      placeholder: 银翼
+    validations:
+      required: true
+  - type: input
+    id: name_en
+    attributes:
+      label: Name (English)
+      placeholder: SilverWing
+    validations:
+      required: true
+  - type: input
+    id: handle
+    attributes:
+      label: Handle(@用户名)
+      placeholder: "@silverwing"
+    validations:
+      required: true
+  - type: input
+    id: initials
+    attributes:
+      label: 头像文字 / Avatar initials(可选,1 个字)
+      description: 留空则自动取名字第一个字 / defaults to the first character of the name
+      placeholder: 银
+    validations:
+      required: false
+  - type: input
+    id: skills_zh
+    attributes:
+      label: 擅长领域(中文,逗号分隔)
+      placeholder: 赛道建模, 激光扫描, 光照烘焙
+    validations:
+      required: true
+  - type: input
+    id: skills_en
+    attributes:
+      label: Skills (English, comma-separated)
+      placeholder: Track modeling, Laser scan, Lighting bake
+    validations:
+      required: true
+  - type: textarea
+    id: bio_zh
+    attributes:
+      label: 简介(中文)
+      placeholder: 专注高精度赛道复刻……
+    validations:
+      required: true
+  - type: textarea
+    id: bio_en
+    attributes:
+      label: Bio (English)
+      placeholder: Focused on high-fidelity track recreations…
+    validations:
+      required: true
+  - type: textarea
+    id: links
+    attributes:
+      label: 外链(每行一个:名称 | 链接)/ Links (one per line — Label | URL)
+      description: 可选。例如 GitHub | https://github.com/you
+      placeholder: |
+        GitHub | https://github.com/you
+        Bilibili | https://space.bilibili.com/xxx
+    validations:
+      required: false

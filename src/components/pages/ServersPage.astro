@@ -1,0 +1,39 @@
+---
+import ServerCard from '../ServerCard.astro';
+import Icon from '../Icon.astro';
+import { UI } from '../../data/ui.js';
+import { getServers } from '../../lib/content.js';
+import { issueFormUrl } from '../../data/site.js';
+
+const { lang } = Astro.props;
+const ui = UI[lang];
+const servers = await getServers(lang);
+const submitUrl = issueFormUrl('server-submission.yml');
+---
+<div class="shell fade-in page-head">
+  <div class="list-head">
+    <div>
+      <h1 class="page-title">{ui.serversPage.title}</h1>
+      <p class="text-muted list-head__sub">{ui.serversPage.sub}</p>
+    </div>
+    {submitUrl ? (
+      <a class="btn btn-primary list-head__action" href={submitUrl} target="_blank" rel="noopener">
+        <Icon name="plus" size={16} />
+        {ui.serversPage.apply}
+      </a>
+    ) : (
+      <button type="button" class="btn btn-primary list-head__action">
+        <Icon name="plus" size={16} />
+        {ui.serversPage.apply}
+      </button>
+    )}
+  </div>
+  <div class="servers-grid">
+    {servers.map((s) => <ServerCard server={s} lang={lang} />)}
+  </div>
+</div>
+
+<style>
+  .servers-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); }
+  @media (max-width: 720px) { .servers-grid { grid-template-columns: 1fr; } }
+</style>

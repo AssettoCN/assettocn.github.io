@@ -1,0 +1,14 @@
+order: 9
+authorId: polaris
+type: tool
+version: 'v3.1'
+updated: '2026-06'
+downloads: '41.2k'
+rating: '4.8'
+title: { zh: 常用 mod 中文本地化包, en: Popular Mods CN Localization }
+desc:
+  zh: >-
+    常用 mod 与工具的中文本地化补丁合集,附安装说明与兼容列表。
+  en: >-
+    A collection of Chinese localization patches for popular mods and tools, with
+    install notes and a compatibility list.

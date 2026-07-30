@@ -1,0 +1,20 @@
+---
+import Hero from '../Hero.astro';
+import Pillars from '../Pillars.astro';
+import AuthorsPreview from '../AuthorsPreview.astro';
+import ServersPreview from '../ServersPreview.astro';
+import GalleryPreview from '../GalleryPreview.astro';
+import JoinCta from '../JoinCta.astro';
+
+// Single-page landing: poster hero + preview bands that link out to the full
+// routed pages (/authors, /servers, /gallery, /works).
+const { lang } = Astro.props;
+---
+<div class="home">
+  <Hero lang={lang} />
+  <Pillars lang={lang} />
+  <AuthorsPreview lang={lang} />
+  <ServersPreview lang={lang} />
+  <GalleryPreview lang={lang} />
+  <JoinCta lang={lang} />
+</div>

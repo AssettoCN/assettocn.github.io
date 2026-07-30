@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import AuthorDetailPage from '../../../components/pages/AuthorDetailPage.astro';
+import { getAuthor, authorIds } from '../../../lib/content.js';
+
+export async function getStaticPaths() {
+  const ids = await authorIds();
+  return ids.map((id) => ({ params: { id } }));
+}
+
+const lang = 'en';
+const { id } = Astro.params;
+const author = await getAuthor(id, lang);
+---
+<BaseLayout lang={lang} section="authors" path={`/authors/${id}`} title={author.name} description={author.bio}>
+  <AuthorDetailPage lang={lang} id={id} />
+</BaseLayout>

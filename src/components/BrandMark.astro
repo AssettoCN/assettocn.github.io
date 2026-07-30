@@ -1,0 +1,21 @@
+---
+/**
+ * The AssettoCN logo mark (4-polygon SVG, ported from the design).
+ * Two-tone: the "ink" polygons take `ink`, the wedge polygons stay AC red.
+ * Props:
+ *   width  render width in px (height derives from the 1054.97×640.76 artwork)
+ *   ink    color for the dark polygons — 'var(--color-text)' on light grounds,
+ *          '#ffffff' on the dark brand panel.
+ */
+const { width = 34, ink = 'var(--color-text)', class: className } = Astro.props;
+const height = Math.round((width * 640.76) / 1054.97 * 100) / 100;
+---
+<svg
+  width={width} height={height} viewBox="0 0 1054.97 640.76"
+  style="display:block;" class={className} role="img" aria-label="AssettoCN"
+>
+  <polygon fill={ink} points="0.5 473.62 0.5 639.58 277.27 369.96 277.27 513.45 406.97 383.75 406.97 74.81 0.5 473.62" />
+  <polygon fill="var(--color-accent)" points="662.8 0 439.14 217.79 439.14 367.41 662.8 148.34 662.8 0" />
+  <polygon fill="var(--color-accent)" points="439.14 403.66 563.73 279.07 563.73 334.73 817.52 85.02 817.52 234.13 541.27 511.92 439.14 511.92 439.14 403.66" />
+  <polygon fill={ink} points="817.52 268.34 698.29 387.58 698.29 602.81 1054.97 247.92 1054.97 93.19 817.52 328.6 817.52 268.34" />
+</svg>

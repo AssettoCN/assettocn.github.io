@@ -1,0 +1,38 @@
+---
+import SectionHead from './SectionHead.astro';
+import AuthorCard from './AuthorCard.astro';
+import { UI } from '../data/ui.js';
+import { getAuthors } from '../lib/content.js';
+import { localizePath, ROUTES } from '../lib/i18n.js';
+
+const { lang } = Astro.props;
+const ui = UI[lang];
+const authors = (await getAuthors(lang)).slice(0, 3);
+const moreHref = localizePath(lang, ROUTES.authors);
+---
+<section class="snap-section home-sec home-sec--surface authors-sec">
+  <div class="home-inner">
+    <SectionHead
+      index="02"
+      eyebrow={ui.nav.authors}
+      title={ui.authorsPage.title}
+      sub={ui.authorsPage.sub}
+      moreHref={moreHref}
+      moreLabel={ui.featured.more}
+    />
+    <div class="authors-sec__grid">
+      {authors.map((a, i) => (
+        <div data-reveal data-reveal-delay={i}>
+          <AuthorCard author={a} lang={lang} preview />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .authors-sec__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+  .authors-sec__grid > div { display: flex; }
+  .authors-sec__grid > div > :global(.author-card) { width: 100%; background: var(--color-bg); }
+  @media (max-width: 860px) { .authors-sec__grid { grid-template-columns: 1fr; } }
+</style>

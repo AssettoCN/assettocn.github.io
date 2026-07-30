@@ -1,0 +1,91 @@
+name: Content submission → PR
+
+# Turns a submission issue (gallery / server / author / work) into the matching
+# src/content/**/<id>.yaml (+ any downloaded image) and opens a PR. Merging the
+# PR is the moderation step; the site rebuilds from the new content.
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  build-entry:
+    if: >
+      contains(github.event.issue.labels.*.name, 'gallery-submission') ||
+      contains(github.event.issue.labels.*.name, 'server-submission') ||
+      contains(github.event.issue.labels.*.name, 'author-submission') ||
+      contains(github.event.issue.labels.*.name, 'work-submission')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Resolve submission kind from label
+        id: kind
+        env:
+          LABELS: ${{ join(github.event.issue.labels.*.name, ',') }}
+        run: |
+          case "$LABELS" in
+            *gallery-submission*) echo "kind=gallery" >> "$GITHUB_OUTPUT" ;;
+            *server-submission*)  echo "kind=server"  >> "$GITHUB_OUTPUT" ;;
+            *author-submission*)  echo "kind=author"  >> "$GITHUB_OUTPUT" ;;
+            *work-submission*)    echo "kind=work"    >> "$GITHUB_OUTPUT" ;;
+            *) echo "kind=" >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      - name: Convert issue → content entry
+        id: convert
+        env:
+          KIND: ${{ steps.kind.outputs.kind }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: node .github/scripts/issue-to-content.mjs
+
+      - name: Open pull request
+        id: cpr
+        if: steps.convert.outputs.status == 'ok'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          base: ${{ github.event.repository.default_branch }}
+          branch: submission/${{ steps.convert.outputs.kind }}-issue-${{ github.event.issue.number }}
+          commit-message: "${{ steps.convert.outputs.kind }}: add ${{ steps.convert.outputs.id }} (closes #${{ github.event.issue.number }})"
+          title: "${{ steps.convert.outputs.kind }}: ${{ steps.convert.outputs.title }} (#${{ github.event.issue.number }})"
+          labels: ${{ steps.convert.outputs.kind }}-submission
+          body: |
+            自动生成自投稿 #${{ github.event.issue.number }}(类型:${{ steps.convert.outputs.kind }})。
+            Auto-generated from submission #${{ github.event.issue.number }} (kind: ${{ steps.convert.outputs.kind }}).
+
+            - 条目 / entry: `${{ steps.convert.outputs.path }}`
+
+            审核合并即上线;合并会自动关闭原 issue。
+            Merge to publish; merging closes the original issue.
+
+      - name: Comment — PR opened
+        if: steps.convert.outputs.status == 'ok'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `✅ 已根据你的投稿生成 PR:${{ steps.cpr.outputs.pull-request-url }}\n审核合并后就会上线。`,
+            });
+
+      - name: Comment — needs fixing
+        if: steps.convert.outputs.status == 'error'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `⚠️ 暂时无法处理这条投稿:\n\n${{ toJSON(steps.convert.outputs.message) }}\n\n可以编辑本 issue 补全后再试。`,
+            });

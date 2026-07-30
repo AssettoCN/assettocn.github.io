@@ -17,9 +17,10 @@ const authors = defineCollection({
   loader: glob({ pattern: '**/*.yaml', base: './src/content/authors' }),
   schema: z.object({
     order: z.number().default(0),          // 列表显示顺序
-    initials: z.string(),                  // 头像上的字
-    tint: z.string(),                      // 头像底色(CSS 变量名)
-    ink: z.string(),                       // 头像字色(CSS 变量名)
+    initials: z.string(),                  // 字母头像上的字
+    tint: z.string(),                      // 字母头像底色(CSS 变量名)
+    ink: z.string(),                       // 字母头像字色(CSS 变量名)
+    avatar: z.string().optional(),         // 可选头像图 '/images/authors/xxx.jpg';留空用字母头像
     name: bilingual,
     handle: z.string(),
     dl: z.string().optional(),

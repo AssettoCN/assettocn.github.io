@@ -170,9 +170,12 @@ const BUILDERS = {
     if (!handle) fail('缺少作者 handle。 / Missing handle.');
     if (!bioZh || !bioEn) fail('缺少简介(中/英)。 / Missing bio.');
     if (!handle.startsWith('@')) handle = '@' + handle;
-    const initials = firstChar(field('initials') || field('头像') || nameZh);
+    const initials = firstChar(field('initials') || field('头像文字') || nameZh);
     const [tint, ink] = AVATAR_PALETTE[issueNumber % AVATAR_PALETTE.length];
     const id = slugify(handle.replace(/^@/, ''), `author-${issueNumber}`);
+    // 可选头像图:传了就下载到 public/images/authors/;没传留空 → 前端回退到字母头像
+    const avatarUrl = imageUrlFrom(field('头像图片') || field('avatar', 'image'));
+    const avatar = avatarUrl ? await downloadImage(avatarUrl, 'authors', id) : '';
     // links textarea: one "Label | URL" per line
     const links = String(field('外链') || field('links'))
       .split('\n').map((l) => l.trim()).filter(Boolean)
@@ -184,6 +187,7 @@ const BUILDERS = {
       `initials: ${q(initials)}\n` +
       `tint: ${q(tint)}\n` +
       `ink: ${q(ink)}\n` +
+      (avatar ? `avatar: ${q(avatar)}\n` : '') +
       `name:\n  zh: ${q(nameZh)}\n  en: ${q(nameEn)}\n` +
       `handle: ${q(handle)}\n` +
       listBlock('skills', { zh: skillsZh, en: skillsEn }) +

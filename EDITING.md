@@ -13,7 +13,7 @@
 
 | 我想改… | 改这里 |
 |---|---|
-| **某个作者(名字/简介/技能/外链/头像色)** | `src/content/authors/<id>.yaml`(一人一个文件) |
+| **某个作者(名字/简介/技能/外链/头像)** | `src/content/authors/<id>.yaml`(一人一个文件)。头像默认用字母字牌(`initials`+`tint`/`ink`);想用真实头像图就加 `avatar: '/images/authors/xxx.jpg'`,留空即回退字母字牌 |
 | **新增作者** | 在 `src/content/authors/` 新建一个 `.yaml`,文件名就是作者 id(也是详情页 URL);详情页自动生成 |
 | **作者外链地址** | 该作者 yaml 里 `links` 的 `url`(把 `'#'` 换成真链接,填了会自动新开标签页) |
 | **某个作品(标题/类型/版本/下载量/评分/描述)** | `src/content/works/<id>.yaml`(一件一个文件) |
@@ -37,9 +37,10 @@
 
 ```yaml
 order: 7                       # 列表里的排序
-initials: 新                    # 头像上的字
-tint: '--color-accent-300'     # 头像底色(用 global.css 里的颜色变量名)
-ink:  '--color-accent-900'     # 头像字色
+initials: 新                    # 字母头像上的字
+tint: '--color-accent-300'     # 字母头像底色(用 global.css 里的颜色变量名)
+ink:  '--color-accent-900'     # 字母头像字色
+# avatar: '/images/authors/newbie.jpg'  # 可选:真实头像图;留空用上面的字母头像
 name:   { zh: 新人, en: Newbie }
 handle: '@newbie'
 skills:
@@ -95,7 +96,7 @@ desc:
 
 截图 / 服务器 / 作者 / 作品四类内容都能让访客通过 GitHub 投稿:在对应页面点投稿按钮
 → 填一个 Issue 表单 → GitHub Action 自动转成对应的 `src/content/**/<id>.yaml`
-(截图/作品还会下载图片),并开一个待审核 PR,你合并即上线。启用只需在
+(截图 / 作品封面 / 作者头像还会下载图片),并开一个待审核 PR,你合并即上线。启用只需在
 `src/data/site.js` 填 `repo: 'owner/repo'`,并在仓库设置里允许 Actions 创建 PR。
 投稿强制需要 GitHub 账号。细节见 **`.github/SUBMISSIONS.md`**。
 

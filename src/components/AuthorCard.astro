@@ -13,7 +13,11 @@ const href = localizePath(lang, ROUTES.author(author.id));
 <a class:list={['card', 'elev-sm', 'author-card', { 'author-card--preview': preview }]} href={href}>
   <div class="author-card__head">
     <div class="author-card__avatar" style={author.avatarStyle}>
-      {author.official ? <BrandMark width={30} /> : author.initials}
+      {author.official
+        ? <BrandMark width={30} />
+        : author.avatar
+          ? <img class="author-card__avatar-img" src={author.avatar} alt={author.name} loading="lazy" />
+          : author.initials}
     </div>
     <div>
       <div class="author-card__namerow">
@@ -42,6 +46,8 @@ const href = localizePath(lang, ROUTES.author(author.id));
   }
   .author-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
   .author-card__head { display: flex; gap: var(--space-3); align-items: center; }
+  .author-card__avatar { overflow: hidden; }
+  .author-card__avatar-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
   .author-card__namerow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .author-card__name { font-size: 19px; }
   .author-card__badge {

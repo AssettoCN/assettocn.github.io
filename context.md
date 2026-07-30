@@ -128,8 +128,8 @@ Scroll-snap is enabled only on the home route via `snap` → `data-snap` on `<ht
   else a deterministic **generative cover** — a tinted block (avatar palette,
   theme-aware) with a big monogram + label, seeded by the title. So cover-less
   works/shots read as intentional varied cards, never broken images. Author
-  avatars are always generated monograms (or the logo, for official), never
-  photos.
+  avatars default to a generated monogram (or the logo, for official); an
+  optional uploaded `avatar` image, when present, is shown instead.
 - **i18n without duplication**: page bodies live in shared `pages/` components;
   only thin per-locale route files differ. `path` is always the canonical
   (no-`/en`) path so `hreflang` + the language toggle resolve both locales.

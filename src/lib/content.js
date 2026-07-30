@@ -57,6 +57,7 @@ function resolveAuthorEntry(entry, lang, works) {
     initials: a.initials,
     tint: a.tint,
     ink: a.ink,
+    avatar: a.avatar,                // optional photo; monogram is the fallback
     name: a.name[lang],
     handle: a.handle,
     bio: a.bio[lang],

@@ -21,7 +21,11 @@ const authorsHref = localizePath(lang, ROUTES.authors);
   <header class="detail-hero">
     <span class="detail-hero__blob" aria-hidden="true"></span>
     <div class="detail-hero__avatar" style={sel.avatarStyleLg}>
-      {sel.official ? <BrandMark width={52} /> : sel.initials}
+      {sel.official
+        ? <BrandMark width={52} />
+        : sel.avatar
+          ? <img class="detail-hero__avatar-img" src={sel.avatar} alt={sel.name} />
+          : sel.initials}
     </div>
     <div class="detail-hero__info">
       <div class="detail-hero__namerow">
@@ -83,6 +87,8 @@ const authorsHref = localizePath(lang, ROUTES.authors);
     position: absolute; right: -40px; top: -40px; width: 180px; height: 180px;
     border-radius: 50%; background: color-mix(in srgb, var(--color-accent-200) 55%, transparent);
   }
+  .detail-hero__avatar { overflow: hidden; }
+  .detail-hero__avatar-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
   .detail-hero__info { position: relative; z-index: 1; }
   .detail-hero__namerow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .detail-hero__name { font-size: clamp(30px, 4.5vw, 40px); margin: 0; }

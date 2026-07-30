@@ -21,8 +21,9 @@
 | **官方出品(ACN 自己的作品)** | 把该作品的 `authorId` 设为 `acn`(官方作者见 `src/content/authors/acn.yaml`)——自动加红色「官方」徽标、Logo 头像,并在作品页置顶。官方作品只由维护者直接加 yaml,不走公开投稿 |
 | **作品封面图** | 该作品 yaml 里加 `cover: '/images/xxx.jpg'`(图片放 `public/images/`) |
 | **作品分类(工具/应用/教程/文档/资料)** | `src/data/work-types.js`(改这里会同步影响 schema 校验和作品页筛选按钮) |
-| **某个服务器(名称/区域/模式/人数/延迟/在线)** | `src/content/servers/<id>.yaml`(一台一个文件;`online:false` 会显示离线并禁用接入按钮) |
-| **新增服务器** | 在 `src/content/servers/` 新建一个 `.yaml` |
+| **某个服务器(分类/名称/区域/模式/人数/延迟/在线)** | `src/content/servers/<id>.yaml`(一台一个文件;`type` 为分类,见下行;`online:false` 会显示离线并禁用接入按钮) |
+| **新增服务器** | 在 `src/content/servers/` 新建一个 `.yaml`;`type` 必填,取 `circuit/drift/touge/cruise` 之一 |
+| **服务器分类(围场/漂移/山路/漫游)** | `src/data/server-types.js`(改这里会同步影响 schema 校验、服务器页筛选按钮和卡片徽标) |
 | **某张截图(标题/投稿人/比例/图片)** | `src/content/gallery/<id>.yaml`(`ratio` 如 `'16/9'`,`cover` 可选) |
 | **新增截图** | 在 `src/content/gallery/` 新建一个 `.yaml` |
 | **界面文案(导航/首页各板块/按钮/页脚,中+英)** | `src/data/ui.js` |

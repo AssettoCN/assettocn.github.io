@@ -61,8 +61,9 @@ Scroll-snap is enabled only on the home route via `snap` → `data-snap` on `<ht
     `SectionHead` — the home landing bands (see above).
   - `WorkRow.astro` — horizontal work card; carries `data-type` for filtering.
   - `AuthorCard.astro` — author card; `preview` prop = home variant (no footer).
-  - `ServerCard.astro` — server card w/ status dot + capacity bar; `preview`
-    prop hides the connect button (home preview vs. full `/servers`).
+  - `ServerCard.astro` — server card w/ category badge + status dot + capacity
+    bar; carries `data-type` for filtering; `preview` prop hides the connect
+    button (home preview vs. full `/servers`).
   - `ImageSlot.astro` — styled placeholder when empty, real `<img>` when `src` set.
   - `Icon.astro` — inline SVG icon set (incl. `sun`/`moon` for the toggle).
   - `BrandMark.astro` — the real 4-polygon AssettoCN logo (two-tone: ink + AC red).
@@ -77,12 +78,14 @@ Scroll-snap is enabled only on the home route via `snap` → `data-snap` on `<ht
    isn't guaranteed, every schema has an `order` field used for sorting.
 2. **Config / copy** stays in `src/data/`: `ui.js` (all UI strings + footer),
    `home.js` (home telemetry `stats`, bilingual), `site.js` (domain),
-   `work-types.js` (`TYPE` = category labels + tag classes; also the source of
-   the `type` enum in the works schema).
+   `work-types.js` (`TYPE` = work category labels + tag classes; source of the
+   `type` enum in the works schema), `server-types.js` (`SERVER_TYPE` = server
+   category labels + tags; source of the `type` enum in the servers schema).
 3. `src/lib/content.js` **resolves** collection entries for a given `lang` into
    render-ready objects: `getAuthors`, `getAuthor`, `getWorks`, `worksByAuthor`,
-   `authorIds`, `getServers` (computes `statusColor`/`pct`/labels/`btnCls`),
-   `getGallery`, `workFilters`, `avatarCss`. Most are **async** (`getCollection`).
+   `authorIds`, `getServers` (computes category label/tag +
+   `statusColor`/`pct`/labels/`btnCls`), `getGallery`, `workFilters`,
+   `serverFilters`, `avatarCss`. Most are **async** (`getCollection`).
 4. `src/lib/i18n.js` — locale helpers (`LOCALES`, `DEFAULT_LOCALE`,
    `localizePath`, `otherLocale`, `ROUTES` incl. `servers`/`gallery`).
 5. Page files `await` the resolvers at build time; components receive plain
@@ -94,6 +97,8 @@ Scroll-snap is enabled only on the home route via `snap` → `data-snap` on `<ht
   validation lives here.
 - `src/data/work-types.js` — `TYPE` map; its keys are the `type` enum used by the
   works schema and the works-page filter.
+- `src/data/server-types.js` — `SERVER_TYPE` map (circuit/drift/touge/cruise); its
+  keys are the `type` enum used by the servers schema and the servers-page filter.
 - `src/data/site.js` — **single source** for the site `url` (domain).
   `astro.config.mjs` and the `robots.txt` endpoint both import `SITE.url`.
 - `src/data/home.js` — home telemetry `stats` (bilingual). No hero image config
@@ -128,8 +133,10 @@ Scroll-snap is enabled only on the home route via `snap` → `data-snap` on `<ht
 - **i18n without duplication**: page bodies live in shared `pages/` components;
   only thin per-locale route files differ. `path` is always the canonical
   (no-`/en`) path so `hreflang` + the language toggle resolve both locales.
-- **Works filter** (`WorksPage.astro`): all works are server-rendered (SEO +
-  no-JS fallback); a small inline script toggles visibility by `data-type`.
+- **Type filters** (`WorksPage.astro`, `ServersPage.astro`): all items are
+  server-rendered (SEO + no-JS fallback); a small inline script toggles
+  visibility by `data-type`. Works filter by work category, servers by discipline
+  (circuit/drift/touge/cruise) — same pattern, different `*-types.js` source.
 - **Progressive enhancement**: scroll-snap, reveal animations and the theme
   toggle all no-op gracefully without JS (content stays visible; reduced-motion
   disables snap + reveal).

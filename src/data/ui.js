@@ -20,7 +20,7 @@ export const UI = {
     authorsPage: { title: '社区作者', sub: '认识这些为 ACN 持续创作的 modder,点开可查看完整介绍与作品。', submit: '申请入驻' },
     worksPage: { title: '社区作品', sub: '由 ACN 社区开发与整理 —— 工具、应用、教程与文档资料,帮你更好地上手 Assetto Corsa。可按类型筛选。', submit: '投稿作品' },
     serversPage: {
-      title: '服务器列表', sub: '社区收录的各家 Assetto Corsa 服务器,点击即可获取接入信息。运营自己的服务器?也欢迎申请收录。',
+      title: '服务器列表', sub: '社区收录的各家 Assetto Corsa 服务器,可按玩法(围场 / 漂移 / 山路 / 漫游)筛选,点击即可获取接入信息。运营自己的服务器?也欢迎申请收录。',
       connect: '接入信息', apply: '申请收录服务器', online: '在线', offline: '离线', players: '在线人数', ping: '延迟',
     },
     galleryPage: { title: '截图画廊', sub: '社区玩家投稿的游戏截图 —— 分享你镜头下的神力科莎。', submit: '投稿截图', by: '投稿者' },
@@ -76,7 +76,7 @@ export const UI = {
     authorsPage: { title: 'Community authors', sub: 'Meet the modders building for ACN. Open a card for the full profile and catalogue.', submit: 'Apply as author' },
     worksPage: { title: 'Community works', sub: 'Built and curated by the ACN community — tools, apps, guides and documentation to help you get the most out of Assetto Corsa. Filter by type.', submit: 'Submit a work' },
     serversPage: {
-      title: 'Server list', sub: 'Assetto Corsa servers listed by the community — click for connection details. Running your own? You are welcome to apply.',
+      title: 'Server list', sub: 'Assetto Corsa servers listed by the community — filter by discipline (circuit / drift / touge / cruise) and click for connection details. Running your own? You are welcome to apply.',
       connect: 'Connection info', apply: 'Apply to list a server', online: 'Online', offline: 'Offline', players: 'Players', ping: 'Ping',
     },
     galleryPage: { title: 'Screenshot gallery', sub: 'Screenshots submitted by community players — share your view of Assetto Corsa.', submit: 'Submit a shot', by: 'by' },

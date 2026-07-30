@@ -1,4 +1,5 @@
 order: 5
+type: circuit
 name:   { zh: 新手上路服, en: Rookie Server }
 region: { zh: 华中 · 武汉, en: Central · Wuhan }
 mode:   { zh: 休闲练习, en: Casual practice }

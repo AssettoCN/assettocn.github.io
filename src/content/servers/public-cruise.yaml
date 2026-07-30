@@ -1,4 +1,5 @@
 order: 1
+type: cruise
 name:   { zh: ACN 公共巡航服, en: ACN Public Cruise }
 region: { zh: 华东 · 上海, en: East · Shanghai }
 mode:   { zh: 自由巡航, en: Free roam }

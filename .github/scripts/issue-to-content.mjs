@@ -91,6 +91,16 @@ async function downloadImage(url, dir, id) {
   }
 }
 
+/** Map a server-category dropdown value (e.g. "漂移 Drift") to a SERVER_TYPE key.
+ *  Keep keys in sync with src/data/server-types.js. Defaults to 'circuit'. */
+function serverTypeFrom(text) {
+  const t = String(text).toLowerCase();
+  if (/漂移|drift/.test(t)) return 'drift';
+  if (/山路|山道|秋名|touge/.test(t)) return 'touge';
+  if (/漫游|巡航|自由|cruise|roam/.test(t)) return 'cruise';
+  return 'circuit'; // 围场:竞速/排位/耐力/新手等默认归此
+}
+
 const AVATAR_PALETTE = [
   ['--color-accent-2-300', '--color-accent-2-900'],
   ['--color-accent-300', '--color-accent-900'],
@@ -136,9 +146,11 @@ const BUILDERS = {
     if (!modeZh || !modeEn) fail('缺少模式(中/英)。 / Missing mode.');
     const max = parseInt(maxRaw, 10);
     if (!Number.isFinite(max) || max <= 0) fail('最大人数需要是一个正整数。 / Max players must be a positive number.');
+    const type = serverTypeFrom(field('类型') || field('category') || field('分类'));
     const id = `${slugify(nameEn, 'server')}-${issueNumber}`;
     const yaml =
       `order: ${order}\n` +
+      `type: ${q(type)}\n` +
       `name:\n  zh: ${q(nameZh)}\n  en: ${q(nameEn)}\n` +
       `region:\n  zh: ${q(regionZh)}\n  en: ${q(regionEn)}\n` +
       `mode:\n  zh: ${q(modeZh)}\n  en: ${q(modeEn)}\n` +

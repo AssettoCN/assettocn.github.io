@@ -4,6 +4,7 @@
 import { getCollection } from 'astro:content';
 import { UI } from '../data/ui.js';
 import { TYPE } from '../data/work-types.js';
+import { SERVER_TYPE } from '../data/server-types.js';
 
 // The official AssettoCN publisher identity. Authors/works with this id get an
 // "official" badge + logo avatar, and official works are pinned to the top.
@@ -108,8 +109,12 @@ export async function getServers(lang) {
   return list.map((e) => {
     const s = e.data;
     const online = s.online;
+    const tm = SERVER_TYPE[s.type];
     return {
       id: e.id,
+      type: s.type,                    // raw key — exposed as data-type for filtering
+      typeLabel: tm.label[lang],
+      typeTag: tm.tag,
       name: s.name[lang],
       region: s.region[lang],
       mode: s.mode[lang],
@@ -150,5 +155,14 @@ export function workFilters(lang) {
   return [
     { key: 'all', label: ui.filterAll },
     ...Object.keys(TYPE).map((k) => ({ key: k, label: TYPE[k].label[lang] })),
+  ];
+}
+
+/** Filter tabs for the servers page: 'all' + every server-type key. */
+export function serverFilters(lang) {
+  const ui = UI[lang];
+  return [
+    { key: 'all', label: ui.filterAll },
+    ...Object.keys(SERVER_TYPE).map((k) => ({ key: k, label: SERVER_TYPE[k].label[lang] })),
   ];
 }

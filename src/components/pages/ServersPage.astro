@@ -2,12 +2,13 @@
 import ServerCard from '../ServerCard.astro';
 import Icon from '../Icon.astro';
 import { UI } from '../../data/ui.js';
-import { getServers } from '../../lib/content.js';
+import { getServers, serverFilters } from '../../lib/content.js';
 import { issueFormUrl } from '../../data/site.js';
 
 const { lang } = Astro.props;
 const ui = UI[lang];
 const servers = await getServers(lang);
+const filters = serverFilters(lang);
 const submitUrl = issueFormUrl('server-submission.yml');
 ---
 <div class="shell fade-in page-head">
@@ -28,12 +29,54 @@ const submitUrl = issueFormUrl('server-submission.yml');
       </button>
     )}
   </div>
-  <div class="servers-grid">
+  <div class="servers-filters" role="group" aria-label={ui.serversPage.title}>
+    {filters.map((f) => (
+      <button
+        type="button"
+        class:list={['btn', f.key === 'all' ? 'btn-primary' : 'btn-secondary', 'servers-filter']}
+        data-filter={f.key}
+        aria-pressed={f.key === 'all' ? 'true' : 'false'}
+      >{f.label}</button>
+    ))}
+  </div>
+
+  <div id="servers-list" class="servers-grid">
     {servers.map((s) => <ServerCard server={s} lang={lang} />)}
   </div>
 </div>
 
 <style>
+  .servers-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: var(--space-8); }
+  .servers-filter { min-height: 34px; }
   .servers-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); }
   @media (max-width: 720px) { .servers-grid { grid-template-columns: 1fr; } }
 </style>
+
+<script>
+  // Client-side category filter. All servers are server-rendered (SEO + no-JS
+  // fallback); this only shows/hides them by data-type. Mirrors the works page.
+  function initServersFilter() {
+    const buttons = document.querySelectorAll('.servers-filter');
+    const items = document.querySelectorAll('#servers-list [data-type]');
+    if (!buttons.length) return;
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const filter = btn.getAttribute('data-filter');
+        buttons.forEach((b) => {
+          const active = b === btn;
+          b.classList.toggle('btn-primary', active);
+          b.classList.toggle('btn-secondary', !active);
+          b.setAttribute('aria-pressed', String(active));
+        });
+        items.forEach((item) => {
+          const show = filter === 'all' || item.getAttribute('data-type') === filter;
+          (item as HTMLElement).style.display = show ? '' : 'none';
+        });
+      });
+    });
+  }
+
+  initServersFilter();
+  document.addEventListener('astro:page-load', initServersFilter);
+</script>

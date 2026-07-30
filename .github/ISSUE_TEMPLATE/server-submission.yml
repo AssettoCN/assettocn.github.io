@@ -37,6 +37,18 @@ body:
       placeholder: East · Shanghai
     validations:
       required: true
+  - type: dropdown
+    id: type
+    attributes:
+      label: 类型 / Category
+      description: 服务器主要玩法 / Primary discipline
+      options:
+        - 围场 Circuit
+        - 漂移 Drift
+        - 山路 Touge
+        - 漫游 Cruise
+    validations:
+      required: true
   - type: input
     id: mode_zh
     attributes:

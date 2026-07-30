@@ -1,6 +1,7 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { TYPE } from './data/work-types.js';
+import { SERVER_TYPE } from './data/server-types.js';
 
 // 双语字段的通用 schema —— zh / en 都必须填,漏一个构建时会报错并指出文件。
 const bilingual = z.object({ zh: z.string(), en: z.string() });
@@ -8,6 +9,8 @@ const bilingualList = z.object({ zh: z.array(z.string()), en: z.array(z.string()
 
 // 作品分类的合法取值,直接取自 work-types.js,增删分类只改那一处。
 const typeKeys = Object.keys(TYPE) as [string, ...string[]];
+// 服务器分类的合法取值,取自 server-types.js。
+const serverTypeKeys = Object.keys(SERVER_TYPE) as [string, ...string[]];
 
 // 作者集合:src/content/authors/<id>.yaml —— 文件名即作者 id(详情页 URL)。
 const authors = defineCollection({
@@ -51,9 +54,10 @@ const servers = defineCollection({
   loader: glob({ pattern: '**/*.yaml', base: './src/content/servers' }),
   schema: z.object({
     order: z.number().default(0),
+    type: z.enum(serverTypeKeys),          // 围场/漂移/山路/漫游(见 server-types.js)
     name: bilingual,
     region: bilingual,
-    mode: bilingual,
+    mode: bilingual,                       // 细分玩法文案,自由文本
     players: z.number().default(0),
     max: z.number(),
     ping: z.string().default('—'),

@@ -83,8 +83,8 @@ Scroll-snap is enabled only on the home route via `snap` → `data-snap` on `<ht
    category labels + tags; source of the `type` enum in the servers schema).
 3. `src/lib/content.js` **resolves** collection entries for a given `lang` into
    render-ready objects: `getAuthors`, `getAuthor`, `getWorks`, `worksByAuthor`,
-   `authorIds`, `getServers` (computes category label/tag +
-   `statusColor`/`pct`/labels/`btnCls`), `getGallery`, `workFilters`,
+   `authorIds`, `getServers` (computes category label/tag + status colour/label +
+   static capacity label + CM `joinUrl` from `address`), `getGallery`, `workFilters`,
    `serverFilters`, `avatarCss`. Most are **async** (`getCollection`).
 4. `src/lib/i18n.js` — locale helpers (`LOCALES`, `DEFAULT_LOCALE`,
    `localizePath`, `otherLocale`, `ROUTES` incl. `servers`/`gallery`).

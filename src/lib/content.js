@@ -127,21 +127,16 @@ export async function getServers(lang) {
       name: s.name[lang],
       region: s.region[lang],
       mode: s.mode[lang],
-      ping: s.ping,
+      // 静态容量文案(不再显示实时人数/延迟——无法从静态站保持真实)。
+      capacityLabel: lang === 'zh' ? `最多 ${s.max} 人` : `up to ${s.max}`,
       homepage: s.homepage,
       address: s.address,
       // 由 ip:port 生成 Content Manager 一键加入链接(acstuff → acmanager:// 协议)
       joinUrl: cmJoinUrl(s.address),
       online,
-      statusTag: online ? 'tag-accent-2' : 'tag-neutral',
-      // Solid colour used by the status dot + capacity bar (green when live).
+      // 在线/离线为维护者在 yaml 手动标注,状态点颜色。
       statusColor: online ? '#33d17a' : 'var(--color-neutral-600)',
       statusLabel: online ? ui.serversPage.online : ui.serversPage.offline,
-      // Capacity fill for the progress bar, 0–100.
-      pct: online ? Math.round((s.players / s.max) * 100) : 0,
-      playersLabel: online ? `${s.players} / ${s.max}` : `0 / ${s.max}`,
-      btnCls: online ? 'btn btn-secondary btn-block' : 'btn btn-ghost btn-block',
-      disabled: !online,
     };
   });
 }

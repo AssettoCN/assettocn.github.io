@@ -60,9 +60,7 @@ const servers = defineCollection({
     name: bilingual,
     region: bilingual,
     mode: bilingual,                       // 细分玩法文案,自由文本
-    players: z.number().default(0),
-    max: z.number(),
-    ping: z.string().default('—'),
+    max: z.number(),                       // 最大容量(静态,仅展示"最多 N 人")
     online: z.boolean().default(true),
     homepage: z.string().optional(),       // 介绍/主页(非接入地址),如 https://srp.udstu.com
     address: z.string().optional(),        // 实际接入地址 ip:port,如 120.26.18.63:8410

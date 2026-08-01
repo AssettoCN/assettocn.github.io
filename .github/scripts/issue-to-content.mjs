@@ -157,9 +157,7 @@ const BUILDERS = {
       `name:\n  zh: ${q(nameZh)}\n  en: ${q(nameEn)}\n` +
       `region:\n  zh: ${q(regionZh)}\n  en: ${q(regionEn)}\n` +
       `mode:\n  zh: ${q(modeZh)}\n  en: ${q(modeEn)}\n` +
-      `players: 0\n` +
       `max: ${max}\n` +
-      `ping: ${q('—')}\n` +
       `online: true\n`;
     if (homepage) yaml += `homepage: ${q(homepage)}\n`;
     if (address) yaml += `address: ${q(address)}\n`;

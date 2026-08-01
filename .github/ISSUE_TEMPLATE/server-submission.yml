@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         填好下面几项、提交后会自动生成一个 Pull Request,维护者审核合并后服务器
-        就会出现在列表里(收录时默认标记为在线、当前人数 0)。
+        就会出现在列表里(收录时默认标记为在线)。
         Submitting opens a PR automatically; a maintainer merges it to list your server.
   - type: input
     id: name_zh

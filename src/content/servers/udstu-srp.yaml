@@ -3,9 +3,7 @@ type: cruise
 name: { zh: 'UDSTU SRP · 首都高', en: 'UDSTU SRP · Shutoko' }
 region: { zh: '中国 · 杭州', en: 'Hangzhou, CN' }
 mode: { zh: '首都高巡航对战 · 带交通流', en: 'Shutoko cruise & battle · with traffic' }
-players: 7
 max: 59
-ping: '—'
 online: true
 homepage: 'https://srp.udstu.com'
 address: '120.26.18.63:8410'

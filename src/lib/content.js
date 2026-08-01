@@ -33,8 +33,6 @@ function resolveWorkEntry(entry, lang, authorsById) {
     type: w.type,
     version: w.version,
     updated: w.updated,
-    downloads: w.downloads,
-    rating: w.rating,
     cover: w.cover,
     link: w.link,
     title: w.title[lang],
@@ -45,7 +43,6 @@ function resolveWorkEntry(entry, lang, authorsById) {
     authorName: author ? author.data.name[lang] : '',
     coverId: 'cover-' + entry.id,
     coverPlaceholder: tm.label[lang] + ' · ' + ui.coverHint,
-    dlLabel: ui.dlLabel,
   };
 }
 

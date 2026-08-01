@@ -20,12 +20,6 @@ const authorHref = localizePath(lang, ROUTES.author(work.authorId));
       {work.official && <span class="tag work-row__official">{ui.official}</span>}
       <span class:list={['tag', work.tagClass]}>{work.typeLabel}</span>
       <span class="text-muted" style="font-size:12px;">{work.version} · {work.updated}</span>
-      {work.rating && (
-        <span class="work-row__rating">
-          <Icon name="star" size={14} />
-          {work.rating}
-        </span>
-      )}
     </div>
     <h3 class="card-title work-row__title">{work.title}</h3>
     <div class="text-muted work-row__by">
@@ -59,10 +53,6 @@ const authorHref = localizePath(lang, ROUTES.author(work.authorId));
   .work-row__official {
     background: var(--color-accent); color: #fff;
     font-size: 10.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
-  }
-  .work-row__rating {
-    margin-left: auto; display: inline-flex; align-items: center; gap: 4px;
-    color: var(--color-accent-700); font-size: 13px;
   }
   .work-row__title { font-size: 22px; line-height: 1.15; margin: 0; }
   .work-row__by { font-size: 13px; }

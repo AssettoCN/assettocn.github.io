@@ -26,7 +26,7 @@ export const UI = {
     galleryPage: { title: '截图画廊', sub: '社区玩家投稿的游戏截图 —— 分享你镜头下的神力科莎。', submit: '投稿截图', by: '投稿者' },
     detail: {
       back: '返回作者列表', aboutTitle: '关于', linksTitle: '链接', worksTitle: 'TA 的作品',
-      statsWorks: '作品', statsDl: '累计下载', statsRating: '平均评分',
+      statsWorks: '作品',
       worksUnit: '个作品', view: '查看',
     },
     filterAll: '全部',
@@ -54,7 +54,7 @@ export const UI = {
       ],
     },
     footer: 'AssettoCN · 由社区驱动 · 仅作原型演示',
-    dlLabel: '下载', viewLabel: '查看', coverHint: '封面',
+    viewLabel: '查看', coverHint: '封面',
   },
   en: {
     langLabel: '中',
@@ -82,7 +82,7 @@ export const UI = {
     galleryPage: { title: 'Screenshot gallery', sub: 'Screenshots submitted by community players — share your view of Assetto Corsa.', submit: 'Submit a shot', by: 'by' },
     detail: {
       back: 'Back to authors', aboutTitle: 'About', linksTitle: 'Links', worksTitle: 'Their works',
-      statsWorks: 'Works', statsDl: 'Downloads', statsRating: 'Avg. rating',
+      statsWorks: 'Works',
       worksUnit: 'works', view: 'View',
     },
     filterAll: 'All',
@@ -110,6 +110,6 @@ export const UI = {
       ],
     },
     footer: 'AssettoCN · Community-driven · Prototype demo only',
-    dlLabel: 'Download', viewLabel: 'View', coverHint: 'cover',
+    viewLabel: 'View', coverHint: 'cover',
   },
 };

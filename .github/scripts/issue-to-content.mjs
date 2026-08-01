@@ -225,7 +225,6 @@ const BUILDERS = {
       `type: ${q(type)}\n` +
       `version: ${q(version)}\n` +
       `updated: ${q(currentMonth())}\n` +
-      `downloads: ${q('—')}\n` +
       `title:\n  zh: ${q(titleZh)}\n  en: ${q(titleEn)}\n` +
       `desc:\n  zh: ${q(descZh)}\n  en: ${q(descEn)}\n`;
     if (cover) yaml += `cover: ${q(cover)}\n`;

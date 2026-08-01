@@ -23,8 +23,6 @@ const authors = defineCollection({
     avatar: z.string().optional(),         // 可选头像图 '/images/authors/xxx.jpg';留空用字母头像
     name: bilingual,
     handle: z.string(),
-    dl: z.string().optional(),
-    rating: z.string().optional(),
     skills: bilingualList,
     bio: bilingual,
     links: z
@@ -42,8 +40,6 @@ const works = defineCollection({
     type: z.enum(typeKeys),                // 工具/应用/教程/文档/资料
     version: z.string(),
     updated: z.string(),
-    downloads: z.string().default('—'),
-    rating: z.string().optional(),
     title: bilingual,
     desc: bilingual,
     cover: z.string().optional(),          // 封面图,填 '/images/xxx.jpg'

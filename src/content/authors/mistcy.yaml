@@ -1,0 +1,18 @@
+order: 17
+initials: M
+tint: '--color-accent-2-300'
+ink: '--color-accent-2-900'
+avatar: '/images/authors/mistcy.jpg'
+name: { zh: 'MISTCY', en: 'MISTCY' }
+handle: '@mistcy'
+skills:
+  zh: [车辆模组, 宝马系]
+  en: [Vehicle mods, BMW builds]
+bio:
+  zh: >-
+    车辆模组作者。代表作:BMW F02 750Li 2009。
+  en: >-
+    Vehicle mod author. Notable: BMW F02 750Li 2009.
+links:
+  - { label: 'B站', url: 'https://space.bilibili.com/623786059' }
+  - { label: 'F02 演示', url: 'https://b23.tv/AES7Pug' }

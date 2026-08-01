@@ -1,0 +1,21 @@
+order: 13
+initials: J
+tint: '--color-accent-300'
+ink: '--color-accent-900'
+avatar: '/images/authors/jay.jpg'
+name: { zh: 'Jay', en: 'Jay' }
+handle: '@jay'
+skills:
+  zh: [赛道转模, 车辆转模]
+  en: [Track ports, Vehicle ports]
+bio:
+  zh: >-
+    赛道与车辆转模作者,随缘制作,取决于找到什么奇奇怪怪的模。
+    代表作:2024 起亚 Picanto GT-line、2023 方程豹 豹5。
+  en: >-
+    A track and vehicle porter who builds as inspiration strikes, depending on
+    what quirky models turn up. Notable: 2024 Kia Picanto GT-line, 2023
+    Fangchengbao Bao 5.
+links:
+  - { label: '爱发电', url: 'https://afdian.com/a/1145141919810WCAO' }
+  - { label: '豹5 演示', url: 'https://b23.tv/DgD11QM' }

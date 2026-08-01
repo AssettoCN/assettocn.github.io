@@ -1,0 +1,21 @@
+order: 12
+initials: S
+tint: '--color-accent-2-300'
+ink: '--color-accent-2-900'
+avatar: '/images/authors/stewartwu.jpg'
+name: { zh: 'Stewart Wu', en: 'Stewart Wu' }
+handle: '@stewartwu'
+skills:
+  zh: [车辆模组, 全内构, 功能开发]
+  en: [Vehicle mods, Full interior, Functional systems]
+bio:
+  zh: >-
+    还在学习的萌新,为实现天马行空的想法制作车辆模组,专注全功能、全内构开发。
+    代表作:Unicorn 318-RS、Mustang RTR。
+  en: >-
+    A self-described newcomer building vehicle mods to bring wild ideas to life,
+    focused on fully-functional, full-interior development. Notable: the Unicorn
+    318-RS and a Mustang RTR.
+links:
+  - { label: 'B站', url: 'https://b23.tv/Ye9UaZY' }
+  - { label: '爱发电', url: 'https://afdian.com/a/318wu' }

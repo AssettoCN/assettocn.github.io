@@ -1,0 +1,19 @@
+order: 18
+initials: 蟑
+tint: '--color-accent-300'
+ink: '--color-accent-900'
+avatar: '/images/authors/zhanglang.jpg'
+name: { zh: 蟑螂, en: 'Zhanglang' }
+handle: '@zhanglang'
+skills:
+  zh: [涂装, 改装, 套件]
+  en: [Liveries, Tuning, Bodykits]
+bio:
+  zh: >-
+    只会改一点车的蟑螂,喜欢做涂装、改改车,偶尔搓一点套件。代表作:仰望 U9。
+  en: >-
+    "Just a cockroach who tweaks cars a little" — enjoys liveries and light
+    tuning, and occasionally dabbles in bodykits. Notable: the Yangwang U9.
+links:
+  - { label: 'B站', url: 'https://b23.tv/0HSGWuU' }
+  - { label: 'U9 演示', url: 'https://b23.tv/KcKbPCP' }

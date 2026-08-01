@@ -1,0 +1,18 @@
+order: 9
+initials: H
+tint: '--color-accent-2-200'
+ink: '--color-accent-2-900'
+avatar: '/images/authors/hentaimu.jpg'
+name: { zh: 'HenTaiMU', en: 'HenTaiMU' }
+handle: '@hentaimu'
+skills:
+  zh: [建模, 车辆, 地图, 涂装]
+  en: [Modeling, Vehicles, Maps, Liveries]
+bio:
+  zh: >-
+    次世代游戏行业从业者,AC MOD 作者,涵盖建模、车辆、地图与涂装。
+  en: >-
+    A next-gen games-industry professional and AC mod author working across
+    modeling, vehicles, maps and liveries.
+links:
+  - { label: 'B站', url: 'https://space.bilibili.com/14007311' }

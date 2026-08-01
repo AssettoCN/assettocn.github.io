@@ -7,7 +7,7 @@ with a **light/dark theme toggle**.
 
 ## Entry Points
 - `npm run dev` — dev server (`astro dev`)
-- `npm run build` — static build to `dist/` (**24 pages** + sitemap)
+- `npm run build` — static build to `dist/` (**48 pages** + sitemap; scales with author count — each author adds a zh+en detail page)
 - `npm run preview` — serve the built `dist/`
 - `astro.config.mjs` — site config + **i18n** (`zh` default at root, `en` under `/en`, `prefixDefaultLocale:false`)
 

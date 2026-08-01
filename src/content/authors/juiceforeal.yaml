@@ -1,0 +1,15 @@
+order: 7
+initials: J
+tint: '--color-accent-2-300'
+ink: '--color-accent-2-900'
+name: { zh: 'JuiceForeaL_999', en: 'JuiceForeaL_999' }
+handle: '@juiceforeal'
+skills:
+  zh: [车辆模组, 地图模组, 游戏转模]
+  en: [Vehicle mods, Map mods, Game ports]
+bio:
+  zh: >-
+    车辆、地图模组与各类游戏转模作者。代表作:仰望 U9、350Z 瑞秋版。
+  en: >-
+    Creator of vehicle and map mods plus cross-game conversions. Notable works:
+    the Yangwang U9 and the "Rachel" 350Z.

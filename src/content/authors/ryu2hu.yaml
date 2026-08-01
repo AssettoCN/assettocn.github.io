@@ -1,0 +1,21 @@
+order: 8
+initials: R
+tint: '--color-accent-300'
+ink: '--color-accent-900'
+avatar: '/images/authors/ryu2hu.jpg'
+name: { zh: 'Ryu·2hu', en: 'Ryu·2hu' }
+handle: '@ryu2hu'
+skills:
+  zh: [车辆修复, 原厂还原, 日系车]
+  en: [Mod fixes, Factory restore, JDM cars]
+bio:
+  zh: >-
+    在现有 mod 上做修修补补,偏好 Standard 规格车辆,擅长把改装车还原成原厂外观。
+    代表作:Nissan STAGEA RS Four V '98、Subaru WRX STI S209 '18、
+    Impreza WRX STi S201 '98。
+  en: >-
+    Polishes and fixes existing mods, favouring Standard-spec cars and restoring
+    tuned builds back to their factory looks. Notable: Nissan STAGEA RS Four V
+    '98, Subaru WRX STI S209 '18, Impreza WRX STi S201 '98.
+links:
+  - { label: 'B站', url: 'https://space.bilibili.com/1681330270' }

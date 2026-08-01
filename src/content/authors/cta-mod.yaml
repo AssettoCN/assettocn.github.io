@@ -1,0 +1,21 @@
+order: 16
+initials: C
+tint: '--color-neutral-300'
+ink: '--color-neutral-900'
+avatar: '/images/authors/cta-mod.jpg'
+name: { zh: 'CTA_MOD', en: 'CTA_MOD' }
+handle: '@cta_mod'
+skills:
+  zh: [载具Mod, 地图制作, 手册整理]
+  en: [Vehicle mods, Map making, Docs curation]
+bio:
+  zh: >-
+    载具 Mod、地图制作与 Mod 制作手册整理。主做流行/新款与高定车辆,并持续整理
+    AC Mod 制作手册与技术文档。代表作:2023 Mansory Carbonado GTS 纪念版。
+  en: >-
+    Vehicle mods, map making and modding-manual curation. Focuses on popular,
+    new and high-end cars while continuously compiling AC modding manuals and
+    technical docs. Notable: 2023 Mansory Carbonado GTS.
+links:
+  - { label: 'B站', url: 'https://space.bilibili.com/1638757708' }
+  - { label: 'Carbonado 演示', url: 'https://www.bilibili.com/video/BV17ri1BUEim/' }

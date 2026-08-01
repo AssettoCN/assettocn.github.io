@@ -1,0 +1,21 @@
+order: 11
+initials: K
+tint: '--color-neutral-300'
+ink: '--color-neutral-900'
+avatar: '/images/authors/kiko924.jpg'
+name: { zh: 'Kiko924', en: 'Kiko924' }
+handle: '@kiko924'
+skills:
+  zh: [原厂车辆, 改装定制, 涂装设计]
+  en: [Factory cars, Custom tuning, Livery design]
+bio:
+  zh: >-
+    Assetto Corsa 车辆模组制作与完善者,主做公开的原厂车辆模组,可接改装定制与涂装设计。
+    代表作:Sally 版保时捷 996。
+  en: >-
+    Assetto Corsa vehicle-mod creator and finisher, focused on public
+    factory-spec cars and open to custom tuning and livery commissions.
+    Notable: the "Sally" Porsche 996.
+links:
+  - { label: '996 下载(夸克)', url: 'https://pan.quark.cn/s/70d2c7adc394' }
+  - { label: 'B站', url: 'https://space.bilibili.com/488192660' }

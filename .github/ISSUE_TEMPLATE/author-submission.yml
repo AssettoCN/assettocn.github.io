@@ -8,7 +8,9 @@ body:
       value: |
         填好下面几项、提交后会自动生成一个 Pull Request,维护者审核合并后作者页就会
         出现这位创作者。头像底色会自动分配,提交作品请另用「作品投稿」。
+        **修改已有资料**:用**同一个 @handle** 重新提交本表单即可覆盖旧信息——注意这是**整条替换**,可选项(头像文字 / 头像图片 / 外链)**留空会被清掉**,想保留就一并重填。
         Submitting opens a PR; a maintainer merges it to add the author.
+        **Editing an existing profile:** resubmit this form with the **same @handle** to overwrite it. It fully replaces the old entry — optional fields left blank are cleared.
   - type: input
     id: name_zh
     attributes:

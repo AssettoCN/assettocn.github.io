@@ -11,5 +11,7 @@ yarn-error.log*
 # env
 .env
 .env.production
+# raw intake / source material (原始投稿资料:xlsx、原图等,不进仓库)
+assets/
 # os
 .DS_Store

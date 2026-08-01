@@ -70,3 +70,11 @@ body:
       placeholder: "30"
     validations:
       required: true
+  - type: input
+    id: link
+    attributes:
+      label: 主页 / 接入信息链接(可选) / Homepage or connect link (optional)
+      description: 服务器主页或接入说明,卡片「接入」按钮会指向它 / the "Connect" button links here
+      placeholder: "https://srp.udstu.com"
+    validations:
+      required: false

@@ -147,8 +147,9 @@ const BUILDERS = {
     const max = parseInt(maxRaw, 10);
     if (!Number.isFinite(max) || max <= 0) fail('最大人数需要是一个正整数。 / Max players must be a positive number.');
     const type = serverTypeFrom(field('类型') || field('category') || field('分类'));
+    const link = imageUrlFrom(field('主页') || field('接入') || field('homepage') || field('link'));
     const id = `${slugify(nameEn, 'server')}-${issueNumber}`;
-    const yaml =
+    let yaml =
       `order: ${order}\n` +
       `type: ${q(type)}\n` +
       `name:\n  zh: ${q(nameZh)}\n  en: ${q(nameEn)}\n` +
@@ -158,6 +159,7 @@ const BUILDERS = {
       `max: ${max}\n` +
       `ping: ${q('—')}\n` +
       `online: true\n`;
+    if (link) yaml += `link: ${q(link)}\n`;
     return { id, dir: 'servers', yaml, title: `${nameZh} / ${nameEn}` };
   },
 

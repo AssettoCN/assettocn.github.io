@@ -64,6 +64,7 @@ const servers = defineCollection({
     max: z.number(),
     ping: z.string().default('—'),
     online: z.boolean().default(true),
+    link: z.string().optional(),           // 服务器主页/接入信息链接;卡片「接入」按钮指向它
   }),
 });
 

@@ -34,10 +34,15 @@ const ui = UI[lang];
     <div class="server-card__fill" style={`width: ${s.pct}%; background: ${s.statusColor};`}></div>
   </div>
   {!preview && (
-    <button type="button" class:list={[s.btnCls, 'server-card__btn']} disabled={s.disabled}>
-      <Icon name="external" size={15} />
-      {ui.serversPage.connect}
-    </button>
+    s.link
+      ? <a class:list={[s.btnCls, 'server-card__btn']} href={s.link} target="_blank" rel="noopener noreferrer">
+          <Icon name="external" size={15} />
+          {ui.serversPage.connect}
+        </a>
+      : <button type="button" class:list={[s.btnCls, 'server-card__btn']} disabled={s.disabled}>
+          <Icon name="external" size={15} />
+          {ui.serversPage.connect}
+        </button>
   )}
 </div>
 

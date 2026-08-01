@@ -121,6 +121,7 @@ export async function getServers(lang) {
       region: s.region[lang],
       mode: s.mode[lang],
       ping: s.ping,
+      link: s.link,
       online,
       statusTag: online ? 'tag-accent-2' : 'tag-neutral',
       // Solid colour used by the status dot + capacity bar (green when live).

@@ -26,7 +26,7 @@ export const UI = {
     galleryPage: { title: '截图画廊', sub: '社区玩家投稿的游戏截图 —— 分享你镜头下的神力科莎。', submit: '投稿截图', by: '投稿者' },
     detail: {
       back: '返回作者列表', aboutTitle: '关于', linksTitle: '链接', worksTitle: 'TA 的作品',
-      statsWorks: '作品', statsDl: '累计下载', statsRating: '平均评分', follow: '关注作者',
+      statsWorks: '作品', statsDl: '累计下载', statsRating: '平均评分',
       worksUnit: '个作品', view: '查看',
     },
     filterAll: '全部',
@@ -82,7 +82,7 @@ export const UI = {
     galleryPage: { title: 'Screenshot gallery', sub: 'Screenshots submitted by community players — share your view of Assetto Corsa.', submit: 'Submit a shot', by: 'by' },
     detail: {
       back: 'Back to authors', aboutTitle: 'About', linksTitle: 'Links', worksTitle: 'Their works',
-      statsWorks: 'Works', statsDl: 'Downloads', statsRating: 'Avg. rating', follow: 'Follow author',
+      statsWorks: 'Works', statsDl: 'Downloads', statsRating: 'Avg. rating',
       worksUnit: 'works', view: 'View',
     },
     filterAll: 'All',

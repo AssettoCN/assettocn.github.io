@@ -13,8 +13,8 @@ body:
     id: author
     attributes:
       label: 作者 id 或 handle / Author (id or @handle)
-      description: 必须对应已收录的作者(如 silverwing 或 @silverwing)/ must match a listed author
-      placeholder: "@silverwing"
+      description: 必须对应已收录的作者(如 kiko924 或 @kiko924)/ must match a listed author
+      placeholder: "@kiko924"
     validations:
       required: true
   - type: dropdown

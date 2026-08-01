@@ -105,6 +105,13 @@ export async function authorIds() {
 }
 
 /** Servers, resolved for the given locale (status/labels computed here). */
+// "ip:port" → Content Manager one-click join URL (opens CM via the acmanager:// handler).
+// Returns null when the address isn't a plain ip:port, so the card just shows the raw address.
+function cmJoinUrl(address) {
+  const m = String(address || '').match(/^\s*([\d.]+):(\d+)\s*$/);
+  return m ? `https://acstuff.ru/s/q:race/online/join?ip=${m[1]}&httpPort=${m[2]}` : null;
+}
+
 export async function getServers(lang) {
   const ui = UI[lang];
   const list = (await getCollection('servers')).sort(byOrder);
@@ -121,7 +128,10 @@ export async function getServers(lang) {
       region: s.region[lang],
       mode: s.mode[lang],
       ping: s.ping,
-      link: s.link,
+      homepage: s.homepage,
+      address: s.address,
+      // 由 ip:port 生成 Content Manager 一键加入链接(acstuff → acmanager:// 协议)
+      joinUrl: cmJoinUrl(s.address),
       online,
       statusTag: online ? 'tag-accent-2' : 'tag-neutral',
       // Solid colour used by the status dot + capacity bar (green when live).

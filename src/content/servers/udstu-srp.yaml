@@ -7,4 +7,5 @@ players: 7
 max: 59
 ping: '—'
 online: true
-link: 'https://srp.udstu.com'
+homepage: 'https://srp.udstu.com'
+address: '120.26.18.63:8410'

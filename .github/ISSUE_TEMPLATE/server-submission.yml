@@ -71,10 +71,18 @@ body:
     validations:
       required: true
   - type: input
-    id: link
+    id: address
     attributes:
-      label: 主页 / 接入信息链接(可选) / Homepage or connect link (optional)
-      description: 服务器主页或接入说明,卡片「接入」按钮会指向它 / the "Connect" button links here
+      label: 接入地址 ip:port / Server address
+      description: 实际连接地址,例如 120.26.18.63:8410;会显示接入信息并生成 CM 一键加入 / actual connect address
+      placeholder: "120.26.18.63:8410"
+    validations:
+      required: false
+  - type: input
+    id: homepage
+    attributes:
+      label: 主页 / 介绍页(可选) / Homepage (optional)
+      description: 服务器介绍页,非接入地址;卡片「主页」按钮指向它 / info page, not the connect address
       placeholder: "https://srp.udstu.com"
     validations:
       required: false

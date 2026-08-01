@@ -64,7 +64,8 @@ const servers = defineCollection({
     max: z.number(),
     ping: z.string().default('—'),
     online: z.boolean().default(true),
-    link: z.string().optional(),           // 服务器主页/接入信息链接;卡片「接入」按钮指向它
+    homepage: z.string().optional(),       // 介绍/主页(非接入地址),如 https://srp.udstu.com
+    address: z.string().optional(),        // 实际接入地址 ip:port,如 120.26.18.63:8410
   }),
 });
 

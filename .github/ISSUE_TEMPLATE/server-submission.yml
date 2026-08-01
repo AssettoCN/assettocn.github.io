@@ -26,15 +26,15 @@ body:
   - type: input
     id: region_zh
     attributes:
-      label: 区域(中文)
-      placeholder: 华东 · 上海
+      label: 区域 / 国家(中文)
+      placeholder: 中国
     validations:
       required: true
   - type: input
     id: region_en
     attributes:
-      label: Region (English)
-      placeholder: East · Shanghai
+      label: Region / Country (English)
+      placeholder: China
     validations:
       required: true
   - type: dropdown

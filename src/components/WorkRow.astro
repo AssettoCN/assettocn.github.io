@@ -20,16 +20,24 @@ const authorHref = localizePath(lang, ROUTES.author(work.authorId));
       {work.official && <span class="tag work-row__official">{ui.official}</span>}
       <span class:list={['tag', work.tagClass]}>{work.typeLabel}</span>
       <span class="text-muted" style="font-size:12px;">{work.version} · {work.updated}</span>
-      <span class="work-row__rating">
-        <Icon name="star" size={14} />
-        {work.rating}
-      </span>
+      {work.rating && (
+        <span class="work-row__rating">
+          <Icon name="star" size={14} />
+          {work.rating}
+        </span>
+      )}
     </div>
     <h3 class="card-title work-row__title">{work.title}</h3>
     <div class="text-muted work-row__by">
       by <a href={authorHref} class="work-row__author">{work.authorName}</a>
     </div>
     <p class="work-row__desc">{work.desc}</p>
+    {work.link && (
+      <a class="btn btn-secondary work-row__link" href={work.link} target="_blank" rel="noopener noreferrer">
+        {ui.viewLabel}
+        <Icon name="external" size={14} />
+      </a>
+    )}
   </div>
 </article>
 
@@ -61,6 +69,10 @@ const authorHref = localizePath(lang, ROUTES.author(work.authorId));
   .work-row__author { cursor: pointer; color: var(--color-accent-700); text-decoration: none; }
   .work-row__author:hover { text-decoration: underline; }
   .work-row__desc { font-size: 15px; line-height: 1.65; margin: 0; text-wrap: pretty; }
+  .work-row__link {
+    align-self: flex-start; margin-top: auto; min-height: 30px;
+    padding: 4px 12px; font-size: 13px; gap: 6px;
+  }
 
   @media (max-width: 640px) {
     .work-row { flex-direction: column; }

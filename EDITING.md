@@ -16,11 +16,11 @@
 | **某个作者(名字/简介/技能/外链/头像)** | `src/content/authors/<id>.yaml`(一人一个文件)。头像默认用字母字牌(`initials`+`tint`/`ink`);想用真实头像图就加 `avatar: '/images/authors/xxx.jpg'`,留空即回退字母字牌 |
 | **新增作者** | 在 `src/content/authors/` 新建一个 `.yaml`,文件名就是作者 id(也是详情页 URL);详情页自动生成 |
 | **作者外链地址** | 该作者 yaml 里 `links` 的 `url`(把 `'#'` 换成真链接,填了会自动新开标签页) |
-| **某个作品(标题/类型/版本/下载量/评分/描述)** | `src/content/works/<id>.yaml`(一件一个文件) |
+| **某个作品(标题/类型/版本/下载量/评分/描述/外链)** | `src/content/works/<id>.yaml`(一件一个文件);加 `link: 'https://...'` 卡片就出现「查看」按钮(B站/爱发电/网盘等) |
 | **新增作品** | 在 `src/content/works/` 新建一个 `.yaml`;`authorId` 要等于某个作者的文件名 |
 | **官方出品(ACN 自己的作品)** | 把该作品的 `authorId` 设为 `acn`(官方作者见 `src/content/authors/acn.yaml`)——自动加红色「官方」徽标、Logo 头像,并在作品页置顶。官方作品只由维护者直接加 yaml,不走公开投稿 |
 | **作品封面图** | 该作品 yaml 里加 `cover: '/images/xxx.jpg'`(图片放 `public/images/`) |
-| **作品分类(工具/应用/教程/文档/资料)** | `src/data/work-types.js`(改这里会同步影响 schema 校验和作品页筛选按钮) |
+| **作品分类(车辆/地图/工具/应用/教程/文档/资料)** | `src/data/work-types.js`(改这里会同步影响 schema 校验和作品页筛选按钮;筛选栏只显示当前有作品的分类) |
 | **某个服务器(分类/名称/区域/模式/人数/延迟/在线)** | `src/content/servers/<id>.yaml`(一台一个文件;`type` 为分类,见下行;`online:false` 会显示离线并禁用接入按钮) |
 | **新增服务器** | 在 `src/content/servers/` 新建一个 `.yaml`;`type` 必填,取 `circuit/drift/touge/cruise` 之一 |
 | **服务器分类(围场/漂移/山路/漫游)** | `src/data/server-types.js`(改这里会同步影响 schema 校验、服务器页筛选按钮和卡片徽标) |
@@ -64,11 +64,11 @@ links:
 ```yaml
 order: 10
 authorId: newbie              # 必须等于某个作者的文件名
-type: tool                    # tool | app | guide | doc | data
+type: vehicle                 # vehicle | map | tool | app | guide | doc | data
 version: 'v1.0'
 updated: '2026-08'
 downloads: '1.2k'             # 没有就填 '—'
-rating: '4.8'
+rating: '4.8'                 # 可选;留空则卡片不显示评分
 title: { zh: 我的工具, en: My Tool }
 desc:
   zh: >-
@@ -76,6 +76,7 @@ desc:
   en: >-
     English description.
 # cover: '/images/my-tool.jpg'   # 可选:作品封面
+# link: 'https://space.bilibili.com/...'  # 可选:外链,卡片显示「查看」按钮
 ```
 
 ## 加图片的固定套路

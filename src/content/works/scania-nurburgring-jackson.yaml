@@ -1,0 +1,12 @@
+order: 30
+authorId: "jackson"
+type: "vehicle"
+version: '—'
+updated: "2026-03"
+title: { zh: "斯堪尼亚 · 纽北", en: "Scania at the Nürburgring" }
+desc:
+  zh: >-
+    斯堪尼亚卡车跑纽北的整活作品。
+  en: >-
+    A Scania truck taking on the Nürburgring.
+link: "https://www.bilibili.com/video/BV1kD421P7BX"

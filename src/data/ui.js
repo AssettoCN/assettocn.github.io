@@ -18,7 +18,7 @@ export const UI = {
     join: { title: '成为社区的一部分', sub: '无论你是想找作者、查资料,还是分享自己的作品,都欢迎加入 AssettoCN。', ctaA: '认识作者', ctaB: '浏览作品', docs: '文档中心' },
     featured: { title: '精选作品', more: '查看全部' },
     authorsPage: { title: '社区作者', sub: '认识这些为 ACN 持续创作的 modder,点开可查看完整介绍与作品。', submit: '申请入驻' },
-    worksPage: { title: '社区作品', sub: '由 ACN 社区开发与整理 —— 工具、应用、教程与文档资料,帮你更好地上手 Assetto Corsa。可按类型筛选。', submit: '投稿作品' },
+    worksPage: { title: '社区作品', sub: '由 ACN 社区创作与整理 —— 车辆、地图、工具、教程与文档资料,帮你更好地上手 Assetto Corsa。可按类型筛选。', submit: '投稿作品' },
     serversPage: {
       title: '服务器列表', sub: '社区收录的各家 Assetto Corsa 服务器,可按玩法(围场 / 漂移 / 山路 / 漫游)筛选,点击即可获取接入信息。运营自己的服务器?也欢迎申请收录。',
       connect: '接入信息', apply: '申请收录服务器', online: '在线', offline: '离线', players: '在线人数', ping: '延迟',
@@ -54,7 +54,7 @@ export const UI = {
       ],
     },
     footer: 'AssettoCN · 由社区驱动 · 仅作原型演示',
-    dlLabel: '下载', coverHint: '封面',
+    dlLabel: '下载', viewLabel: '查看', coverHint: '封面',
   },
   en: {
     langLabel: '中',
@@ -74,7 +74,7 @@ export const UI = {
     join: { title: 'Become part of the community', sub: 'Whether you are here to find authors, look up resources, or share your own work — you are welcome in AssettoCN.', ctaA: 'Meet the authors', ctaB: 'Browse works', docs: 'Docs' },
     featured: { title: 'Featured works', more: 'See all' },
     authorsPage: { title: 'Community authors', sub: 'Meet the modders building for ACN. Open a card for the full profile and catalogue.', submit: 'Apply as author' },
-    worksPage: { title: 'Community works', sub: 'Built and curated by the ACN community — tools, apps, guides and documentation to help you get the most out of Assetto Corsa. Filter by type.', submit: 'Submit a work' },
+    worksPage: { title: 'Community works', sub: 'Created and curated by the ACN community — vehicles, maps, tools, guides and documentation to help you get the most out of Assetto Corsa. Filter by type.', submit: 'Submit a work' },
     serversPage: {
       title: 'Server list', sub: 'Assetto Corsa servers listed by the community — filter by discipline (circuit / drift / touge / cruise) and click for connection details. Running your own? You are welcome to apply.',
       connect: 'Connection info', apply: 'Apply to list a server', online: 'Online', offline: 'Offline', players: 'Players', ping: 'Ping',
@@ -110,6 +110,6 @@ export const UI = {
       ],
     },
     footer: 'AssettoCN · Community-driven · Prototype demo only',
-    dlLabel: 'Download', coverHint: 'cover',
+    dlLabel: 'Download', viewLabel: 'View', coverHint: 'cover',
   },
 };

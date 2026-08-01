@@ -95,8 +95,11 @@ Scroll-snap is enabled only on the home route via `snap` → `data-snap` on `<ht
 - `src/content.config.ts` — Content Collections + Zod schemas for `authors`,
   `works`, `servers`, `gallery` (loaded via the `glob` loader). Build-time
   validation lives here.
-- `src/data/work-types.js` — `TYPE` map; its keys are the `type` enum used by the
-  works schema and the works-page filter.
+- `src/data/work-types.js` — `TYPE` map (vehicle/map/tool/app/guide/doc/data); its
+  keys are the `type` enum used by the works schema and the works-page filter.
+  The filter (`workFilters`) only renders categories that currently have works, so
+  an empty type (e.g. `map` before any map is submitted) shows no dead tab. Works
+  may carry an optional `link` (external URL) → a "View" button on the card.
 - `src/data/server-types.js` — `SERVER_TYPE` map (circuit/drift/touge/cruise); its
   keys are the `type` enum used by the servers schema and the servers-page filter.
 - `src/data/site.js` — **single source** for the site `url` (domain).

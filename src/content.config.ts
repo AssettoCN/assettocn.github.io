@@ -47,6 +47,7 @@ const works = defineCollection({
     title: bilingual,
     desc: bilingual,
     cover: z.string().optional(),          // 封面图,填 '/images/xxx.jpg'
+    link: z.string().optional(),           // 作品外链(B站/爱发电/网盘等),卡片显示「查看」按钮
   }),
 });
 

@@ -36,6 +36,7 @@ function resolveWorkEntry(entry, lang, authorsById) {
     downloads: w.downloads,
     rating: w.rating,
     cover: w.cover,
+    link: w.link,
     title: w.title[lang],
     desc: w.desc[lang],
     typeLabel: tm.label[lang],
@@ -151,11 +152,14 @@ export async function getGallery(lang) {
 }
 
 /** Filter tabs for the works page: 'all' + every type key (static, no I/O). */
-export function workFilters(lang) {
+export function workFilters(lang, works) {
   const ui = UI[lang];
+  // 只展示当前确有作品的类型,避免出现点开为空的筛选标签(如暂无地图作品时不显示「地图」)。
+  const used = works ? new Set(works.map((w) => w.type)) : null;
+  const keys = Object.keys(TYPE).filter((k) => !used || used.has(k));
   return [
     { key: 'all', label: ui.filterAll },
-    ...Object.keys(TYPE).map((k) => ({ key: k, label: TYPE[k].label[lang] })),
+    ...keys.map((k) => ({ key: k, label: TYPE[k].label[lang] })),
   ];
 }
 

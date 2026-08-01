@@ -198,7 +198,7 @@ const BUILDERS = {
   },
 
   async work() {
-    const TYPES = ['tool', 'app', 'guide', 'doc', 'data'];
+    const TYPES = ['vehicle', 'map', 'tool', 'app', 'guide', 'doc', 'data']; // 与 src/data/work-types.js 保持一致
     let authorId = slugify((field('作者') || field('author')).replace(/^@/, ''), '');
     const type = (field('type') || field('类型')).trim().toLowerCase();
     const version = field('version') || field('版本');
@@ -214,6 +214,8 @@ const BUILDERS = {
     const id = `${slugify(titleEn, 'work')}-${issueNumber}`;
     const coverUrl = imageUrlFrom(field('封面') || field('cover'));
     const cover = coverUrl ? await downloadImage(coverUrl, 'works', id) : '';
+    // 可选外链:作品卡上的「查看」按钮。取第一个 URL,没有则留空。
+    const link = imageUrlFrom(field('作品链接') || field('work link') || field('链接') || field('link'));
     let yaml =
       `order: ${order}\n` +
       `authorId: ${q(authorId)}\n` +
@@ -224,6 +226,7 @@ const BUILDERS = {
       `title:\n  zh: ${q(titleZh)}\n  en: ${q(titleEn)}\n` +
       `desc:\n  zh: ${q(descZh)}\n  en: ${q(descEn)}\n`;
     if (cover) yaml += `cover: ${q(cover)}\n`;
+    if (link) yaml += `link: ${q(link)}\n`;
     return { id, dir: 'works', yaml, title: `${titleZh} / ${titleEn}` };
   },
 };

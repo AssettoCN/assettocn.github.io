@@ -1,5 +1,5 @@
 name: 作品投稿 / Work submission
-description: 投稿一件作品(工具/应用/教程/文档/资料)到社区作品页 / Submit a work
+description: 投稿一件作品(车辆/地图/工具/应用/教程/文档/资料)到社区作品页 / Submit a work
 title: "[Work] "
 labels: ["work-submission"]
 body:
@@ -22,6 +22,8 @@ body:
     attributes:
       label: 类型 / Type
       options:
+        - vehicle
+        - map
         - tool
         - app
         - guide
@@ -65,6 +67,14 @@ body:
       placeholder: Auto-generates baseline setups per track and car…
     validations:
       required: true
+  - type: input
+    id: link
+    attributes:
+      label: 作品链接(可选) / Work link (optional)
+      description: B站 / 爱发电 / 网盘等,作品卡会显示「查看」按钮 / B站, afdian, netdisk… shown as a "View" button
+      placeholder: "https://space.bilibili.com/..."
+    validations:
+      required: false
   - type: textarea
     id: cover
     attributes:

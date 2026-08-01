@@ -1,0 +1,12 @@
+order: 31
+authorId: "jackson"
+type: "vehicle"
+version: '—'
+updated: "2026-03"
+title: { zh: "Rocket Bunny GTI", en: "Rocket Bunny GTI" }
+desc:
+  zh: >-
+    Rocket Bunny 宽体 GTI,含副驾视角。
+  en: >-
+    A Rocket Bunny widebody GTI, with a passenger-seat view.
+link: "https://www.bilibili.com/video/BV1zK4y1z7Bn"

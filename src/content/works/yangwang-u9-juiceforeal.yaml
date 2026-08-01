@@ -1,0 +1,11 @@
+order: 20
+authorId: "juiceforeal"
+type: "vehicle"
+version: '—'
+updated: "2026-03"
+title: { zh: "仰望 U9", en: "Yangwang U9" }
+desc:
+  zh: >-
+    比亚迪仰望 U9 纯电超跑的神力科莎移植。
+  en: >-
+    Assetto Corsa port of the BYD Yangwang U9 electric hypercar.

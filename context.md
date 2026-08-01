@@ -30,11 +30,12 @@ expressed as **real routes** for crawlability and shareable URLs.
 The prototype's home is a scroll-snapping one-pager. It's reproduced as
 `HomePage.astro`, which stacks six full-viewport bands:
 1. **Hero** (`Hero.astro`) — poster wordmark **AssettoCN** (red `CN`), kicker,
-   tagline + two CTAs, a **telemetry strip** of the `HOME.stats`, scroll hint.
+   tagline + two CTAs, a **telemetry strip** of real collection counts
+   (`getHomeStats`, 0-count items hidden), scroll hint.
    Purely typographic — the design dropped the old hero screenshot/brand image.
 2. **01 · Mission** (`Pillars.astro`) — three numbered cards.
 3. **02 · Authors** (`AuthorsPreview.astro`) — first 3 authors, links to `/authors`.
-4. **03 · Servers** (`ServersPreview.astro`) — first 3 servers (capacity bars),
+4. **03 · Servers** (`ServersPreview.astro`) — first 3 servers,
    links to `/servers`.
 5. **04 · Gallery** (`GalleryPreview.astro`) — first 5 shots, links to `/gallery`.
 6. **05 · Join** (`JoinCta.astro`) — gradient panel + quick links (servers,
@@ -56,14 +57,15 @@ Scroll-snap is enabled only on the home route via `snap` → `data-snap` on `<ht
   - `Nav.astro` — sticky bar; 5 links + **theme toggle** (`data-theme-toggle`,
     inline script flips `data-theme` + persists to `localStorage['acn-theme']`)
     + language toggle **link** to the same page in the other locale.
-  - `Hero.astro` — poster home hero + telemetry strip (reads `HOME.stats`).
+  - `Hero.astro` — poster home hero + telemetry strip (reads `getHomeStats` — real counts).
   - `Pillars`, `AuthorsPreview`, `ServersPreview`, `GalleryPreview`, `JoinCta`,
     `SectionHead` — the home landing bands (see above).
   - `WorkRow.astro` — horizontal work card; carries `data-type` for filtering.
   - `AuthorCard.astro` — author card; `preview` prop = home variant (no footer).
-  - `ServerCard.astro` — server card w/ category badge + status dot + capacity
-    bar; carries `data-type` for filtering; `preview` prop hides the connect
-    button (home preview vs. full `/servers`).
+  - `ServerCard.astro` — server card w/ category badge + status dot + static
+    capacity label; carries `data-type` for filtering; `preview` prop hides the
+    footer buttons (CM one-click join + homepage) on the home preview. No live
+    player count / ping / capacity bar (can't stay truthful on a static site).
   - `ImageSlot.astro` — styled placeholder when empty, real `<img>` when `src` set.
   - `Icon.astro` — inline SVG icon set (incl. `sun`/`moon` for the toggle).
   - `BrandMark.astro` — the real 4-polygon AssettoCN logo (two-tone: ink + AC red).
@@ -77,7 +79,7 @@ Scroll-snap is enabled only on the home route via `snap` → `data-snap` on `<ht
    field. Bilingual fields are `{ zh, en }` objects. Because collection order
    isn't guaranteed, every schema has an `order` field used for sorting.
 2. **Config / copy** stays in `src/data/`: `ui.js` (all UI strings + footer),
-   `home.js` (home telemetry `stats`, bilingual), `site.js` (domain),
+   `site.js` (domain),
    `work-types.js` (`TYPE` = work category labels + tag classes; source of the
    `type` enum in the works schema), `server-types.js` (`SERVER_TYPE` = server
    category labels + tags; source of the `type` enum in the servers schema).
@@ -104,8 +106,9 @@ Scroll-snap is enabled only on the home route via `snap` → `data-snap` on `<ht
   keys are the `type` enum used by the servers schema and the servers-page filter.
 - `src/data/site.js` — **single source** for the site `url` (domain).
   `astro.config.mjs` and the `robots.txt` endpoint both import `SITE.url`.
-- `src/data/home.js` — home telemetry `stats` (bilingual). No hero image config
-  anymore — the redesigned hero is text-only.
+- Home telemetry `stats` are **derived** (`getHomeStats` in `lib/content.js`) from
+  real collection counts, 0-count items hidden — no mock numbers, no `home.js`.
+  The redesigned hero is text-only (no hero image config).
 - `astro.config.mjs` — `site: SITE.url` (absolute canonical/OG/hreflang) + i18n
   + the **`@astrojs/sitemap`** integration (with an `i18n` map `zh→zh-Hans`,
   `en→en`) that emits `sitemap-index.xml` + `sitemap-0.xml` with per-URL hreflang.
@@ -163,5 +166,5 @@ See **`EDITING.md`** for the full "change X → edit file Y" table. In short:
 - New author → `src/content/authors/<id>.yaml` (detail page auto-generated).
 - New work → `src/content/works/<id>.yaml` (`authorId` must match an author file).
 - New server → `src/content/servers/<id>.yaml`; new shot → `src/content/gallery/<id>.yaml`.
-- UI strings / footer → `src/data/ui.js`. Home stats → `src/data/home.js`.
+- UI strings / footer → `src/data/ui.js`. Home stats are auto-derived (`getHomeStats`).
 - Domain → `src/data/site.js`. Theme colors → `src/styles/global.css`.

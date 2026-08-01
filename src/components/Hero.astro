@@ -1,14 +1,14 @@
 ---
 import BrandMark from './BrandMark.astro';
 import Icon from './Icon.astro';
-import { HOME } from '../data/home.js';
 import { UI } from '../data/ui.js';
+import { getHomeStats } from '../lib/content.js';
 import { localizePath, ROUTES } from '../lib/i18n.js';
 
 /** Poster-style home hero: big AssettoCN wordmark, copy + CTAs, telemetry strip. */
 const { lang } = Astro.props;
 const ui = UI[lang];
-const stats = HOME.stats[lang];
+const stats = await getHomeStats(lang);
 const worksHref = localizePath(lang, ROUTES.works);
 const authorsHref = localizePath(lang, ROUTES.authors);
 ---
@@ -35,14 +35,16 @@ const authorsHref = localizePath(lang, ROUTES.authors);
       </div>
     </div>
 
-    <div class="hero__telem">
-      {stats.map((s) => (
-        <div class="hero__stat">
-          <span class="hero__stat-n">{s.n}</span>
-          <span class="hero__stat-l">{s.l}</span>
-        </div>
-      ))}
-    </div>
+    {stats.length > 0 && (
+      <div class="hero__telem">
+        {stats.map((s) => (
+          <div class="hero__stat">
+            <span class="hero__stat-n">{s.n}</span>
+            <span class="hero__stat-l">{s.l}</span>
+          </div>
+        ))}
+      </div>
+    )}
   </div>
 
   <div class="hero__scroll" aria-hidden="true">

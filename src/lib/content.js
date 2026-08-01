@@ -158,6 +158,27 @@ export async function getGallery(lang) {
 }
 
 /** Filter tabs for the works page: 'all' + every type key (static, no I/O). */
+/** Home hero telemetry: real counts derived from the collections; 0-count items hidden.
+ *  Auto-updates as content grows — no mock numbers. */
+export async function getHomeStats(lang) {
+  const [authors, works, servers, gallery] = await Promise.all([
+    getCollection('authors'),
+    getCollection('works'),
+    getCollection('servers'),
+    getCollection('gallery'),
+  ]);
+  const L = {
+    zh: { authors: '社区作者', works: '收录作品', servers: '收录服务器', gallery: '社区截图' },
+    en: { authors: 'Authors', works: 'Works', servers: 'Servers', gallery: 'Screenshots' },
+  }[lang];
+  return [
+    { n: authors.length, l: L.authors },
+    { n: works.length, l: L.works },
+    { n: servers.length, l: L.servers },
+    { n: gallery.length, l: L.gallery },
+  ].filter((s) => s.n > 0).map((s) => ({ n: String(s.n), l: s.l }));
+}
+
 export function workFilters(lang, works) {
   const ui = UI[lang];
   // 只展示当前确有作品的类型,避免出现点开为空的筛选标签(如暂无地图作品时不显示「地图」)。

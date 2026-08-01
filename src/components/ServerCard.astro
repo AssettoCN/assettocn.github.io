@@ -20,28 +20,20 @@ const ui = UI[lang];
       <span class="server-card__dot" aria-hidden="true"></span>{s.statusLabel}
     </span>
   </div>
-  {!preview && (s.address || s.homepage) && (
-    <div class="server-card__foot">
-      {s.address && (
-        <div class="server-card__conn">
-          <span class="text-muted server-card__label">{ui.serversPage.connect}</span>
-          <code class="server-card__addr" title={ui.serversPage.connect}>{s.address}</code>
-        </div>
+  {!preview && (s.joinUrl || s.homepage) && (
+    <div class="server-card__links">
+      {s.joinUrl && (
+        <a class="btn btn-secondary server-card__btn" href={s.joinUrl}>
+          <Icon name="external" size={15} />
+          {ui.serversPage.join}
+        </a>
       )}
-      <div class="server-card__links">
-        {s.joinUrl && (
-          <a class="btn btn-secondary server-card__btn" href={s.joinUrl}>
-            <Icon name="external" size={15} />
-            {ui.serversPage.join}
-          </a>
-        )}
-        {s.homepage && (
-          <a class="btn btn-ghost server-card__btn" href={s.homepage} target="_blank" rel="noopener noreferrer">
-            <Icon name="external" size={15} />
-            {ui.serversPage.homepage}
-          </a>
-        )}
-      </div>
+      {s.homepage && (
+        <a class="btn btn-ghost server-card__btn" href={s.homepage} target="_blank" rel="noopener noreferrer">
+          <Icon name="external" size={15} />
+          {ui.serversPage.homepage}
+        </a>
+      )}
     </div>
   )}
 </div>
@@ -54,15 +46,7 @@ const ui = UI[lang];
   .server-card__loc { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px; margin-top: 6px; }
   .server-card__status { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
   .server-card__dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; display: inline-block; }
-  .server-card__label { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
   .server-card__btn { min-height: 42px; justify-content: center; }
-  .server-card__foot { display: flex; flex-direction: column; gap: var(--space-2); }
-  .server-card__conn { display: flex; flex-direction: column; gap: 4px; }
-  .server-card__addr {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13.5px;
-    background: var(--color-neutral-100, rgba(0,0,0,.04)); border: 1px solid var(--color-divider);
-    border-radius: var(--radius-sm, 8px); padding: 7px 10px; user-select: all; word-break: break-all;
-  }
   .server-card__links { display: flex; gap: var(--space-2); }
   .server-card__links .server-card__btn { flex: 1; min-height: 40px; }
   @media (max-width: 420px) { .server-card__links { flex-direction: column; } }

@@ -27,7 +27,7 @@
 | **某张截图(标题/投稿人/比例/图片)** | `src/content/gallery/<id>.yaml`(`ratio` 如 `'16/9'`,`cover` 可选) |
 | **新增截图** | 在 `src/content/gallery/` 新建一个 `.yaml` |
 | **界面文案(导航/首页各板块/按钮/页脚,中+英)** | `src/data/ui.js` |
-| **首页 Hero 下方的统计条(现为 5 个)** | `src/data/home.js` → `stats`(中/英各一份,`n`=数字 `l`=说明,增删个数两语言保持一致)。新版 Hero 是纯文字海报式,不再有大图配置 |
+| **首页 Hero 下方的统计条** | 现为**真实动态数字**,由实际收录数自动计算(`lib/content.js` 的 `getHomeStats`:作者/作品/服务器/截图,为 0 的项自动隐藏),不再手填、无 mock。新版 Hero 是纯文字海报式,不再有大图配置 |
 | **域名** | `src/data/site.js` → `url`(一处生效:astro 配置、robots、canonical/hreflang) |
 | **主题色 / 品牌红 / 字体 / 深色主题** | `src/styles/global.css`(浅色见第 2 段「AC retheme」;深色见第 2b 段 `html[data-theme='dark']`) |
 

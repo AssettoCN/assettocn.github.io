@@ -1,9 +1,0 @@
-order: 6
-type: circuit
-name:   { zh: 耐力赛专服, en: Endurance Server }
-region: { zh: 华东 · 杭州, en: East · Hangzhou }
-mode:   { zh: 耐力赛, en: Endurance }
-players: 16
-max: 32
-ping: '34ms'
-online: true

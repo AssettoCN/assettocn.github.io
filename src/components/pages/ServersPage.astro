@@ -8,7 +8,7 @@ import { issueFormUrl } from '../../data/site.js';
 const { lang } = Astro.props;
 const ui = UI[lang];
 const servers = await getServers(lang);
-const filters = serverFilters(lang);
+const filters = serverFilters(lang, servers);
 const submitUrl = issueFormUrl('server-submission.yml');
 ---
 <div class="shell fade-in page-head">

@@ -1,9 +1,0 @@
-order: 3
-type: circuit
-name:   { zh: GT3 竞技联赛, en: GT3 League }
-region: { zh: 华北 · 北京, en: North · Beijing }
-mode:   { zh: 排位 + 正赛, en: Quali + race }
-players: 18
-max: 26
-ping: '28ms'
-online: true

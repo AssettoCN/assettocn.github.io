@@ -164,10 +164,13 @@ export function workFilters(lang, works) {
 }
 
 /** Filter tabs for the servers page: 'all' + every server-type key. */
-export function serverFilters(lang) {
+export function serverFilters(lang, servers) {
   const ui = UI[lang];
+  // 同 workFilters:只展示当前有服务器的类别,空类别不显示死标签。
+  const used = servers ? new Set(servers.map((s) => s.type)) : null;
+  const keys = Object.keys(SERVER_TYPE).filter((k) => !used || used.has(k));
   return [
     { key: 'all', label: ui.filterAll },
-    ...Object.keys(SERVER_TYPE).map((k) => ({ key: k, label: SERVER_TYPE[k].label[lang] })),
+    ...keys.map((k) => ({ key: k, label: SERVER_TYPE[k].label[lang] })),
   ];
 }

@@ -106,6 +106,30 @@ export async function authorIds() {
   return authors.map((a) => a.id);
 }
 
+// 入门指南:id 形如 'zh/install-game' —— 前段是语言,其余是 slug(中/英同 slug 配成一页)。
+const guideLang = (id) => id.split('/')[0];
+const guideSlug = (id) => id.split('/').slice(1).join('/');
+
+/** Guides for one locale, ordered — meta only (no rendered body). */
+export async function getGuides(lang) {
+  const list = (await getCollection('guides')).filter((g) => guideLang(g.id) === lang);
+  return list
+    .map((g) => ({ slug: guideSlug(g.id), title: g.data.title, summary: g.data.summary, order: g.data.order ?? 0, draft: g.data.draft }))
+    .sort((a, b) => a.order - b.order);
+}
+
+/** The collection entry for one guide (pass to render()); null if missing. */
+export async function getGuideEntry(slug, lang) {
+  const list = await getCollection('guides');
+  return list.find((g) => guideLang(g.id) === lang && guideSlug(g.id) === slug) || null;
+}
+
+/** Slugs present in a locale — for getStaticPaths (only builds what exists). */
+export async function guideSlugs(lang) {
+  const list = await getCollection('guides');
+  return [...new Set(list.filter((g) => guideLang(g.id) === lang).map((g) => guideSlug(g.id)))];
+}
+
 /** Servers, resolved for the given locale (status/labels computed here). */
 // "ip:port" → Content Manager one-click join URL (opens CM via the acmanager:// handler).
 // Returns null when the address isn't a plain ip:port, so the card just shows the raw address.

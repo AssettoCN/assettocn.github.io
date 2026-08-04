@@ -72,6 +72,18 @@ const servers = defineCollection({
   }),
 });
 
+// 入门指南集合:src/content/guides/<lang>/<slug>.md —— 长文用 Markdown 正文。
+// 语言由目录决定(zh/ 或 en/),同一 slug 的中/英两篇配成一页;draft:true 显示「待审校」。
+const guides = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/guides' }),
+  schema: z.object({
+    order: z.number().default(0),
+    title: z.string(),
+    summary: z.string(),
+    draft: z.boolean().default(false),
+  }),
+});
+
 // 截图画廊集合:src/content/gallery/<id>.yaml
 const gallery = defineCollection({
   loader: glob({ pattern: '**/*.yaml', base: './src/content/gallery' }),
@@ -84,4 +96,4 @@ const gallery = defineCollection({
   }),
 });
 
-export const collections = { authors, works, servers, gallery };
+export const collections = { authors, works, servers, gallery, guides };

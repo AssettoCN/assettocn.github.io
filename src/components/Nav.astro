@@ -9,12 +9,13 @@ import { localizePath, otherLocale, ROUTES } from '../lib/i18n.js';
 // path:    canonical (locale-agnostic) path, so the language toggle jumps to the
 //          same page in the other locale.
 // 首页由左上角 Logo 承担,不单列「首页」项;「文档」是唯一跨站外链(docs.assetto.cn),
-// 单独渲染(新开标签 + ↗)。「入门」暂不露出,待 /start 内容就绪再加。
+// 单独渲染(新开标签 + ↗)。「入门」排第一,指向站内 /start。
 const { lang, section = null, path = '/' } = Astro.props;
 const ui = UI[lang];
 const homeHref = localizePath(lang, ROUTES.home);
 
 const links = [
+  { key: 'start', label: ui.nav.start, href: localizePath(lang, ROUTES.start) },
   { key: 'authors', label: ui.nav.authors, href: localizePath(lang, ROUTES.authors) },
   { key: 'works', label: ui.nav.works, href: localizePath(lang, ROUTES.works) },
   { key: 'servers', label: ui.nav.servers, href: localizePath(lang, ROUTES.servers) },

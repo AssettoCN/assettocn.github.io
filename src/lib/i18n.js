@@ -23,6 +23,7 @@ export function localizePath(lang, canonical) {
 /** Canonical (locale-agnostic) paths for each route. */
 export const ROUTES = {
   home: '/',
+  start: '/start',
   authors: '/authors',
   works: '/works',
   servers: '/servers',

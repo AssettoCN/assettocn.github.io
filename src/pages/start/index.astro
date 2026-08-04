@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StartPage from '../../components/pages/StartPage.astro';
+import { UI } from '../../data/ui.js';
+
+const lang = 'zh';
+const ui = UI[lang];
+---
+<BaseLayout lang={lang} section="start" path="/start" title={ui.startPage.title} description={ui.startPage.sub}>
+  <StartPage lang={lang} />
+</BaseLayout>

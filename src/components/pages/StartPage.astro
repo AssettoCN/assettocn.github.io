@@ -1,0 +1,49 @@
+---
+import { UI } from '../../data/ui.js';
+import { getGuides } from '../../lib/content.js';
+import { localizePath, ROUTES } from '../../lib/i18n.js';
+
+const { lang } = Astro.props;
+const ui = UI[lang];
+const guides = await getGuides(lang);
+---
+<div class="shell fade-in start">
+  <header class="start-head">
+    <h1 class="page-title">{ui.startPage.title}</h1>
+    <p class="text-muted start-sub">{ui.startPage.sub}</p>
+  </header>
+
+  <ol class="start-list">
+    {guides.map((g, i) => (
+      <li>
+        <a class="card elev-sm start-step" href={localizePath(lang, ROUTES.start + '/' + g.slug)}>
+          <span class="start-step__no">{String(i + 1).padStart(2, '0')}</span>
+          <span class="start-step__body">
+            <span class="start-step__title">
+              {g.title}
+              {g.draft && <span class="tag start-step__draft">{ui.guide.draft}</span>}
+            </span>
+            <span class="text-muted start-step__sum">{g.summary}</span>
+          </span>
+        </a>
+      </li>
+    ))}
+  </ol>
+</div>
+
+<style>
+  .start { padding-top: var(--space-6); padding-bottom: var(--space-8); }
+  .start-head { max-width: 60ch; margin-bottom: var(--space-6); }
+  .start-sub { font-size: 16px; line-height: 1.7; margin-top: var(--space-3); }
+  .start-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
+  .start-step {
+    display: flex; align-items: center; gap: var(--space-4);
+    padding: var(--space-4); text-decoration: none; color: inherit; transition: box-shadow .16s ease;
+  }
+  .start-step:hover { box-shadow: var(--shadow-md); }
+  .start-step__no { font-family: var(--font-heading); font-size: 28px; color: var(--color-accent); flex: none; width: 44px; }
+  .start-step__body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .start-step__title { font-size: 18px; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .start-step__sum { font-size: 14px; line-height: 1.6; }
+  .start-step__draft { font-size: 10.5px; background: var(--color-accent-100); color: var(--color-accent-700); }
+</style>

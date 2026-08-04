@@ -4,7 +4,7 @@ import { SITE } from './site.js';
 export const UI = {
   zh: {
     langLabel: 'EN',
-    nav: { authors: '作者', works: '作品', servers: '服务器', gallery: '截图', docs: '文档' },
+    nav: { start: '入门', authors: '作者', works: '作品', servers: '服务器', gallery: '截图', docs: '文档' },
     hero: {
       kicker: 'ASSETTO CORSA · 中文社区', title: '神力科莎中文社区',
       sub: 'AssettoCN 是聚集国内 modder 与玩家的中文社区。我们链接创作者、沉淀 AC 相关的资料与文档,帮你找到值得关注的作者与作品。',
@@ -46,6 +46,11 @@ export const UI = {
         { label: 'GitHub', href: SITE.social.github },
       ],
     },
+    startPage: {
+      title: '入门指南',
+      sub: '第一次玩神力科莎?跟着下面几步,从装游戏一路到进服开跑。',
+    },
+    guide: { toc: '入门指南', prev: '上一篇', next: '下一篇', draft: '初稿 · 待审校' },
     detail: {
       back: '返回作者列表', aboutTitle: '关于', linksTitle: '链接', worksTitle: 'TA 的作品',
       statsWorks: '作品',
@@ -79,7 +84,7 @@ export const UI = {
   },
   en: {
     langLabel: '中',
-    nav: { authors: 'Authors', works: 'Works', servers: 'Servers', gallery: 'Shots', docs: 'Docs' },
+    nav: { start: 'Guide', authors: 'Authors', works: 'Works', servers: 'Servers', gallery: 'Shots', docs: 'Docs' },
     hero: {
       kicker: 'ASSETTO CORSA · CN COMMUNITY', title: 'The Assetto Corsa community, in Chinese',
       sub: 'AssettoCN is a Chinese community of Assetto Corsa modders and players. We connect creators and collect AC resources and docs to help you find authors and work worth following.',
@@ -121,6 +126,11 @@ export const UI = {
         { label: 'GitHub', href: SITE.social.github },
       ],
     },
+    startPage: {
+      title: 'Getting started',
+      sub: 'New to Assetto Corsa? Follow these steps — from installing the game to getting on track.',
+    },
+    guide: { toc: 'Guides', prev: 'Previous', next: 'Next', draft: 'Draft · under review' },
     detail: {
       back: 'Back to authors', aboutTitle: 'About', linksTitle: 'Links', worksTitle: 'Their works',
       statsWorks: 'Works',

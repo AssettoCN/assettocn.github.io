@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import GuidePage from '../../../components/pages/GuidePage.astro';
+import { guideSlugs, getGuides } from '../../../lib/content.js';
+
+export async function getStaticPaths() {
+  const slugs = await guideSlugs('en');
+  return slugs.map((slug) => ({ params: { slug } }));
+}
+
+const lang = 'en';
+const { slug } = Astro.params;
+const guides = await getGuides(lang);
+const meta = guides.find((g) => g.slug === slug);
+---
+<BaseLayout lang={lang} section="start" path={`/start/${slug}`} title={meta?.title} description={meta?.summary}>
+  <GuidePage lang={lang} slug={slug} />
+</BaseLayout>

@@ -16,4 +16,4 @@ bio:
 links:
   - { platform: website, url: 'https://assetto.cn', label: 官网 / Site }
   - { platform: website, url: 'https://docs.assetto.cn', label: 文档中心 / Docs }
-  - { platform: github, url: '#' }
+  - { platform: github, url: 'https://github.com/AssettoCN' }

@@ -1,6 +1,6 @@
 order: 1
 type: cruise
-name: { zh: 'UDSTU SRP · 首都高', en: 'UDSTU SRP · Shutoko' }
+name: { zh: 'UD SRP', en: 'UD SRP' }
 region: { zh: '中国', en: 'China' }
 mode: { zh: '首都高巡航对战 · 带交通流', en: 'Shutoko cruise & battle · with traffic' }
 max: 59

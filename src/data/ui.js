@@ -36,7 +36,7 @@ export const UI = {
         { t: '收录服务器', b: '汇总社区在运营的服务器并提供一键接入,方便你快速进服开跑。' },
       ],
       ecoTitle: '生态与定位',
-      ecoBody: 'AssettoCN 由 UDSTU 工作室发起与维护,是社区对外的统一门面。整个生态最终都会收敛到 assetto.cn:本站作为社区平台(作者 / 作品 / 服务器 / 截图,以及正在筹备的入门指南),开发向的技术文档在 docs.assetto.cn。',
+      ecoBody: 'AssettoCN 由 Undefined Studio 出品与维护,是社区对外的统一门面。整个生态最终都会收敛到 assetto.cn:本站作为社区平台(作者 / 作品 / 服务器 / 截图,以及正在筹备的入门指南),开发向的技术文档在 docs.assetto.cn。',
       joinTitle: '加入我们',
       joinBody: '欢迎加入 QQ 群交流、在 B站关注我们的动态;想投稿作者 / 作品 / 服务器 / 截图,可通过 GitHub 提交。',
       links: [
@@ -111,7 +111,7 @@ export const UI = {
         { t: 'Server listing', b: 'A roundup of community-run servers with one-click join, so you can get on track fast.' },
       ],
       ecoTitle: 'Ecosystem & scope',
-      ecoBody: 'AssettoCN is started and maintained by the UDSTU studio and serves as the community’s public front. The whole ecosystem is converging on assetto.cn: this site is the community platform (authors / works / servers / screenshots, plus getting-started guides in the works), while developer-facing technical docs live at docs.assetto.cn.',
+      ecoBody: 'AssettoCN is produced and maintained by Undefined Studio and serves as the community’s public front. The whole ecosystem is converging on assetto.cn: this site is the community platform (authors / works / servers / screenshots, plus getting-started guides in the works), while developer-facing technical docs live at docs.assetto.cn.',
       joinTitle: 'Join us',
       joinBody: 'Join our QQ group, follow us on Bilibili, or submit an author / work / server / screenshot through GitHub.',
       links: [

@@ -1,6 +1,7 @@
 ---
 import BrandMark from './BrandMark.astro';
 import { UI } from '../data/ui.js';
+import { SITE } from '../data/site.js';
 import { localizePath, ROUTES } from '../lib/i18n.js';
 
 const { lang } = Astro.props;
@@ -14,8 +15,7 @@ const galleryHref = localizePath(lang, ROUTES.gallery);
 const quickLinks = [
   { label: ui.nav.servers, href: serversHref },
   { label: ui.nav.gallery, href: galleryHref },
-  { label: j.docs, href: 'https://docs.assetto.cn', external: true },
-  { label: 'Wiki', href: 'https://wiki.assetto.cn', external: true },
+  { label: j.docs, href: SITE.docsUrl, external: true },
 ];
 ---
 <section class="snap-section home-sec join-sec">

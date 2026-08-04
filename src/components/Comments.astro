@@ -1,0 +1,61 @@
+---
+// giscus 评论区(由 GitHub Discussions 驱动)。SITE.giscus 的 repoId/categoryId 留空时
+// 整块不渲染 —— 不加载外部脚本、不影响构建。term 用作 discussion 的唯一标识(mapping
+// 'specific'),同一作者的中/英页面共用一条评论串。主题跟随本站明暗切换。
+import { SITE } from '../data/site.js';
+import { UI } from '../data/ui.js';
+
+const { lang, term, mapping = 'specific' } = Astro.props;
+const g = SITE.giscus;
+const enabled = Boolean(g && g.repoId && g.categoryId);
+const ui = UI[lang];
+const giscusLang = lang === 'zh' ? 'zh-CN' : 'en';
+// 自定义 giscus 主题(适配本站配色)。giscus 只按 URL 加载主题,故用绝对地址;
+// 由 SITE.url(生产域名)拼出,部署后在 giscus 的 iframe 内可跨域取到(GitHub Pages 带 CORS)。
+const themes = {
+  light: `${SITE.url}/giscus-theme-light.css`,
+  dark: `${SITE.url}/giscus-theme-dark.css`,
+};
+---
+{enabled && (
+  <section class="comments">
+    <h4 class="comments__title">{ui.commentsTitle}</h4>
+    <script is:inline define:vars={{ g, mapping, term, giscusLang, themes }}>
+      (function () {
+        var host = document.currentScript;
+        var ORIGIN = 'https://giscus.app';
+        var curTheme = function () {
+          return themes[document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'];
+        };
+        // giscus 通过一枚带 data-* 的 <script> 承载配置;动态注入以免被打包器改写。
+        var s = document.createElement('script');
+        s.src = ORIGIN + '/client.js';
+        s.async = true;
+        s.crossOrigin = 'anonymous';
+        var attrs = {
+          repo: g.repo, 'repo-id': g.repoId, category: g.category, 'category-id': g.categoryId,
+          mapping: mapping, term: term, strict: '0', 'reactions-enabled': '1',
+          'emit-metadata': '0', 'input-position': 'bottom', loading: 'lazy',
+          theme: curTheme(), lang: giscusLang,
+        };
+        Object.keys(attrs).forEach(function (k) { s.setAttribute('data-' + k, attrs[k]); });
+        host.parentNode.insertBefore(s, host);
+        // 明暗切换时同步 giscus 主题(观察 <html data-theme>)。
+        var sync = function () {
+          var f = document.querySelector('iframe.giscus-frame');
+          if (f && f.contentWindow) {
+            f.contentWindow.postMessage({ giscus: { setConfig: { theme: curTheme() } } }, ORIGIN);
+          }
+        };
+        new MutationObserver(sync).observe(document.documentElement, {
+          attributes: true, attributeFilter: ['data-theme'],
+        });
+      })();
+    </script>
+  </section>
+)}
+
+<style>
+  .comments { margin-top: var(--space-8); padding-top: var(--space-6); border-top: 1px solid var(--color-divider); }
+  .comments__title { font-size: 22px; margin: 0 0 var(--space-4); }
+</style>

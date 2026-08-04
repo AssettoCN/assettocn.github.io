@@ -13,5 +13,8 @@ yarn-error.log*
 .env.production
 # raw intake / source material (原始投稿资料:xlsx、原图等,不进仓库)
 assets/
+# local-only docs (本地保留,不进仓库):编辑手册 + 给 agent 的架构地图
+EDITING.md
+context.md
 # os
 .DS_Store

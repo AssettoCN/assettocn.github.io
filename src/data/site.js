@@ -13,6 +13,25 @@ export const SITE = {
   // GitHub Issue 表单(见 .github/ISSUE_TEMPLATE/*.yml),投稿经 Action 自动
   // 转成待审核的 PR。留空则按钮保持普通占位状态。
   repo: 'AssettoCN/assettocn.github.io',
+
+  // 开发文档站(唯一跨站外链)。顶栏「文档 ↗」与页脚「文档中心」都读这里,
+  // 将来文档收归 assetto.cn 子路径/子域时只改这一行。
+  docsUrl: 'https://docs.assetto.cn',
+
+  // 社区讨论区(GitHub Discussions)。页脚「动态交流」指向这里。链接确定,但**需先在
+  // 仓库 Settings 里开启 Discussions** 才可访问(见 EDITING.md「启用评论」同一步)。
+  discussionsUrl: 'https://github.com/AssettoCN/assettocn.github.io/discussions',
+
+  // 评论(giscus,由 GitHub Discussions 驱动)。**repoId / categoryId 留空 = 整站不显示
+  // 评论**:不渲染组件、不加载任何外部脚本、不影响构建。启用步骤见 EDITING.md
+  // (仓库开 Discussions → 安装 giscus app → 建一个分类如 Comments → 到 giscus.app
+  //  填入本仓库拿到 repo-id / category-id 贴到下面)。
+  giscus: {
+    repo: 'AssettoCN/assettocn.github.io',
+    repoId: 'R_kgDOSAqXxw',
+    category: 'Comments',
+    categoryId: 'DIC_kwDOSAqXx84DCoqj',
+  },
 };
 
 /** GitHub「新建 issue(用某个模板)」链接;未配置 repo 时返回 null。 */

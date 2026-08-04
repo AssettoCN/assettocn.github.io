@@ -1,0 +1,57 @@
+/* giscus 自定义主题 —— AssettoCN 深色(近黑底 · AC 红)。
+   与 global.css 的 html[data-theme='dark'] 配色对应;跨域 iframe 内加载,取值写死。
+   改站点深色配色时这里要同步。浅色见 giscus-theme-light.css。 */
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&display=swap');
+
+main {
+  /* 文字 */
+  --color-fg-default: #f2efec;
+  --color-fg-muted: #9e999b;
+  --color-fg-subtle: #7d787a;
+
+  /* 背景层 */
+  --color-canvas-default: #0e0c0c;
+  --color-canvas-overlay: #161415;
+  --color-canvas-inset: #0e0c0c;
+  --color-canvas-subtle: #161415;
+
+  /* 边框 / 分隔 */
+  --color-border-default: #2b2829;
+  --color-border-muted: #1f1d1e;
+  --color-neutral-muted: rgba(242, 239, 236, 0.08);
+
+  /* 强调色 = AC 红(深色下用更亮的红保证可读) */
+  --color-accent-fg: #ef7079;
+  --color-accent-emphasis: #e2001a;
+  --color-accent-muted: rgba(226, 0, 26, 0.40);
+  --color-accent-subtle: #340a0d;
+
+  /* 主按钮(发表评论)= 实心 AC 红 */
+  --color-btn-primary-text: #ffffff;
+  --color-btn-primary-bg: #e2001a;
+  --color-btn-primary-border: transparent;
+  --color-btn-primary-hover-bg: #e6414c;
+  --color-btn-primary-hover-border: transparent;
+  --color-btn-primary-selected-bg: #c0001a;
+  --color-btn-primary-disabled-text: rgba(255, 255, 255, 0.65);
+  --color-btn-primary-disabled-bg: #6f131a;
+
+  /* 次按钮 */
+  --color-btn-text: #f2efec;
+  --color-btn-bg: #1f1d1e;
+  --color-btn-border: rgba(242, 239, 236, 0.13);
+  --color-btn-hover-bg: #2b2829;
+  --color-btn-hover-border: rgba(242, 239, 236, 0.22);
+  --color-btn-active-bg: #322f30;
+  --color-btn-selected-bg: #2b2829;
+
+  /* 状态色 */
+  --color-success-fg: #aebf92;
+  --color-danger-fg: #ef7079;
+
+  --color-action-list-item-default-hover-bg: rgba(242, 239, 236, 0.07);
+
+  font-family: "Figtree", system-ui, sans-serif;
+}
+
+main .gsc-reactions { border-top-color: #1f1d1e; }

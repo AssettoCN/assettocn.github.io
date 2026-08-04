@@ -2,6 +2,7 @@
 import WorkRow from '../WorkRow.astro';
 import Icon from '../Icon.astro';
 import BrandMark from '../BrandMark.astro';
+import Comments from '../Comments.astro';
 import { UI } from '../../data/ui.js';
 import { getAuthor, worksByAuthor } from '../../lib/content.js';
 import { localizePath, ROUTES } from '../../lib/i18n.js';
@@ -75,6 +76,8 @@ const authorsHref = localizePath(lang, ROUTES.authors);
   <div class="list-stack">
     {selWorks.map((w) => <WorkRow work={w} lang={lang} />)}
   </div>
+
+  <Comments lang={lang} term={`author:${sel.id}`} />
 </div>
 
 <style>

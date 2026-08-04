@@ -1,0 +1,59 @@
+/* giscus 自定义主题 —— AssettoCN 浅色(白底 · AC 红)。
+   把 giscus(GitHub Primer)内部变量映射到本站 global.css 的配色。
+   注:此文件在 giscus 的跨域 iframe 内加载,读不到本站的 CSS 变量,故直接写死取值;
+   改站点配色时这里要同步。深色见 giscus-theme-dark.css。 */
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&display=swap');
+
+main {
+  /* 文字 */
+  --color-fg-default: #16161a;
+  --color-fg-muted: #74767c;
+  --color-fg-subtle: #97999f;
+
+  /* 背景层 */
+  --color-canvas-default: #ffffff;
+  --color-canvas-overlay: #ffffff;
+  --color-canvas-inset: #f3f3f5;
+  --color-canvas-subtle: #f3f3f5;
+
+  /* 边框 / 分隔 */
+  --color-border-default: #dcdde0;
+  --color-border-muted: #ececee;
+  --color-neutral-muted: rgba(22, 22, 26, 0.07);
+
+  /* 强调色 = AC 红(链接、聚焦、选中) */
+  --color-accent-fg: #c0001a;
+  --color-accent-emphasis: #e2001a;
+  --color-accent-muted: rgba(226, 0, 26, 0.35);
+  --color-accent-subtle: #ffe9ea;
+
+  /* 主按钮(发表评论)= 实心 AC 红 */
+  --color-btn-primary-text: #ffffff;
+  --color-btn-primary-bg: #e2001a;
+  --color-btn-primary-border: transparent;
+  --color-btn-primary-hover-bg: #c0001a;
+  --color-btn-primary-hover-border: transparent;
+  --color-btn-primary-selected-bg: #98001a;
+  --color-btn-primary-disabled-text: rgba(255, 255, 255, 0.75);
+  --color-btn-primary-disabled-bg: #f5555f;
+
+  /* 次按钮 */
+  --color-btn-text: #16161a;
+  --color-btn-bg: #f3f3f5;
+  --color-btn-border: rgba(22, 22, 26, 0.13);
+  --color-btn-hover-bg: #ececee;
+  --color-btn-hover-border: rgba(22, 22, 26, 0.20);
+  --color-btn-active-bg: #e6e6e9;
+  --color-btn-selected-bg: #ececee;
+
+  /* 状态色 */
+  --color-success-fg: #56633f;
+  --color-danger-fg: #c0001a;
+
+  --color-action-list-item-default-hover-bg: rgba(22, 22, 26, 0.06);
+
+  font-family: "Figtree", system-ui, sans-serif;
+}
+
+/* 隐藏「Powered by giscus」下的多余边距等可按需微调 */
+main .gsc-reactions { border-top-color: #ececee; }

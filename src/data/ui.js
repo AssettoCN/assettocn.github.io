@@ -1,8 +1,10 @@
 // All user-facing UI copy, keyed by locale. Ported from the prototype.
+import { SITE } from './site.js';
+
 export const UI = {
   zh: {
     langLabel: 'EN',
-    nav: { home: '首页', authors: '作者', works: '作品', servers: '服务器', gallery: '截图' },
+    nav: { authors: '作者', works: '作品', servers: '服务器', gallery: '截图', docs: '文档' },
     hero: {
       kicker: 'ASSETTO CORSA · 中文社区', title: '神力科莎中文社区',
       sub: 'AssettoCN 是聚集国内 modder 与玩家的中文社区。我们链接创作者、沉淀 AC 相关的资料与文档,帮你找到值得关注的作者与作品。',
@@ -41,9 +43,8 @@ export const UI = {
           { label: '加入我们', href: '#' },
         ] },
         { title: '资料', links: [
-          { label: '文档中心', href: 'https://docs.assetto.cn' },
-          { label: '社区 Wiki', href: 'https://wiki.assetto.cn' },
-          { label: '动态交流', href: '#' },
+          { label: '文档中心', href: SITE.docsUrl },
+          { label: '动态交流', href: SITE.discussionsUrl },
         ] },
         { title: '关注', links: [
           { label: 'Bilibili', href: '#' },
@@ -55,10 +56,11 @@ export const UI = {
     },
     footer: 'AssettoCN · 由社区驱动 · 仅作原型演示',
     viewLabel: '查看', coverHint: '封面',
+    commentsTitle: '留言',
   },
   en: {
     langLabel: '中',
-    nav: { home: 'Home', authors: 'Authors', works: 'Works', servers: 'Servers', gallery: 'Shots' },
+    nav: { authors: 'Authors', works: 'Works', servers: 'Servers', gallery: 'Shots', docs: 'Docs' },
     hero: {
       kicker: 'ASSETTO CORSA · CN COMMUNITY', title: 'The Assetto Corsa community, in Chinese',
       sub: 'AssettoCN is a Chinese community of Assetto Corsa modders and players. We connect creators and collect AC resources and docs to help you find authors and work worth following.',
@@ -97,9 +99,8 @@ export const UI = {
           { label: 'Join us', href: '#' },
         ] },
         { title: 'Resources', links: [
-          { label: 'Docs', href: 'https://docs.assetto.cn' },
-          { label: 'Wiki', href: 'https://wiki.assetto.cn' },
-          { label: 'Discussions', href: '#' },
+          { label: 'Docs', href: SITE.docsUrl },
+          { label: 'Discussions', href: SITE.discussionsUrl },
         ] },
         { title: 'Follow', links: [
           { label: 'Bilibili', href: '#' },
@@ -111,5 +112,6 @@ export const UI = {
     },
     footer: 'AssettoCN · Community-driven · Prototype demo only',
     viewLabel: 'View', coverHint: 'cover',
+    commentsTitle: 'Comments',
   },
 };

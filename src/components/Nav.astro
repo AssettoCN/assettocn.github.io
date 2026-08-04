@@ -2,16 +2,19 @@
 import BrandMark from './BrandMark.astro';
 import Icon from './Icon.astro';
 import { UI } from '../data/ui.js';
+import { SITE } from '../data/site.js';
 import { localizePath, otherLocale, ROUTES } from '../lib/i18n.js';
 
-// section: 'home' | 'authors' | 'works' | 'servers' | 'gallery' | null
+// section: 'authors' | 'works' | 'servers' | 'gallery' | null
 // path:    canonical (locale-agnostic) path, so the language toggle jumps to the
 //          same page in the other locale.
+// 首页由左上角 Logo 承担,不单列「首页」项;「文档」是唯一跨站外链(docs.assetto.cn),
+// 单独渲染(新开标签 + ↗)。「入门」暂不露出,待 /start 内容就绪再加。
 const { lang, section = null, path = '/' } = Astro.props;
 const ui = UI[lang];
+const homeHref = localizePath(lang, ROUTES.home);
 
 const links = [
-  { key: 'home', label: ui.nav.home, href: localizePath(lang, ROUTES.home) },
   { key: 'authors', label: ui.nav.authors, href: localizePath(lang, ROUTES.authors) },
   { key: 'works', label: ui.nav.works, href: localizePath(lang, ROUTES.works) },
   { key: 'servers', label: ui.nav.servers, href: localizePath(lang, ROUTES.servers) },
@@ -20,13 +23,17 @@ const links = [
 const langHref = localizePath(otherLocale(lang), path);
 ---
 <div class="nav acn-nav">
-  <a class="nav-brand acn-brand" href={links[0].href}>
+  <a class="nav-brand acn-brand" href={homeHref}>
     <BrandMark width={34} />
     AssettoCN
   </a>
   {links.map((l) => (
     <a href={l.href} aria-current={section === l.key ? 'page' : undefined}>{l.label}</a>
   ))}
+  <a class="acn-nav__ext" href={SITE.docsUrl} target="_blank" rel="noopener noreferrer">
+    {ui.nav.docs}
+    <Icon name="external" size={13} />
+  </a>
   <button type="button" class="acn-theme" data-theme-toggle aria-label="Toggle dark mode">
     <span class="acn-theme__ico acn-theme__ico--sun"><Icon name="sun" size={16} /></span>
     <span class="acn-theme__ico acn-theme__ico--moon"><Icon name="moon" size={16} /></span>
@@ -70,6 +77,9 @@ const langHref = localizePath(otherLocale(lang), path);
     color: inherit;
   }
   .acn-lang { min-height: 34px; }
+  /* 跨站外链(文档):内联小 ↗,与内部导航项区分开。 */
+  .acn-nav__ext { display: inline-flex; align-items: center; gap: 4px; }
+  .acn-nav__ext :global(svg) { opacity: .6; }
 
   .acn-theme {
     display: inline-grid; place-items: center;

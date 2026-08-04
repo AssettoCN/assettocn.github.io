@@ -1,0 +1,21 @@
+order: 1005
+initials: "咪"
+tint: "--color-accent-2-300"
+ink: "--color-accent-2-900"
+avatar: "/images/authors/miguez-huashi.jpg"
+name:
+  zh: "米格-画师"
+  en: "Miguez_HS"
+handle: "@Miguez_HUASHI"
+skills:
+  zh:
+    - "爆闪艺术，特种车辆，追击用车"
+  en:
+    - "Flash Strobe Styling"
+    - "Special Operations Vehicle"
+    - "Pursuit Vehicle"
+bio:
+  zh: "𓆡𓆝𓆟𓆜𓆞𓆝𓆟𓆜𓆞"
+  en: "𓆡𓆝𓆟𓆜𓆞𓆝𓆟𓆜𓆞"
+links:
+  - { label: "Bilibili : https://space.bilibili.com/500390971?spm_id_from=333.1007.0.0", url: "#" }

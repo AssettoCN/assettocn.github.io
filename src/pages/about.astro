@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AboutPage from '../components/pages/AboutPage.astro';
+import { UI } from '../data/ui.js';
+
+const lang = 'zh';
+const ui = UI[lang];
+---
+<BaseLayout lang={lang} path="/about" title={ui.about.title} description={ui.about.lead}>
+  <AboutPage lang={lang} />
+</BaseLayout>

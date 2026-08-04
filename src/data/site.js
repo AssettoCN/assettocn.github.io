@@ -22,6 +22,13 @@ export const SITE = {
   // 仓库 Settings 里开启 Discussions** 才可访问(见 EDITING.md「启用评论」同一步)。
   discussionsUrl: 'https://github.com/AssettoCN/assettocn.github.io/discussions',
 
+  // 社区外链单一来源(页脚「关注」和关于页共用,改一处即可)。
+  social: {
+    bilibili: 'https://space.bilibili.com/3833596',
+    qqGroup: 'https://qm.qq.com/q/IAxQOpCGYM',
+    github: 'https://github.com/AssettoCN',
+  },
+
   // 评论(giscus,由 GitHub Discussions 驱动)。**repoId / categoryId 留空 = 整站不显示
   // 评论**:不渲染组件、不加载任何外部脚本、不影响构建。启用步骤见 EDITING.md
   // (仓库开 Discussions → 安装 giscus app → 建一个分类如 Comments → 到 giscus.app

@@ -27,5 +27,6 @@ export const ROUTES = {
   works: '/works',
   servers: '/servers',
   gallery: '/gallery',
+  about: '/about',
   author: (id) => `/authors/${id}`,
 };

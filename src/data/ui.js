@@ -26,6 +26,26 @@ export const UI = {
       connect: '接入信息', join: '一键接入(CM)', homepage: '主页', apply: '申请收录服务器', online: '在线', offline: '离线',
     },
     galleryPage: { title: '截图画廊', sub: '社区玩家投稿的游戏截图 —— 分享你镜头下的神力科莎。', submit: '投稿截图', by: '投稿者' },
+    about: {
+      title: '关于 AssettoCN',
+      lead: 'AssettoCN(简称 ACN)是面向国内玩家的神力科莎(Assetto Corsa)中文社区。我们把国内的 modder、作品、服务器与资料聚到一起,帮助中文玩家更轻松地上手这款模拟赛车游戏,并找到值得关注的创作者。',
+      doTitle: '我们在做什么',
+      items: [
+        { t: '链接创作者', b: '集中展示国内 modder 与他们的车辆、地图等作品,帮你找到并关注喜欢的作者。我们不直接托管 mod,而是把你导向作者本人的发布页。' },
+        { t: '沉淀资料与文档', b: '整理从入门安装到进阶制作的资料;面向开发者的深入技术文档放在 docs.assetto.cn。' },
+        { t: '收录服务器', b: '汇总社区在运营的服务器并提供一键接入,方便你快速进服开跑。' },
+      ],
+      ecoTitle: '生态与定位',
+      ecoBody: 'AssettoCN 由 UDSTU 工作室发起与维护,是社区对外的统一门面。整个生态最终都会收敛到 assetto.cn:本站作为社区平台(作者 / 作品 / 服务器 / 截图,以及正在筹备的入门指南),开发向的技术文档在 docs.assetto.cn。',
+      joinTitle: '加入我们',
+      joinBody: '欢迎加入 QQ 群交流、在 B站关注我们的动态;想投稿作者 / 作品 / 服务器 / 截图,可通过 GitHub 提交。',
+      links: [
+        { label: 'QQ 群', href: SITE.social.qqGroup },
+        { label: 'Bilibili', href: SITE.social.bilibili },
+        { label: '社区讨论', href: SITE.discussionsUrl },
+        { label: 'GitHub', href: SITE.social.github },
+      ],
+    },
     detail: {
       back: '返回作者列表', aboutTitle: '关于', linksTitle: '链接', worksTitle: 'TA 的作品',
       statsWorks: '作品',
@@ -37,6 +57,7 @@ export const UI = {
       blurb: '神力科莎中文社区 —— 链接创作者,沉淀 AC 资料与文档。',
       cols: [
         { title: '社区', links: [
+          { label: '关于 ACN', href: '/about' },
           { label: '作者列表', href: '/authors' },
           { label: '社区作品', href: '/works' },
           { label: '加入我们', href: SITE.discussionsUrl },
@@ -46,9 +67,9 @@ export const UI = {
           { label: '动态交流', href: SITE.discussionsUrl },
         ] },
         { title: '关注', links: [
-          { label: 'Bilibili', href: 'https://space.bilibili.com/3833596' },
-          { label: 'QQ 群', href: 'https://qm.qq.com/q/IAxQOpCGYM' },
-          { label: 'GitHub', href: 'https://github.com/AssettoCN' },
+          { label: 'Bilibili', href: SITE.social.bilibili },
+          { label: 'QQ 群', href: SITE.social.qqGroup },
+          { label: 'GitHub', href: SITE.social.github },
         ] },
       ],
     },
@@ -80,6 +101,26 @@ export const UI = {
       connect: 'Connection info', join: 'Join via CM', homepage: 'Homepage', apply: 'Apply to list a server', online: 'Online', offline: 'Offline',
     },
     galleryPage: { title: 'Screenshot gallery', sub: 'Screenshots submitted by community players — share your view of Assetto Corsa.', submit: 'Submit a shot', by: 'by' },
+    about: {
+      title: 'About AssettoCN',
+      lead: 'AssettoCN (ACN for short) is a Chinese-language community for Assetto Corsa. We gather Chinese modders, their work, servers and resources in one place — helping Chinese players get into the sim more easily and find creators worth following.',
+      doTitle: 'What we do',
+      items: [
+        { t: 'Connect creators', b: 'We showcase Chinese modders and their cars, maps and more, so you can find and follow the creators you like. We don’t host mods directly — we point you to each author’s own release page.' },
+        { t: 'Resources & docs', b: 'Curated material from first install to advanced creation; in-depth developer docs live at docs.assetto.cn.' },
+        { t: 'Server listing', b: 'A roundup of community-run servers with one-click join, so you can get on track fast.' },
+      ],
+      ecoTitle: 'Ecosystem & scope',
+      ecoBody: 'AssettoCN is started and maintained by the UDSTU studio and serves as the community’s public front. The whole ecosystem is converging on assetto.cn: this site is the community platform (authors / works / servers / screenshots, plus getting-started guides in the works), while developer-facing technical docs live at docs.assetto.cn.',
+      joinTitle: 'Join us',
+      joinBody: 'Join our QQ group, follow us on Bilibili, or submit an author / work / server / screenshot through GitHub.',
+      links: [
+        { label: 'QQ group', href: SITE.social.qqGroup },
+        { label: 'Bilibili', href: SITE.social.bilibili },
+        { label: 'Discussions', href: SITE.discussionsUrl },
+        { label: 'GitHub', href: SITE.social.github },
+      ],
+    },
     detail: {
       back: 'Back to authors', aboutTitle: 'About', linksTitle: 'Links', worksTitle: 'Their works',
       statsWorks: 'Works',
@@ -91,6 +132,7 @@ export const UI = {
       blurb: 'The Assetto Corsa Chinese community — connecting creators and collecting AC resources.',
       cols: [
         { title: 'Community', links: [
+          { label: 'About ACN', href: '/en/about' },
           { label: 'Authors', href: '/en/authors' },
           { label: 'Works', href: '/en/works' },
           { label: 'Join us', href: SITE.discussionsUrl },
@@ -100,9 +142,9 @@ export const UI = {
           { label: 'Discussions', href: SITE.discussionsUrl },
         ] },
         { title: 'Follow', links: [
-          { label: 'Bilibili', href: 'https://space.bilibili.com/3833596' },
-          { label: 'QQ group', href: 'https://qm.qq.com/q/IAxQOpCGYM' },
-          { label: 'GitHub', href: 'https://github.com/AssettoCN' },
+          { label: 'Bilibili', href: SITE.social.bilibili },
+          { label: 'QQ group', href: SITE.social.qqGroup },
+          { label: 'GitHub', href: SITE.social.github },
         ] },
       ],
     },

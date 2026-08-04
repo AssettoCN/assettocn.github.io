@@ -1,0 +1,69 @@
+---
+import Icon from '../Icon.astro';
+import { UI } from '../../data/ui.js';
+
+const { lang } = Astro.props;
+const ui = UI[lang];
+const a = ui.about;
+---
+<div class="shell fade-in about">
+  <header class="about-head">
+    <h1 class="page-title">{a.title}</h1>
+    <p class="about-lead">{a.lead}</p>
+  </header>
+
+  <section class="about-sec">
+    <h2 class="about-h">{a.doTitle}</h2>
+    <div class="about-grid">
+      {a.items.map((it) => (
+        <div class="card elev-sm about-card">
+          <h3 class="about-card__t">{it.t}</h3>
+          <p class="about-card__b text-muted">{it.b}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="about-sec">
+    <h2 class="about-h">{a.ecoTitle}</h2>
+    <p class="about-body">{a.ecoBody}</p>
+  </section>
+
+  <section class="about-sec">
+    <h2 class="about-h">{a.joinTitle}</h2>
+    <p class="about-body">{a.joinBody}</p>
+    <div class="about-links">
+      {a.links.map((lk) => {
+        const external = lk.href.startsWith('http');
+        return (
+          <a
+            class="btn btn-secondary about-link"
+            href={lk.href}
+            target={external ? '_blank' : undefined}
+            rel={external ? 'noopener noreferrer' : undefined}
+          >
+            <span>{lk.label}</span>
+            {external && <Icon name="external" size={14} />}
+          </a>
+        );
+      })}
+    </div>
+  </section>
+</div>
+
+<style>
+  .about { padding-top: var(--space-6); padding-bottom: var(--space-8); }
+  .about-head { max-width: 62ch; }
+  .about-lead { font-size: 18px; line-height: 1.75; margin: var(--space-3) 0 0; text-wrap: pretty; }
+  .about-sec { margin-top: var(--space-8); }
+  .about-h { font-size: 22px; margin: 0 0 var(--space-4); }
+  .about-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+  .about-card { padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); }
+  .about-card__t { font-size: 17px; margin: 0; }
+  .about-card__b { font-size: 14px; line-height: 1.65; margin: 0; }
+  .about-body { font-size: 15px; line-height: 1.75; max-width: 68ch; text-wrap: pretty; }
+  .about-links { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-4); }
+  .about-link { gap: 8px; }
+
+  @media (max-width: 760px) { .about-grid { grid-template-columns: 1fr; } }
+</style>

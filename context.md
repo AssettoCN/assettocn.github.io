@@ -82,7 +82,9 @@ Scroll-snap is enabled only on the home route via `snap` → `data-snap` on `<ht
    `site.js` (domain),
    `work-types.js` (`TYPE` = work category labels + tag classes; source of the
    `type` enum in the works schema), `server-types.js` (`SERVER_TYPE` = server
-   category labels + tags; source of the `type` enum in the servers schema).
+   category labels + tags; source of the `type` enum in the servers schema),
+   `link-platforms.js` (`LINK_PLATFORM` = author-link platforms → icon + bilingual
+   label + domain-match; source of the `links[].platform` enum in the authors schema).
 3. `src/lib/content.js` **resolves** collection entries for a given `lang` into
    render-ready objects: `getAuthors`, `getAuthor`, `getWorks`, `worksByAuthor`,
    `authorIds`, `getServers` (computes category label/tag + status colour/label +
@@ -104,6 +106,12 @@ Scroll-snap is enabled only on the home route via `snap` → `data-snap` on `<ht
   may carry an optional `link` (external URL) → a "View" button on the card.
 - `src/data/server-types.js` — `SERVER_TYPE` map (circuit/drift/touge/cruise); its
   keys are the `type` enum used by the servers schema and the servers-page filter.
+- `src/data/link-platforms.js` — `LINK_PLATFORM` map (bilibili/afdian/weibo/qq/
+  youtube/patreon/x/discord/github/website/other); keys are the `links[].platform`
+  enum in the authors schema; each entry maps to an `Icon.astro` icon + bilingual
+  label (+ `match` regexes used by the submission parser to auto-classify links).
+  Author `links` are now `{ platform, url, label? }` (`label` only overrides `other`);
+  `lib/content.js` resolves each to `{ url, icon, label }` for `AuthorDetailPage`.
 - `src/data/site.js` — **single source** for the site `url` (domain).
   `astro.config.mjs` and the `robots.txt` endpoint both import `SITE.url`.
 - Home telemetry `stats` are **derived** (`getHomeStats` in `lib/content.js`) from

@@ -17,4 +17,4 @@ bio:
     what quirky models turn up. Notable: 2024 Kia Picanto GT-line, 2023
     Fangchengbao Bao 5.
 links:
-  - { label: '爱发电', url: 'https://afdian.com/a/1145141919810WCAO' }
+  - { platform: afdian, url: 'https://afdian.com/a/1145141919810WCAO' }

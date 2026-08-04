@@ -17,4 +17,4 @@ bio:
     new and high-end cars while continuously compiling AC modding manuals and
     technical docs. Notable: 2023 Mansory Carbonado GTS.
 links:
-  - { label: 'B站', url: 'https://space.bilibili.com/1638757708' }
+  - { platform: bilibili, url: 'https://space.bilibili.com/1638757708' }

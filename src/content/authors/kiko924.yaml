@@ -17,4 +17,4 @@ bio:
     factory-spec cars and open to custom tuning and livery commissions.
     Notable: the "Sally" Porsche 996.
 links:
-  - { label: 'B站', url: 'https://space.bilibili.com/488192660' }
+  - { platform: bilibili, url: 'https://space.bilibili.com/488192660' }

@@ -15,4 +15,4 @@ bio:
     A next-gen games-industry professional and AC mod author working across
     modeling, vehicles, maps and liveries.
 links:
-  - { label: 'B站', url: 'https://space.bilibili.com/14007311' }
+  - { platform: bilibili, url: 'https://space.bilibili.com/14007311' }

@@ -18,4 +18,4 @@ bio:
   zh: "𓆡𓆝𓆟𓆜𓆞𓆝𓆟𓆜𓆞"
   en: "𓆡𓆝𓆟𓆜𓆞𓆝𓆟𓆜𓆞"
 links:
-  - { label: "Bilibili", url: "https://space.bilibili.com/500390971" }
+  - { platform: bilibili, url: "https://space.bilibili.com/500390971" }

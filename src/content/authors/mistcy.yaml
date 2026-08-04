@@ -14,4 +14,4 @@ bio:
   en: >-
     Vehicle mod author. Notable: BMW F02 750Li 2009.
 links:
-  - { label: 'B站', url: 'https://space.bilibili.com/623786059' }
+  - { platform: bilibili, url: 'https://space.bilibili.com/623786059' }

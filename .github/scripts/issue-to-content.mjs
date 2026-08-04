@@ -60,6 +60,37 @@ const firstChar = (s) => Array.from(String(s).trim())[0] || '?';
 const splitList = (s) => String(s).split(/[,,、\n]+/).map((x) => x.trim()).filter(Boolean);
 const currentMonth = () => new Date().toISOString().slice(0, 7);
 
+// 作者外链平台识别(与 src/data/link-platforms.js 保持一致)——用于「其他链接」里
+// 每行 "名称 | 链接" 的自动归类:先按名称,再按域名,都不中则 other。
+const LINK_DOMAINS = [
+  ['bilibili', [/bilibili\.com/i, /b23\.tv/i]],
+  ['afdian', [/afdian\.(com|net)/i]],
+  ['weibo', [/weibo\.(com|cn)/i]],
+  ['qq', [/qq\.com/i]],
+  ['youtube', [/youtube\.com/i, /youtu\.be/i]],
+  ['patreon', [/patreon\.com/i]],
+  ['x', [/twitter\.com/i, /(?:\/\/|\.)x\.com/i]],
+  ['discord', [/discord\.(gg|com)/i]],
+  ['github', [/github\.com/i]],
+];
+const LINK_NAMES = {
+  bilibili: 'bilibili', 'b站': 'bilibili', '哔哩哔哩': 'bilibili',
+  afdian: 'afdian', '爱发电': 'afdian',
+  weibo: 'weibo', '微博': 'weibo',
+  qq: 'qq', 'qq群': 'qq',
+  youtube: 'youtube', '油管': 'youtube',
+  patreon: 'patreon',
+  x: 'x', twitter: 'x', '推特': 'x',
+  discord: 'discord', github: 'github',
+  website: 'website', '个人主页': 'website', 官网: 'website', 主页: 'website',
+};
+function detectPlatform(name, url) {
+  const n = String(name || '').trim().toLowerCase().replace(/\s+/g, '');
+  if (LINK_NAMES[n]) return LINK_NAMES[n];
+  for (const [key, res] of LINK_DOMAINS) if (res.some((re) => re.test(url))) return key;
+  return 'other';
+}
+
 /** Extract the first image URL from a textarea value (markdown / <img> / bare). */
 function imageUrlFrom(value) {
   const v = value || '';
@@ -179,11 +210,30 @@ const BUILDERS = {
     // 可选头像图:传了就下载到 public/images/authors/;没传留空 → 前端回退到字母头像
     const avatarUrl = imageUrlFrom(field('头像图片') || field('avatar', 'image'));
     const avatar = avatarUrl ? await downloadImage(avatarUrl, 'authors', id) : '';
-    // links textarea: one "Label | URL" per line
-    const links = String(field('外链') || field('links'))
-      .split('\n').map((l) => l.trim()).filter(Boolean)
-      .map((l) => { const i = l.indexOf('|'); return i === -1 ? { label: l, url: '#' } : { label: l.slice(0, i).trim(), url: l.slice(i + 1).trim() || '#' }; })
-      .filter((x) => x.label);
+    // 外链:每个平台一个专属输入框(平台由填哪个框决定,投稿人无需写平台名);
+    // 「其他链接」textarea 每行 "名称 | 链接",按名称/域名归类。
+    const links = [];
+    const pushLink = (platform, val) => { const u = String(val || '').trim(); if (u) links.push({ platform, url: u }); };
+    pushLink('bilibili', field('bilibili'));
+    pushLink('afdian', field('afdian'));
+    pushLink('weibo', field('weibo'));
+    pushLink('qq', field('qq'));
+    pushLink('youtube', field('youtube'));
+    pushLink('patreon', field('patreon'));
+    pushLink('x', field('twitter'));
+    pushLink('discord', field('discord'));
+    pushLink('github', field('github'));
+    pushLink('website', field('website'));
+    for (const line of String(field('其他链接') || field('other', 'links')).split('\n')) {
+      const t = line.trim();
+      if (!t) continue;
+      const bar = t.indexOf('|');
+      const nm = bar === -1 ? '' : t.slice(0, bar).trim();
+      const url = (bar === -1 ? t : t.slice(bar + 1)).trim();
+      if (!url) continue;
+      const platform = detectPlatform(nm, url);
+      links.push(platform === 'other' && nm ? { platform, url, label: nm } : { platform, url });
+    }
     const listBlock = (k, arr) => `${k}:\n  zh:\n${arr.zh.map((x) => `    - ${q(x)}`).join('\n') || '    []'}\n  en:\n${arr.en.map((x) => `    - ${q(x)}`).join('\n') || '    []'}\n`;
     let yaml =
       `order: ${order}\n` +
@@ -195,7 +245,7 @@ const BUILDERS = {
       `handle: ${q(handle)}\n` +
       listBlock('skills', { zh: skillsZh, en: skillsEn }) +
       `bio:\n  zh: ${q(bioZh)}\n  en: ${q(bioEn)}\n`;
-    if (links.length) yaml += `links:\n` + links.map((l) => `  - { label: ${q(l.label)}, url: ${q(l.url)} }`).join('\n') + '\n';
+    if (links.length) yaml += `links:\n` + links.map((l) => `  - { platform: ${l.platform}, url: ${q(l.url)}${l.label ? `, label: ${q(l.label)}` : ''} }`).join('\n') + '\n';
     const note = existsSync(`src/content/authors/${id}.yaml`) ? ` ⚠️ 覆盖已存在的作者 ${id}` : '';
     return { id, dir: 'authors', yaml, title: `${nameZh} / ${nameEn}${note}` };
   },

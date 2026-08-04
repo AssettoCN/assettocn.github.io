@@ -18,4 +18,4 @@ bio:
     tuned builds back to their factory looks. Notable: Nissan STAGEA RS Four V
     '98, Subaru WRX STI S209 '18, Impreza WRX STi S201 '98.
 links:
-  - { label: 'B站', url: 'https://space.bilibili.com/1681330270' }
+  - { platform: bilibili, url: 'https://space.bilibili.com/1681330270' }

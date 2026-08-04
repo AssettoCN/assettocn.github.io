@@ -14,5 +14,5 @@ bio:
     Mostly builds tuned compact cars, plus a grab-bag of other things. Notable:
     a Scania at the Nürburgring and a Rocket Bunny GTI.
 links:
-  - { label: 'B站', url: 'https://space.bilibili.com/413134910' }
-  - { label: '爱发电', url: 'https://afdian.com/a/0139c5bb' }
+  - { platform: bilibili, url: 'https://space.bilibili.com/413134910' }
+  - { platform: afdian, url: 'https://afdian.com/a/0139c5bb' }

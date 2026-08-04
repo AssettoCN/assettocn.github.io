@@ -2,6 +2,7 @@ import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { TYPE } from './data/work-types.js';
 import { SERVER_TYPE } from './data/server-types.js';
+import { LINK_PLATFORM } from './data/link-platforms.js';
 
 // 双语字段的通用 schema —— zh / en 都必须填,漏一个构建时会报错并指出文件。
 const bilingual = z.object({ zh: z.string(), en: z.string() });
@@ -11,6 +12,8 @@ const bilingualList = z.object({ zh: z.array(z.string()), en: z.array(z.string()
 const typeKeys = Object.keys(TYPE) as [string, ...string[]];
 // 服务器分类的合法取值,取自 server-types.js。
 const serverTypeKeys = Object.keys(SERVER_TYPE) as [string, ...string[]];
+// 作者外链平台的合法取值,取自 link-platforms.js。
+const linkPlatformKeys = Object.keys(LINK_PLATFORM) as [string, ...string[]];
 
 // 作者集合:src/content/authors/<id>.yaml —— 文件名即作者 id(详情页 URL)。
 const authors = defineCollection({
@@ -25,8 +28,14 @@ const authors = defineCollection({
     handle: z.string(),
     skills: bilingualList,
     bio: bilingual,
+    // 外链改为按平台模板化:platform 取自 link-platforms.js(决定图标+默认显示名),
+    // label 仅在 platform: other 时用来自定义显示名(其余平台留空即用平台默认名)。
     links: z
-      .array(z.object({ label: z.string(), url: z.string().default('#') }))
+      .array(z.object({
+        platform: z.enum(linkPlatformKeys),
+        url: z.string().default('#'),
+        label: z.string().optional(),
+      }))
       .default([]),
   }),
 });

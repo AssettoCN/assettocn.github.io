@@ -5,6 +5,7 @@ import { getCollection } from 'astro:content';
 import { UI } from '../data/ui.js';
 import { TYPE } from '../data/work-types.js';
 import { SERVER_TYPE } from '../data/server-types.js';
+import { LINK_PLATFORM } from '../data/link-platforms.js';
 
 // The official AssettoCN publisher identity. Authors/works with this id get an
 // "official" badge + logo avatar, and official works are pinned to the top.
@@ -60,7 +61,11 @@ function resolveAuthorEntry(entry, lang, works) {
     handle: a.handle,
     bio: a.bio[lang],
     skills: a.skills[lang],
-    links: a.links,
+    // 外链按平台解析:platform → 图标 + 默认显示名;label 仅覆盖显示名(other 用)。
+    links: a.links.map((lk) => {
+      const p = LINK_PLATFORM[lk.platform] ?? LINK_PLATFORM.other;
+      return { platform: lk.platform, url: lk.url, icon: p.icon, label: lk.label || p.label[lang] };
+    }),
     official: entry.id === OFFICIAL_ID,
     workCount: count,
     avatarStyle: avatarCss(a, 'sm'),

@@ -76,13 +76,89 @@ body:
       placeholder: Focused on high-fidelity track recreations…
     validations:
       required: true
-  - type: textarea
-    id: links
+  - type: markdown
     attributes:
-      label: 外链(每行一个:名称 | 链接)/ Links (one per line — Label | URL)
-      description: 可选。例如 GitHub | https://github.com/you
+      value: |
+        ### 外链 / Links
+        下面按平台分好了,**有哪个就把链接填到对应的框里**(都可选、留空即不显示)——
+        无需自己写平台名,平台图标会自动匹配。别的平台用最后的「其他链接」。
+        Fill the box for each platform you have — all optional; the icon is picked automatically.
+  - type: input
+    id: link_bilibili
+    attributes:
+      label: Bilibili
+      placeholder: https://space.bilibili.com/xxxxxx
+    validations:
+      required: false
+  - type: input
+    id: link_afdian
+    attributes:
+      label: 爱发电 Afdian
+      placeholder: https://afdian.com/a/xxxx
+    validations:
+      required: false
+  - type: input
+    id: link_weibo
+    attributes:
+      label: 微博 Weibo
+      placeholder: https://weibo.com/u/xxxx
+    validations:
+      required: false
+  - type: input
+    id: link_qq
+    attributes:
+      label: QQ 群 QQ Group
+      placeholder: 群号或加群链接 / group number or invite link
+    validations:
+      required: false
+  - type: input
+    id: link_youtube
+    attributes:
+      label: YouTube
+      placeholder: https://youtube.com/@xxxx
+    validations:
+      required: false
+  - type: input
+    id: link_patreon
+    attributes:
+      label: Patreon
+      placeholder: https://patreon.com/xxxx
+    validations:
+      required: false
+  - type: input
+    id: link_x
+    attributes:
+      label: X (Twitter)
+      placeholder: https://x.com/xxxx
+    validations:
+      required: false
+  - type: input
+    id: link_discord
+    attributes:
+      label: Discord
+      placeholder: https://discord.gg/xxxx
+    validations:
+      required: false
+  - type: input
+    id: link_github
+    attributes:
+      label: GitHub
+      placeholder: https://github.com/xxxx
+    validations:
+      required: false
+  - type: input
+    id: link_website
+    attributes:
+      label: 个人主页 Website
+      placeholder: https://your-site.com
+    validations:
+      required: false
+  - type: textarea
+    id: link_other
+    attributes:
+      label: 其他链接 / Other links(可选)
+      description: 上面没有的平台放这里,每行一个:名称 | 链接 / one per line — Name | URL
       placeholder: |
-        GitHub | https://github.com/you
-        Bilibili | https://space.bilibili.com/xxx
+        Steam | https://steamcommunity.com/id/xxxx
     validations:
       required: false

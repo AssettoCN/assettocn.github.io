@@ -17,5 +17,5 @@ bio:
     focused on fully-functional, full-interior development. Notable: the Unicorn
     318-RS and a Mustang RTR.
 links:
-  - { label: 'B站', url: 'https://b23.tv/Ye9UaZY' }
-  - { label: '爱发电', url: 'https://afdian.com/a/318wu' }
+  - { platform: bilibili, url: 'https://b23.tv/Ye9UaZY' }
+  - { platform: afdian, url: 'https://afdian.com/a/318wu' }

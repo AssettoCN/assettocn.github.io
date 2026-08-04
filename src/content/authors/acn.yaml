@@ -14,6 +14,6 @@ bio:
     The official AssettoCN account — community modpacks, official tools and
     curated resources are maintained and updated here.
 links:
-  - { label: 官网 / Site, url: 'https://assetto.cn' }
-  - { label: 文档中心 / Docs, url: 'https://docs.assetto.cn' }
-  - { label: GitHub, url: '#' }
+  - { platform: website, url: 'https://assetto.cn', label: 官网 / Site }
+  - { platform: website, url: 'https://docs.assetto.cn', label: 文档中心 / Docs }
+  - { platform: github, url: '#' }

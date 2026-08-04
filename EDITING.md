@@ -15,7 +15,8 @@
 |---|---|
 | **某个作者(名字/简介/技能/外链/头像)** | `src/content/authors/<id>.yaml`(一人一个文件)。头像默认用字母字牌(`initials`+`tint`/`ink`);想用真实头像图就加 `avatar: '/images/authors/xxx.jpg'`,留空即回退字母字牌 |
 | **新增作者** | 在 `src/content/authors/` 新建一个 `.yaml`,文件名就是作者 id(也是详情页 URL);详情页自动生成 |
-| **作者外链地址** | 该作者 yaml 里 `links` 的 `url`(把 `'#'` 换成真链接,填了会自动新开标签页) |
+| **作者外链(按平台)** | 该作者 yaml 里 `links`,每条形如 `{ platform, url }`。`platform` 取自 `src/data/link-platforms.js`(`bilibili`/`afdian`/`weibo`/`qq`/`youtube`/`patreon`/`x`/`discord`/`github`/`website`/`other`),决定**图标**和**显示名**,不用再手写名称;只有 `platform: other` 时才用可选的 `label` 自定义显示名 |
+| **外链平台清单(图标 / 名称 / 域名识别)** | `src/data/link-platforms.js`(增删平台只改这一处:会同步影响 schema 校验、作者页图标、投稿识别;新平台的图标名要在 `src/components/Icon.astro` 里有对应图标) |
 | **某个作品(标题/类型/版本/描述/外链)** | `src/content/works/<id>.yaml`(一件一个文件);加 `link: 'https://...'` 卡片就出现「查看」按钮(B站/爱发电/网盘等) |
 | **新增作品** | 在 `src/content/works/` 新建一个 `.yaml`;`authorId` 要等于某个作者的文件名 |
 | **官方出品(ACN 自己的作品)** | 把该作品的 `authorId` 设为 `acn`(官方作者见 `src/content/authors/acn.yaml`)——自动加红色「官方」徽标、Logo 头像,并在作品页置顶。官方作品只由维护者直接加 yaml,不走公开投稿 |
@@ -51,8 +52,10 @@ bio:
     这里写中文简介,可以很长,会自动折行。
   en: >-
     English bio goes here.
-links:
-  - { label: GitHub, url: 'https://github.com/...' }
+links:                             # 每条 { platform, url };平台取值见 link-platforms.js
+  - { platform: bilibili, url: 'https://space.bilibili.com/...' }
+  - { platform: github,   url: 'https://github.com/...' }
+  # 冷门平台用 other 并加 label 自定义名:{ platform: other, url: '...', label: 'Steam' }
 ```
 
 保存后 `/authors/newbie` 详情页会自动出现。**中英双语字段(name/skills/bio)两种语言都要填**,漏了构建会报错。

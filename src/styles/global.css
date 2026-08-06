@@ -262,7 +262,7 @@ figure { margin: 0; }
 .shell { max-width: 1200px; margin: 0 auto; padding: 0 var(--space-6) var(--space-8); }
 
 /* home landing sections — full-viewport bands, centered content */
-.home-sec { min-height: calc(100vh - 64px); display: flex; align-items: center; }
+.home-sec { min-height: calc(100vh - 64px); min-height: calc(100dvh - 64px); display: flex; align-items: center; }
 .home-sec--surface { background: var(--color-surface); }
 .home-inner { width: 100%; max-width: 1200px; margin: 0 auto; padding: var(--space-8) var(--space-6); }
 
@@ -282,8 +282,14 @@ figure { margin: 0; }
 
 /* Home is a single-page scroll-snap landing; other pages scroll normally.
    BaseLayout adds data-snap to <html> only on the home route. */
-html[data-snap] { scroll-snap-type: y proximity; scroll-padding-top: 64px; }
-.snap-section { scroll-snap-align: start; }
+/* mandatory + snap-stop:always:强制吸附、且一次滚动最多走一段(不会划过头)。 */
+html[data-snap] { scroll-snap-type: y mandatory; scroll-padding-top: 64px; }
+.snap-section { scroll-snap-align: start; scroll-snap-stop: always; }
+/* 触屏 / 窄屏 / 矮视口:关掉整页吸附。触屏上强制吸附与惯性滚动打架;矮视口下分段可能
+   高过窗口,mandatory 会把中间内容卡住够不到 —— 这些情况交还原生顺滑滚动。 */
+@media (max-width: 720px), (pointer: coarse), (max-height: 640px) {
+  html[data-snap] { scroll-snap-type: none; }
+}
 
 /* Scroll reveal — progressive enhancement. The head script adds `.js` to
    <html>; only then do reveal targets start hidden, so no-JS keeps them visible. */

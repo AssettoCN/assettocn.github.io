@@ -1,0 +1,38 @@
+---
+/**
+ * Top-of-page header for list pages: "/ 0N" index + eyebrow + <h1> + sub, with
+ * an optional right-aligned action (submit / apply) via the default slot.
+ * List-page sibling of SectionHead (which renders <h2> home-section headers).
+ * Mirrors the design's per-page "/ 0X · LABEL" motif so list pages line up with
+ * the home sections and the /start 闯关 header.
+ */
+const { index, eyebrow, title, sub } = Astro.props;
+---
+<div class="page-head-row">
+  <div class="page-head-row__lead">
+    {index && <span class="page-head-row__idx">{index}</span>}
+    <div>
+      {eyebrow && <div class="page-head-row__eyebrow">{eyebrow}</div>}
+      <h1 class="page-title page-head-row__title">{title}</h1>
+      {sub && <p class="text-muted page-head-row__sub">{sub}</p>}
+    </div>
+  </div>
+  <slot />
+</div>
+
+<style>
+  .page-head-row {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: var(--space-6); flex-wrap: wrap;
+    border-top: 1px solid var(--color-divider);
+    padding-top: var(--space-4); margin-bottom: var(--space-8);
+  }
+  .page-head-row__lead { display: flex; align-items: baseline; gap: 18px; min-width: 0; }
+  /* ASCII 区段号:用等宽字体呈现仪表盘感。 */
+  .page-head-row__idx { font-family: var(--font-mono); font-size: 14px; color: var(--color-accent); flex: none; }
+  .page-head-row__eyebrow { font-family: var(--font-body); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--color-neutral-600); margin-bottom: 8px; }
+  .page-head-row__title { margin: 0 0 8px; }
+  .page-head-row__sub { font-size: 16px; line-height: 1.6; margin: 0; max-width: 58ch; }
+
+  @media (max-width: 560px) { .page-head-row__idx { display: none; } }
+</style>

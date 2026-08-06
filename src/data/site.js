@@ -14,6 +14,9 @@ export const SITE = {
   // 转成待审核的 PR。留空则按钮保持普通占位状态。
   repo: 'AssettoCN/assettocn.github.io',
 
+  // 源码分支(「在 GitHub 上编辑此页」链接指向的分支)。默认主分支 main。
+  branch: 'main',
+
   // 开发文档站(唯一跨站外链)。顶栏「文档 ↗」与页脚「文档中心」都读这里,
   // 将来文档收归 assetto.cn 子路径/子域时只改这一行。
   docsUrl: 'https://docs.assetto.cn',
@@ -44,4 +47,10 @@ export const SITE = {
 /** GitHub「新建 issue(用某个模板)」链接;未配置 repo 时返回 null。 */
 export function issueFormUrl(template) {
   return SITE.repo ? `https://github.com/${SITE.repo}/issues/new?template=${template}` : null;
+}
+
+/** GitHub「在网页编辑器打开某个文件」链接(改完自动 fork + 开 PR,无写权限也能提);
+ *  repoPath 为仓库内相对路径,如 'src/content/guides/zh/faq.md'。未配置 repo 时返回 null。 */
+export function editUrl(repoPath) {
+  return SITE.repo ? `https://github.com/${SITE.repo}/edit/${SITE.branch || 'main'}/${repoPath}` : null;
 }

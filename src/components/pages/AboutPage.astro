@@ -1,5 +1,6 @@
 ---
 import Icon from '../Icon.astro';
+import PageHead from '../PageHead.astro';
 import { UI } from '../../data/ui.js';
 
 const { lang } = Astro.props;
@@ -7,10 +8,7 @@ const ui = UI[lang];
 const a = ui.about;
 ---
 <div class="shell fade-in about">
-  <header class="about-head">
-    <h1 class="page-title">{a.title}</h1>
-    <p class="about-lead">{a.lead}</p>
-  </header>
+  <PageHead index="/ 07" eyebrow="About" title={a.title} sub={a.lead} />
 
   <section class="about-sec">
     <h2 class="about-h">{a.doTitle}</h2>

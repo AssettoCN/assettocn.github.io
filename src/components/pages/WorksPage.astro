@@ -1,5 +1,6 @@
 ---
 import WorkRow from '../WorkRow.astro';
+import PageHead from '../PageHead.astro';
 import Icon from '../Icon.astro';
 import { UI } from '../../data/ui.js';
 import { getWorks, workFilters } from '../../lib/content.js';
@@ -12,11 +13,7 @@ const filters = workFilters(lang, works);
 const submitUrl = issueFormUrl('work-submission.yml');
 ---
 <div class="shell fade-in page-head">
-  <div class="list-head">
-    <div>
-      <h1 class="page-title">{ui.worksPage.title}</h1>
-      <p class="text-muted list-head__sub">{ui.worksPage.sub}</p>
-    </div>
+  <PageHead index="/ 06" eyebrow={ui.nav.works} title={ui.worksPage.title} sub={ui.worksPage.sub}>
     {submitUrl ? (
       <a class="btn btn-primary list-head__action" href={submitUrl} target="_blank" rel="noopener">
         <Icon name="plus" size={16} />
@@ -28,7 +25,7 @@ const submitUrl = issueFormUrl('work-submission.yml');
         {ui.worksPage.submit}
       </button>
     )}
-  </div>
+  </PageHead>
 
   <div class="works-filters" role="group" aria-label={ui.worksPage.title}>
     {filters.map((f) => (

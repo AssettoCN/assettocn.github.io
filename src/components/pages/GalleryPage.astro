@@ -1,5 +1,6 @@
 ---
 import ImageSlot from '../ImageSlot.astro';
+import PageHead from '../PageHead.astro';
 import Icon from '../Icon.astro';
 import { UI } from '../../data/ui.js';
 import { getGallery } from '../../lib/content.js';
@@ -13,11 +14,7 @@ const shots = await getGallery(lang);
 const submitUrl = issueFormUrl('gallery-submission.yml');
 ---
 <div class="shell fade-in page-head">
-  <div class="list-head">
-    <div>
-      <h1 class="page-title">{ui.galleryPage.title}</h1>
-      <p class="text-muted list-head__sub">{ui.galleryPage.sub}</p>
-    </div>
+  <PageHead index="/ 04" eyebrow={ui.nav.gallery} title={ui.galleryPage.title} sub={ui.galleryPage.sub}>
     {submitUrl ? (
       <a class="btn btn-primary list-head__action" href={submitUrl} target="_blank" rel="noopener">
         <Icon name="image-plus" size={16} />
@@ -29,7 +26,7 @@ const submitUrl = issueFormUrl('gallery-submission.yml');
         {ui.galleryPage.submit}
       </button>
     )}
-  </div>
+  </PageHead>
   <div class="gallery-masonry">
     {shots.map((s) => (
       <figure class="card elev-sm gallery-shot">

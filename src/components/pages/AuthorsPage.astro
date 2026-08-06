@@ -1,5 +1,6 @@
 ---
 import AuthorCard from '../AuthorCard.astro';
+import PageHead from '../PageHead.astro';
 import Icon from '../Icon.astro';
 import { UI } from '../../data/ui.js';
 import { getAuthors } from '../../lib/content.js';
@@ -11,11 +12,7 @@ const authors = await getAuthors(lang);
 const submitUrl = issueFormUrl('author-submission.yml');
 ---
 <div class="shell fade-in page-head">
-  <div class="list-head">
-    <div>
-      <h1 class="page-title">{ui.authorsPage.title}</h1>
-      <p class="text-muted list-head__sub">{ui.authorsPage.sub}</p>
-    </div>
+  <PageHead index="/ 02" eyebrow={ui.nav.authors} title={ui.authorsPage.title} sub={ui.authorsPage.sub}>
     {submitUrl ? (
       <a class="btn btn-primary list-head__action" href={submitUrl} target="_blank" rel="noopener">
         <Icon name="plus" size={16} />
@@ -27,7 +24,7 @@ const submitUrl = issueFormUrl('author-submission.yml');
         {ui.authorsPage.submit}
       </button>
     )}
-  </div>
+  </PageHead>
   <div class="authors-grid">
     {authors.map((a) => <AuthorCard author={a} lang={lang} />)}
   </div>

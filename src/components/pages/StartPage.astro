@@ -2,48 +2,252 @@
 import { UI } from '../../data/ui.js';
 import { getGuides } from '../../lib/content.js';
 import { localizePath, ROUTES } from '../../lib/i18n.js';
+import { levelMeta } from '../../data/start-levels.js';
 
 const { lang } = Astro.props;
 const ui = UI[lang];
 const guides = await getGuides(lang);
+const total = guides.length;
+const serversHref = localizePath(lang, ROUTES.servers);
+
+// 每关:序号、赛车味的左右交替、难度点、用时、正文链接。
+const levels = guides.map((g, i) => {
+  const meta = levelMeta(g.slug);
+  return {
+    ...g,
+    no: String(i + 1).padStart(2, '0'),
+    href: localizePath(lang, ROUTES.start + '/' + g.slug),
+    difficulty: meta.difficulty,
+    minutes: meta.minutes,
+    side: i % 2 === 0 ? 'left' : 'right',
+  };
+});
 ---
-<div class="shell fade-in start">
+<div class="shell fade-in start" data-start-root data-finish-done={ui.startPage.finishTitleDone}>
   <header class="start-head">
-    <h1 class="page-title">{ui.startPage.title}</h1>
-    <p class="text-muted start-sub">{ui.startPage.sub}</p>
+    <span class="start-head__ix">/ 00</span>
+    <div>
+      <div class="start-head__kicker">{ui.startPage.kicker}</div>
+      <h1 class="start-head__title">{ui.startPage.title}</h1>
+      <p class="start-head__sub text-muted">{ui.startPage.sub}</p>
+    </div>
   </header>
 
-  <ol class="start-list">
-    {guides.map((g, i) => (
-      <li>
-        <a class="card elev-sm start-step" href={localizePath(lang, ROUTES.start + '/' + g.slug)}>
-          <span class="start-step__no">{String(i + 1).padStart(2, '0')}</span>
-          <span class="start-step__body">
-            <span class="start-step__title">
-              {g.title}
-              {g.draft && <span class="tag start-step__draft">{ui.guide.draft}</span>}
-            </span>
-            <span class="text-muted start-step__sum">{g.summary}</span>
+  <!-- 进度 HUD -->
+  <div class="start-hud">
+    <div class="start-hud__count">
+      <span class="start-hud__label">{ui.startPage.hud}</span>
+      <span class="start-hud__n" data-cleared>0</span>
+      <span class="start-hud__of">/ {total} {ui.startPage.of}</span>
+    </div>
+    <div class="start-hud__bar"><span data-bar></span></div>
+    <button type="button" class="btn btn-secondary start-hud__reset" data-reset>{ui.startPage.reset}</button>
+  </div>
+
+  <!-- 赛道 -->
+  <div class="track">
+    <div class="track__start">
+      <span class="track__pill"><span class="flag"></span>{ui.startPage.start}</span>
+      <span class="track__line"></span>
+    </div>
+
+    {levels.map((l) => (
+      <div class={`lv lv--${l.side}`} data-slug={l.slug}>
+        <div class="lv__mid">
+          <span class="lv__rail"></span>
+          <span class="lv__node">
+            <span class="lv__no">{l.no}</span>
+            <svg class="lv__check" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
           </span>
-        </a>
-      </li>
+        </div>
+        <div class="lv__card card">
+          <div class="lv__badge">
+            <span class="lv__lv">{ui.startPage.lv} {l.no}</span>
+            <span class="lv__diff" aria-hidden="true">
+              {[1, 2, 3].map((n) => <i class={n <= l.difficulty ? 'on' : ''}></i>)}
+            </span>
+            <span class="lv__time">~{l.minutes} {ui.startPage.min}</span>
+          </div>
+          <div class="lv__title">
+            {l.title}
+            {l.draft && <span class="tag lv__draft">{ui.guide.draft}</span>}
+          </div>
+          <p class="lv__sum">{l.summary}</p>
+          <div class="lv__actions">
+            <a class="btn btn-primary lv__read" href={l.href}>{ui.startPage.read} →</a>
+            <button type="button" class="btn btn-secondary lv__toggle" data-toggle>
+              <span class="off">{ui.startPage.mark}</span>
+              <span class="on">{ui.startPage.marked} ✓</span>
+            </button>
+          </div>
+        </div>
+      </div>
     ))}
-  </ol>
+
+    <!-- 终点 -->
+    <div class="finish" data-finish>
+      <span class="finish__line"></span>
+      <div class="finish__card">
+        <span class="finish__strip"></span>
+        <div class="finish__kicker">{ui.startPage.finish}</div>
+        <div class="finish__title" data-finish-title>{ui.startPage.finishTitle}</div>
+        <p class="finish__sub">{ui.startPage.finishSub}</p>
+        <a class="btn btn-primary" href={serversHref}>{ui.startPage.go} →</a>
+      </div>
+    </div>
+  </div>
 </div>
+
+<script is:inline>
+  (function () {
+    var root = document.querySelector('[data-start-root]');
+    if (!root) return;
+    var KEY = 'acn-start-cleared';
+    var levels = Array.prototype.slice.call(root.querySelectorAll('.lv'));
+    var total = levels.length;
+    var bar = root.querySelector('[data-bar]');
+    var countEl = root.querySelector('[data-cleared]');
+    var finishEl = root.querySelector('[data-finish]');
+    var finishTitle = root.querySelector('[data-finish-title]');
+    var titleDefault = finishTitle ? finishTitle.textContent : '';
+    var titleDone = root.getAttribute('data-finish-done') || titleDefault;
+
+    function read() {
+      try { return new Set(JSON.parse(localStorage.getItem(KEY) || '[]')); }
+      catch (e) { return new Set(); }
+    }
+    function write(s) {
+      try { localStorage.setItem(KEY, JSON.stringify(Array.from(s))); }
+      catch (e) {}
+    }
+    function render() {
+      var s = read();
+      var cleared = 0, firstOpen = -1;
+      levels.forEach(function (lv, i) {
+        var done = s.has(lv.getAttribute('data-slug'));
+        lv.classList.toggle('is-done', done);
+        lv.classList.remove('is-current');
+        if (done) cleared++; else if (firstOpen === -1) firstOpen = i;
+      });
+      if (firstOpen >= 0) levels[firstOpen].classList.add('is-current');
+      if (countEl) countEl.textContent = String(cleared);
+      if (bar) bar.style.width = (total ? (cleared / total) * 100 : 0) + '%';
+      var all = total > 0 && cleared === total;
+      if (finishEl) finishEl.classList.toggle('is-done', all);
+      if (finishTitle) finishTitle.textContent = all ? titleDone : titleDefault;
+    }
+
+    root.addEventListener('click', function (e) {
+      var t = e.target.closest ? e.target.closest('[data-toggle]') : null;
+      if (t) {
+        var lv = t.closest('.lv');
+        var slug = lv.getAttribute('data-slug');
+        var s = read();
+        if (s.has(slug)) s.delete(slug); else s.add(slug);
+        write(s);
+        render();
+        return;
+      }
+      if (e.target.closest && e.target.closest('[data-reset]')) { write(new Set()); render(); }
+    });
+
+    render();
+  })();
+</script>
 
 <style>
   .start { padding-top: var(--space-6); padding-bottom: var(--space-8); }
-  .start-head { max-width: 60ch; margin-bottom: var(--space-6); }
-  .start-sub { font-size: 16px; line-height: 1.7; margin-top: var(--space-3); }
-  .start-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
-  .start-step {
-    display: flex; align-items: center; gap: var(--space-4);
-    padding: var(--space-4); text-decoration: none; color: inherit; transition: box-shadow .16s ease;
+
+  /* header */
+  .start-head { display: flex; align-items: baseline; gap: 18px; border-top: 1px solid var(--color-divider); padding-top: var(--space-4); margin-bottom: var(--space-6); }
+  .start-head__ix { font-family: var(--font-mono); font-size: 15px; color: var(--color-accent); flex: none; }
+  .start-head__kicker { font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: color-mix(in srgb, var(--color-text) 55%, transparent); margin-bottom: 8px; }
+  .start-head__title { font-size: clamp(32px, 5vw, 48px); margin: 0 0 8px; }
+  .start-head__sub { font-size: 16px; line-height: 1.7; margin: 0; max-width: 58ch; }
+
+  /* progress HUD */
+  .start-hud { display: flex; align-items: center; gap: var(--space-6); flex-wrap: wrap; padding: var(--space-4) var(--space-6); border: 1px solid var(--color-divider); border-radius: var(--radius-lg); background: var(--color-surface); margin-bottom: var(--space-8); }
+  .start-hud__count { display: flex; align-items: baseline; gap: 10px; }
+  .start-hud__label { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: color-mix(in srgb, var(--color-text) 55%, transparent); }
+  .start-hud__n { font-family: var(--font-heading); font-size: 34px; line-height: 1; color: var(--color-accent); }
+  .start-hud__of { font-size: 14px; color: color-mix(in srgb, var(--color-text) 55%, transparent); }
+  .start-hud__bar { flex: 1; min-width: 160px; height: 10px; border-radius: 999px; background: var(--color-neutral-200); overflow: hidden; }
+  .start-hud__bar > span { display: block; height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, var(--color-accent-400), var(--color-accent)); transition: width .5s cubic-bezier(.22, .61, .36, 1); }
+  .start-hud__reset { min-height: 36px; padding-inline: 16px; font-size: 12px; }
+
+  /* track */
+  .track { position: relative; max-width: 900px; margin: 0 auto; }
+  .track__start { display: flex; flex-direction: column; align-items: center; }
+  .track__pill { display: inline-flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--color-neutral-700); background: var(--color-surface); border: 1px solid var(--color-divider); border-radius: 999px; padding: 8px 18px; }
+  .flag { width: 14px; height: 14px; border-radius: 3px; background: repeating-conic-gradient(var(--color-text) 0 25%, transparent 0 50%) 0 0 / 7px 7px; }
+  .track__line { width: 4px; height: 28px; background: repeating-linear-gradient(to bottom, var(--color-neutral-400) 0 7px, transparent 7px 15px); }
+
+  /* level row */
+  .lv { display: grid; grid-template-columns: 1fr 92px 1fr; align-items: center; min-height: 150px; }
+  .lv__mid { grid-column: 2; grid-row: 1; position: relative; align-self: stretch; display: flex; align-items: center; justify-content: center; }
+  .lv__rail { position: absolute; top: 0; bottom: 0; left: 50%; transform: translateX(-50%); width: 4px; background: var(--color-neutral-300); transition: background .3s ease; }
+  .lv.is-done .lv__rail { background: var(--color-accent); }
+  .lv__node { position: relative; z-index: 1; width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; background: var(--color-surface); border: 3px solid var(--color-neutral-300); transition: background .3s ease, border-color .3s ease; }
+  .lv__no { font-family: var(--font-heading); font-size: 28px; line-height: 1; color: var(--color-neutral-500); }
+  .lv__check { display: none; }
+  .lv.is-done .lv__node { background: var(--color-accent); border-color: var(--color-accent); }
+  .lv.is-done .lv__no { display: none; }
+  .lv.is-done .lv__check { display: block; }
+  .lv.is-current .lv__node { border-color: var(--color-accent); animation: acnPulse 1.9s ease-out infinite; }
+  .lv.is-current .lv__no { color: var(--color-accent); }
+  @keyframes acnPulse {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent) 55%, transparent); }
+    70% { box-shadow: 0 0 0 14px transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
   }
-  .start-step:hover { box-shadow: var(--shadow-md); }
-  .start-step__no { font-family: var(--font-heading); font-size: 28px; color: var(--color-accent); flex: none; width: 44px; }
-  .start-step__body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-  .start-step__title { font-size: 18px; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .start-step__sum { font-size: 14px; line-height: 1.6; }
-  .start-step__draft { font-size: 10.5px; background: var(--color-accent-100); color: var(--color-accent-700); }
+
+  .lv__card { grid-row: 1; align-self: center; padding: var(--space-6); border: 1px solid var(--color-divider); background: var(--color-surface); transition: border-color .18s ease, transform .18s ease; }
+  .lv--left .lv__card { grid-column: 1; }
+  .lv--right .lv__card { grid-column: 3; }
+  .lv__card:hover { border-color: color-mix(in srgb, var(--color-accent) 55%, transparent); transform: translateY(-3px); }
+  .lv.is-done .lv__card { border-color: color-mix(in srgb, var(--color-accent) 32%, transparent); }
+
+  .lv__badge { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; margin-bottom: var(--space-2); }
+  .lv__lv { font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--color-accent); border: 1px solid color-mix(in srgb, var(--color-accent) 40%, transparent); border-radius: 999px; padding: 3px 10px; }
+  .lv__diff { display: inline-flex; gap: 4px; }
+  .lv__diff i { width: 7px; height: 7px; border-radius: 50%; background: var(--color-neutral-300); }
+  .lv__diff i.on { background: var(--color-accent); }
+  .lv__time { font-size: 12px; color: var(--color-neutral-600); white-space: nowrap; }
+  .lv__title { font-family: var(--font-heading); font-size: 24px; line-height: 1.15; margin-bottom: var(--space-2); display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .lv__draft { font-size: 10px; background: var(--color-accent-100); color: var(--color-accent-700); }
+  .lv__sum { font-size: 14px; line-height: 1.6; color: var(--color-neutral-700); margin: 0 0 var(--space-4); }
+  .lv__actions { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+  .lv__read { min-height: 40px; padding-inline: 18px; font-size: 12.5px; text-decoration: none; }
+  .lv__toggle { min-height: 40px; padding-inline: 16px; font-size: 12.5px; }
+  .lv__toggle .on { display: none; }
+  .lv.is-done .lv__toggle .off { display: none; }
+  .lv.is-done .lv__toggle .on { display: inline; }
+  .lv.is-done .lv__toggle { color: var(--color-accent); border-color: color-mix(in srgb, var(--color-accent) 45%, transparent); }
+
+  /* finish */
+  .finish { display: flex; flex-direction: column; align-items: center; gap: var(--space-4); }
+  .finish__line { width: 4px; height: 40px; background: var(--color-neutral-300); transition: background .3s ease; }
+  .finish.is-done .finish__line { background: var(--color-accent); }
+  .finish__card { position: relative; overflow: hidden; text-align: center; max-width: 560px; border: 1px solid var(--color-divider); border-radius: var(--radius-lg); padding: calc(var(--space-6) + 12px) var(--space-8) var(--space-6); background: var(--color-surface); transition: border-color .3s ease, background .3s ease; }
+  .finish.is-done .finish__card { border-color: color-mix(in srgb, var(--color-accent) 45%, transparent); background: linear-gradient(150deg, color-mix(in srgb, var(--color-accent) 10%, var(--color-surface)), var(--color-surface) 60%); }
+  .finish__strip { position: absolute; top: 0; left: 0; right: 0; height: 12px; background: repeating-conic-gradient(var(--color-text) 0 25%, transparent 0 50%) 0 0 / 12px 12px; opacity: .4; }
+  .finish__kicker { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--color-accent); margin-bottom: var(--space-2); }
+  .finish__title { font-family: var(--font-heading); font-size: 28px; line-height: 1.1; margin-bottom: var(--space-2); }
+  .finish__sub { font-size: 14px; color: var(--color-neutral-700); margin: 0 auto var(--space-4); max-width: 44ch; }
+
+  @media (max-width: 720px) {
+    .track { max-width: 560px; }
+    .track__start, .finish { align-items: flex-start; padding-left: 26px; }
+    .lv { grid-template-columns: 56px 1fr; column-gap: var(--space-4); }
+    .lv__mid { grid-column: 1; }
+    .lv__node { width: 52px; height: 52px; border-width: 2px; }
+    .lv__no { font-size: 20px; }
+    .lv__check { width: 24px; height: 24px; }
+    .lv--left .lv__card, .lv--right .lv__card { grid-column: 2; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lv.is-current .lv__node { animation: none; }
+    .start-hud__bar > span { transition: none; }
+  }
 </style>

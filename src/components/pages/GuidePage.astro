@@ -1,6 +1,8 @@
 ---
 import { render } from 'astro:content';
+import Icon from '../Icon.astro';
 import { UI } from '../../data/ui.js';
+import { editUrl } from '../../data/site.js';
 import { getGuides, getGuideEntry } from '../../lib/content.js';
 import { localizePath, ROUTES } from '../../lib/i18n.js';
 
@@ -14,6 +16,8 @@ const next = guides[idx + 1];
 const entry = await getGuideEntry(slug, lang);
 const { Content } = await render(entry);
 const guideHref = (s) => localizePath(lang, ROUTES.start + '/' + s);
+// 「在 GitHub 上编辑此页」——指向当前语言这篇指南的 Markdown 源文件。
+const editHref = editUrl(`src/content/guides/${lang}/${slug}.md`);
 ---
 <div class="shell fade-in guide">
   <aside class="guide-side">
@@ -31,6 +35,12 @@ const guideHref = (s) => localizePath(lang, ROUTES.start + '/' + s);
       {meta.draft && <span class="tag guide-draft">{ui.guide.draft}</span>}
     </div>
     <div class="prose"><Content /></div>
+    {editHref && (
+      <a class="guide-edit" href={editHref} target="_blank" rel="noopener noreferrer">
+        <Icon name="github" size={14} />
+        {ui.guide.edit}
+      </a>
+    )}
     <nav class="guide-pager">
       {prev ? <a class="guide-pager__link" href={guideHref(prev.slug)}><span class="text-muted">{ui.guide.prev}</span>{prev.title}</a> : <span />}
       {next ? <a class="guide-pager__link guide-pager__next" href={guideHref(next.slug)}><span class="text-muted">{ui.guide.next}</span>{next.title}</a> : <span />}
@@ -52,6 +62,10 @@ const guideHref = (s) => localizePath(lang, ROUTES.start + '/' + s);
   .guide-main__head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: var(--space-4); }
   .guide-title { font-size: clamp(26px, 4vw, 34px); margin: 0; }
   .guide-draft { background: var(--color-accent-100); color: var(--color-accent-700); font-size: 11px; }
+
+  .guide-edit { display: inline-flex; align-items: center; gap: 7px; margin-top: var(--space-6); font-size: 13px; color: var(--color-neutral-600); text-decoration: none; }
+  .guide-edit:hover { color: var(--color-accent); }
+  .guide-edit :global(svg) { opacity: .75; }
 
   .guide-pager { display: flex; justify-content: space-between; gap: var(--space-4); margin-top: var(--space-8); padding-top: var(--space-4); border-top: 1px solid var(--color-divider); }
   .guide-pager__link { display: flex; flex-direction: column; gap: 2px; font-size: 15px; color: var(--color-text); text-decoration: none; max-width: 45%; }

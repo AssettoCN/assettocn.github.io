@@ -10,7 +10,7 @@
    Component-specific layout (hero, stat grid, work rows) lives in each
    .astro component's scoped <style>.
    ========================================================================= */
-@import url('https://fonts.googleapis.com/css2?family=Caprasimo:wght@400&family=Figtree:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caprasimo:wght@400&family=Figtree:wght@400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 /* ── 1. Organic tokens ───────────────────────────────────────────────────── */
 :root {
@@ -54,6 +54,9 @@
   --font-heading: "Caprasimo", system-ui, sans-serif;
   --font-heading-weight: 400;
   --font-body: "Figtree", system-ui, sans-serif;
+  /* 等宽:仅用于 ASCII 的仪表盘式标签(/ 0X 区段号、LV 徽章、版本·日期);
+     含中文的标签仍用 --font-body(JetBrains Mono 无中文字形)。 */
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
 
   --space-1: 4.4px;
   --space-2: 8.8px;
@@ -71,48 +74,50 @@
   --shadow-lg: 0 12px 32px color-mix(in srgb, #2e2b25 22%, transparent);
 }
 
-/* ── 2. Assetto Corsa retheme (white ground, near-black ink, AC red) ─────── */
+/* ── 2. Assetto Corsa retheme (warm paper ground, white cards, AC red) ────── */
+/* 暖纸色底 + 白卡片(对齐 Claude Design 稿):卡片用 --color-surface(白)在
+   --color-bg(暖白)上更"跳"。深色主题(2b)与设计稿一致,无需改动。 */
 :root {
-  --color-bg: #ffffff;
-  --color-surface: #f3f3f5;
-  --color-text: #16161a;
+  --color-bg: #f6f4f1;
+  --color-surface: #ffffff;
+  --color-text: #16130f;
   --color-accent: #e2001a;
-  --color-accent-2: #45484d;
-  --color-divider: color-mix(in srgb, #16161a 13%, transparent);
+  --color-accent-2: #5c636a;
+  --color-divider: rgba(22, 19, 15, .12);
 
-  --color-neutral-100: #f6f6f7;
-  --color-neutral-200: #ececee;
-  --color-neutral-300: #dcdde0;
-  --color-neutral-400: #bcbec3;
-  --color-neutral-500: #97999f;
-  --color-neutral-600: #74767c;
-  --color-neutral-700: #55575c;
-  --color-neutral-800: #38393d;
-  --color-neutral-900: #202124;
+  --color-neutral-100: #f2f0ee;
+  --color-neutral-200: #e7e4e0;
+  --color-neutral-300: #d8d4cf;
+  --color-neutral-400: #b8b3ac;
+  --color-neutral-500: #8f8a82;
+  --color-neutral-600: #6b665f;
+  --color-neutral-700: #4c4842;
+  --color-neutral-800: #302d29;
+  --color-neutral-900: #1a1815;
 
-  --color-accent-100: #ffe9ea;
-  --color-accent-200: #ffccce;
-  --color-accent-300: #ff9aa0;
-  --color-accent-400: #f5555f;
+  --color-accent-100: #fde8ea;
+  --color-accent-200: #fbc9ce;
+  --color-accent-300: #f59aa3;
+  --color-accent-400: #ec5462;
   --color-accent-500: #e2001a;
-  --color-accent-600: #c0001a;
-  --color-accent-700: #98001a;
-  --color-accent-800: #6d0014;
-  --color-accent-900: #45000d;
+  --color-accent-600: #c40018;
+  --color-accent-700: #9c0013;
+  --color-accent-800: #6f000d;
+  --color-accent-900: #4a0009;
 
-  --color-accent-2-100: #ececed;
-  --color-accent-2-200: #dadbdd;
-  --color-accent-2-300: #b6b8bc;
-  --color-accent-2-400: #8a8d93;
-  --color-accent-2-500: #5f6268;
-  --color-accent-2-600: #45484d;
-  --color-accent-2-700: #303236;
-  --color-accent-2-800: #1f2124;
-  --color-accent-2-900: #141518;
+  --color-accent-2-100: #eceef0;
+  --color-accent-2-200: #dfe2e5;
+  --color-accent-2-300: #c9ced3;
+  --color-accent-2-400: #a7aeb5;
+  --color-accent-2-500: #7c848c;
+  --color-accent-2-600: #5c636a;
+  --color-accent-2-700: #434850;
+  --color-accent-2-800: #2b2f34;
+  --color-accent-2-900: #191c1f;
 
-  --shadow-sm: 0 1px 2px rgba(20, 20, 25, .12);
-  --shadow-md: 0 3px 12px rgba(20, 20, 25, .14);
-  --shadow-lg: 0 16px 40px rgba(20, 20, 25, .20);
+  --shadow-sm: 0 1px 2px rgba(22, 19, 15, .07);
+  --shadow-md: 0 6px 20px rgba(22, 19, 15, .10);
+  --shadow-lg: 0 24px 55px rgba(22, 19, 15, .14);
 }
 
 /* ── 2b. Dark theme (toggled via data-theme="dark" on <html>) ─────────────── */

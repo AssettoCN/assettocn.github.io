@@ -19,7 +19,7 @@ const authorHref = localizePath(lang, ROUTES.author(work.authorId));
     <div class="work-row__meta">
       {work.official && <span class="tag work-row__official">{ui.official}</span>}
       <span class:list={['tag', work.tagClass]}>{work.typeLabel}</span>
-      <span class="text-muted" style="font-size:12px;">{work.version} · {work.updated}</span>
+      <span class="text-muted" style="font-size:12px; font-family: var(--font-mono);">{work.version} · {work.updated}</span>
     </div>
     <h3 class="card-title work-row__title">{work.title}</h3>
     <div class="text-muted work-row__by">

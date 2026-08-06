@@ -1,5 +1,6 @@
 ---
 import ServerCard from '../ServerCard.astro';
+import PageHead from '../PageHead.astro';
 import Icon from '../Icon.astro';
 import { UI } from '../../data/ui.js';
 import { getServers, serverFilters } from '../../lib/content.js';
@@ -12,11 +13,7 @@ const filters = serverFilters(lang, servers);
 const submitUrl = issueFormUrl('server-submission.yml');
 ---
 <div class="shell fade-in page-head">
-  <div class="list-head">
-    <div>
-      <h1 class="page-title">{ui.serversPage.title}</h1>
-      <p class="text-muted list-head__sub">{ui.serversPage.sub}</p>
-    </div>
+  <PageHead index="/ 03" eyebrow={ui.nav.servers} title={ui.serversPage.title} sub={ui.serversPage.sub}>
     {submitUrl ? (
       <a class="btn btn-primary list-head__action" href={submitUrl} target="_blank" rel="noopener">
         <Icon name="plus" size={16} />
@@ -28,7 +25,7 @@ const submitUrl = issueFormUrl('server-submission.yml');
         {ui.serversPage.apply}
       </button>
     )}
-  </div>
+  </PageHead>
   <div class="servers-filters" role="group" aria-label={ui.serversPage.title}>
     {filters.map((f) => (
       <button

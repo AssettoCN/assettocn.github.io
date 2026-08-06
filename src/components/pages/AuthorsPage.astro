@@ -12,7 +12,7 @@ const authors = await getAuthors(lang);
 const submitUrl = issueFormUrl('author-submission.yml');
 ---
 <div class="shell fade-in page-head">
-  <PageHead index="/ 02" eyebrow={ui.nav.authors} title={ui.authorsPage.title} sub={ui.authorsPage.sub}>
+  <PageHead eyebrow={ui.nav.authors} title={ui.authorsPage.title} sub={ui.authorsPage.sub}>
     {submitUrl ? (
       <a class="btn btn-primary list-head__action" href={submitUrl} target="_blank" rel="noopener">
         <Icon name="plus" size={16} />

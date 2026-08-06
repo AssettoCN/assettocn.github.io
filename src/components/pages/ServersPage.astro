@@ -13,7 +13,7 @@ const filters = serverFilters(lang, servers);
 const submitUrl = issueFormUrl('server-submission.yml');
 ---
 <div class="shell fade-in page-head">
-  <PageHead index="/ 03" eyebrow={ui.nav.servers} title={ui.serversPage.title} sub={ui.serversPage.sub}>
+  <PageHead eyebrow={ui.nav.servers} title={ui.serversPage.title} sub={ui.serversPage.sub}>
     {submitUrl ? (
       <a class="btn btn-primary list-head__action" href={submitUrl} target="_blank" rel="noopener">
         <Icon name="plus" size={16} />

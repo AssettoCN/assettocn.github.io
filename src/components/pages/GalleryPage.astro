@@ -14,7 +14,7 @@ const shots = await getGallery(lang);
 const submitUrl = issueFormUrl('gallery-submission.yml');
 ---
 <div class="shell fade-in page-head">
-  <PageHead index="/ 04" eyebrow={ui.nav.gallery} title={ui.galleryPage.title} sub={ui.galleryPage.sub}>
+  <PageHead eyebrow={ui.nav.gallery} title={ui.galleryPage.title} sub={ui.galleryPage.sub}>
     {submitUrl ? (
       <a class="btn btn-primary list-head__action" href={submitUrl} target="_blank" rel="noopener">
         <Icon name="image-plus" size={16} />

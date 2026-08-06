@@ -13,7 +13,7 @@ const filters = workFilters(lang, works);
 const submitUrl = issueFormUrl('work-submission.yml');
 ---
 <div class="shell fade-in page-head">
-  <PageHead index="/ 06" eyebrow={ui.nav.works} title={ui.worksPage.title} sub={ui.worksPage.sub}>
+  <PageHead eyebrow={ui.nav.works} title={ui.worksPage.title} sub={ui.worksPage.sub}>
     {submitUrl ? (
       <a class="btn btn-primary list-head__action" href={submitUrl} target="_blank" rel="noopener">
         <Icon name="plus" size={16} />

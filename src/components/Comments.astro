@@ -27,7 +27,7 @@ const themes = {
         var curTheme = function () {
           return themes[document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'];
         };
-        // giscus 通过一枚带 data-* 的 <script> 承载配置;动态注入以免被打包器改写。
+        // giscus 通过一枚带 data-* 的 script 标签承载配置;动态注入以免被打包器改写。
         var s = document.createElement('script');
         s.src = ORIGIN + '/client.js';
         s.async = true;

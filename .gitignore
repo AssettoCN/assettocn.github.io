@@ -1,5 +1,7 @@
 # build output
 dist/
+# Claude Design 基座包(由 scripts/gen-dsbundle.mjs 从 global.css 生成,可重建,不进仓库)
+ds-bundle/
 # generated types
 .astro/
 # deps

@@ -7,6 +7,8 @@ ds-bundle/
 .design-sync/
 # generated types
 .astro/
+# 本地缓存(scripts/gen-og.mjs 下载的 ttf + fontconfig 缓存,可重下)
+.cache/
 # deps
 node_modules/
 # logs

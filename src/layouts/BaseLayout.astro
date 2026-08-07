@@ -21,6 +21,7 @@ const site = Astro.site ?? new URL('http://localhost:4321');
 const zhUrl = new URL(localizePath('zh', path), site).href;
 const enUrl = new URL(localizePath('en', path), site).href;
 const canonicalUrl = new URL(localizePath(lang, path), site).href;
+const ogImageUrl = new URL('/og.png', site).href;
 const fullTitle = title ? `${title} · AssettoCN` : 'AssettoCN · Assetto Corsa 中文社区';
 ---
 <!doctype html>
@@ -59,6 +60,17 @@ const fullTitle = title ? `${title} · AssettoCN` : 'AssettoCN · Assetto Corsa 
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:locale" content={lang === 'zh' ? 'zh_CN' : 'en_US'} />
+    <meta property="og:site_name" content="AssettoCN" />
+    {/* 分享卡片图。必须是绝对 URL —— QQ / 微信 / B站 / Discord 的抓取器不解析相对路径。
+        图由 scripts/gen-og.mjs 生成(纯品牌:logo + 字标),全站共用一张。 */}
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="AssettoCN" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    {description && <meta name="twitter:description" content={description} />}
+    <meta name="twitter:image" content={ogImageUrl} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <!-- 字体同源自托管(见 src/styles/fonts.css);正文字体提前预载,避免首屏字体闪烁。 -->
     <link rel="preload" href="/fonts/figtree-latin.woff2" as="font" type="font/woff2" crossorigin />

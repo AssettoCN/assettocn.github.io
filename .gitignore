@@ -1,8 +1,8 @@
 # build output
 dist/
 # Claude Design 相关(设计工具的产物与配置,不属于静态站源码,本地保留即可):
-#   ds-bundle/    —— 基座包,由 scripts/gen-dsbundle.mjs 从 global.css 生成,可重建
-#   .design-sync/ —— 同步配置(projectId)与约定说明
+#   .design-sync/ —— 同步配置(projectId)、约定说明,以及生成器 gen-dsbundle.mjs
+#   ds-bundle/    —— 基座包,由该生成器从 global.css 重新生成,可重建
 ds-bundle/
 .design-sync/
 # generated types

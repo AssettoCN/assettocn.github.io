@@ -1,8 +1,9 @@
 /* giscus 自定义主题 —— AssettoCN 浅色(白底 · AC 红)。
    把 giscus(GitHub Primer)内部变量映射到本站 global.css 的配色。
    注:此文件在 giscus 的跨域 iframe 内加载,读不到本站的 CSS 变量,故直接写死取值;
-   改站点配色时这里要同步。深色见 giscus-theme-dark.css。 */
-@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&display=swap');
+   改站点配色时这里要同步。深色见 giscus-theme-dark.css。
+   字体:本站字体已自托管,但这里是跨域 iframe,取本站字体要额外赌 CORS;评论正文
+   用系统字栈就够,也省掉一次(国内会超时的)跨境请求。 */
 
 main {
   /* 文字 */
@@ -52,7 +53,7 @@ main {
 
   --color-action-list-item-default-hover-bg: rgba(22, 22, 26, 0.06);
 
-  font-family: "Figtree", system-ui, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 
 /* 隐藏「Powered by giscus」下的多余边距等可按需微调 */

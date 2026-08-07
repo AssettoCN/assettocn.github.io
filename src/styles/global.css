@@ -10,7 +10,11 @@
    Component-specific layout (hero, stat grid, work rows) lives in each
    .astro component's scoped <style>.
    ========================================================================= */
-@import url('https://fonts.googleapis.com/css2?family=Caprasimo:wght@400&family=Figtree:wght@400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+/* 字体自托管(public/fonts/)—— 不走 Google Fonts CDN:fonts.googleapis.com 在
+   国内不可达,而 CSS 的远程 @import 是阻塞渲染的,国内用户要先等一次跨境超时、
+   再退回系统字体,品牌字根本加载不到。这里是相对路径 @import,Vite 构建时会内联,
+   不产生额外请求。字体列表变了就跑 node scripts/fetch-fonts.mjs 重新生成。 */
+@import './fonts.css';
 
 /* ── 1. Organic tokens ───────────────────────────────────────────────────── */
 :root {

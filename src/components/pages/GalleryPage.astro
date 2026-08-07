@@ -146,7 +146,11 @@ function caption(s) {
   }
   .lb__cap { display: flex; flex-direction: column; gap: 4px; text-align: center; padding-bottom: var(--space-2); }
   .lb__cap-title { font-size: 15px; font-weight: 600; }
-  .lb__cap-meta { font-size: 12px; color: rgba(255, 255, 255, .68); font-family: var(--font-mono); }
+  /* 这行是「摄影 X · 车辆 Y · 赛道 Z」—— 投稿者填的专有名词,不是编号。刻意**不用**
+     --font-mono:mono face 只切了 UI 用得到的那几十个字符(见 fetch-fonts.mjs),
+     Nürburgring 这类带变音符的车/赛道名会有单个字母掉到系统等宽字体上,一行里字形
+     不齐,看着像渲染坏了。正文字体本来就要加载,这里用它零成本。 */
+  .lb__cap-meta { font-size: 12px; color: rgba(255, 255, 255, .68); }
 
   .lb__close, .lb__nav {
     position: fixed; z-index: 1; display: grid; place-items: center;

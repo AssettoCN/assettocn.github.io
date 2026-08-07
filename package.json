@@ -17,5 +17,9 @@
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-arm64-gnu": "4.62.2"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^5.9.3"
   }
 }

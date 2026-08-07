@@ -1,5 +1,5 @@
 ---
-order: 1
+order: 2
 title: Buy & install the game
 summary: Get Assetto Corsa installed on Steam so you're ready to add mods.
 draft: true

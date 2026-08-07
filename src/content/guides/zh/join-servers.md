@@ -1,5 +1,5 @@
 ---
-order: 4
+order: 6
 title: 联机进服
 summary: 用 Content Manager 一键加入服务器,或手动通过 IP 连接。
 draft: true

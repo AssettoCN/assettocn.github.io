@@ -1,5 +1,5 @@
 ---
-order: 6
+order: 8
 title: FAQ
 summary: The most common beginner snags — can't join a server, mods not showing, graphics / performance.
 draft: true

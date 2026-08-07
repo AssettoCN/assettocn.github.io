@@ -54,17 +54,21 @@ const levels = guides.map((g, i) => ({
 </section>
 
 <style>
-  /* 关卡带:等宽栅格 + 一条贯穿的赛道线。窄屏退化成两列/一列,线自动消失。 */
+  /* 关卡带:等宽栅格 + 一条贯穿的赛道线。
+     4 列(8 关 = 两行)。赛道线画在每个关卡自己身上、并向两侧各延伸半个间距,
+     于是同一行内连成一条、换行时自然断开 —— 用容器上的一条 ::before 做不到这点,
+     那样只有第一行有线。 */
   .start-sec__track {
     list-style: none; margin: 0; padding: 0;
-    display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--space-3);
-    position: relative;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4) var(--space-3);
   }
-  .start-sec__track::before {
-    content: ''; position: absolute; left: 0; right: 0; top: 26px;
-    height: 2px; background: var(--color-divider);
+  .start-sec__lv { display: flex; position: relative; }
+  .start-sec__lv::before {
+    content: ''; position: absolute; top: 26px; height: 2px;
+    left: calc(var(--space-3) / -2); right: calc(var(--space-3) / -2);
+    background: var(--color-divider);
   }
-  .start-sec__lv { display: flex; }
   .start-sec__card {
     position: relative; z-index: 1;
     display: flex; flex-direction: column; gap: 6px; width: 100%;
@@ -97,11 +101,11 @@ const levels = guides.map((g, i) => ({
   .start-sec__btn { min-height: 46px; padding-inline: 24px; font-size: 15px; }
 
   @media (max-width: 900px) {
-    .start-sec__track { grid-template-columns: repeat(3, 1fr); }
-    .start-sec__track::before { display: none; }
+    .start-sec__track { grid-template-columns: repeat(2, 1fr); }
+    .start-sec__lv::before { display: none; }
   }
   @media (max-width: 560px) {
-    .start-sec__track { grid-template-columns: repeat(2, 1fr); }
+    .start-sec__track { grid-template-columns: 1fr; }
   }
   @media (prefers-reduced-motion: reduce) {
     .start-sec__card { transition: none; }

@@ -55,7 +55,7 @@ export const UI = {
     },
     startPage: {
       kicker: '入门闯关',
-      title: '六关,从装游戏到进服开跑',
+      title: '八关,从装游戏到进服开跑',
       sub: '第一次玩神力科莎?跟着这条赛道一关一关通关,最后一把进服开跑。进度只存在你自己的浏览器里。',
       hud: '已通关', of: '关', reset: '重置进度',
       start: '起点', lv: 'LV', min: '分钟', read: '阅读',
@@ -65,7 +65,7 @@ export const UI = {
       finishSub: '通关全部关卡,你已经具备进服开跑的一切。去服务器列表,选一台开跑吧。',
       go: '去服务器',
       // 首页板块专用:比 /start 页的 sub 更短,不提进度存储这类细节。
-      homeSub: '第一次玩神力科莎?六关带你从装游戏一路走到进服开跑。',
+      homeSub: '第一次玩神力科莎?八关带你从装游戏一路走到进服开跑。',
       homeCta: '开始闯关',
     },
     guide: { toc: '入门指南', prev: '上一篇', next: '下一篇', draft: '初稿 · 待审校', edit: '在 GitHub 上编辑此页' },
@@ -161,7 +161,7 @@ export const UI = {
     },
     startPage: {
       kicker: 'GETTING STARTED',
-      title: 'Six levels, from install to on-track',
+      title: 'Eight levels, from install to on-track',
       sub: 'New to Assetto Corsa? Clear this track one level at a time, then jump on a server. Progress is saved only in your own browser.',
       hud: 'CLEARED', of: 'levels', reset: 'Reset',
       start: 'START', lv: 'LV', min: 'min', read: 'Read',
@@ -170,7 +170,7 @@ export const UI = {
       finishTitle: 'Prep done — ready to launch', finishTitleDone: "All cleared — you're ready 🏁",
       finishSub: "You've cleared every level and have everything you need to get on track. Head to the server list and pick one.",
       go: 'To servers',
-      homeSub: 'New to Assetto Corsa? Six levels take you from installing the game to your first online race.',
+      homeSub: 'New to Assetto Corsa? Eight levels take you from installing the game to your first online race.',
       homeCta: 'Start the track',
     },
     guide: { toc: 'Guides', prev: 'Previous', next: 'Next', draft: 'Draft · under review', edit: 'Edit this page on GitHub' },

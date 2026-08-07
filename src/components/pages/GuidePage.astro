@@ -92,6 +92,22 @@ const editHref = editUrl(`src/content/guides/${lang}/${slug}.md`);
   }
   /* 列表项里的图跟着缩进走,不要顶到列表标记上。 */
   .prose :global(li img) { margin: var(--space-3) 0; }
+  /* 表格(依赖清单、配置要求这类)。窄屏时让表格自己横向滚,不要把整页撑宽。 */
+  .prose :global(table) {
+    width: 100%; margin: var(--space-4) 0;
+    border-collapse: collapse; font-size: 14px;
+    display: block; overflow-x: auto;
+  }
+  .prose :global(th), .prose :global(td) {
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid var(--color-divider);
+    text-align: left; vertical-align: top;
+  }
+  .prose :global(th) {
+    font-weight: 700; white-space: nowrap;
+    border-bottom-color: var(--color-text);
+  }
+  .prose :global(tbody tr:last-child td) { border-bottom: 0; }
   .prose :global(blockquote) { margin: 0 0 var(--space-3); padding: var(--space-2) var(--space-4); border-left: 3px solid var(--color-accent); background: var(--color-accent-100); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
   .prose :global(blockquote p) { margin: 0; }
 
@@ -101,3 +117,17 @@ const editHref = editUrl(`src/content/guides/${lang}/${slug}.md`);
     .guide-side__list { flex-flow: row wrap; }
   }
 </style>
+
+<script>
+  // 正文里的外链改为新标签页打开。站内别处的外链(导航「文档」、投稿按钮、画廊)
+  // 都是这个行为,但 Markdown 渐进增强:没有 JS 时链接照样能点,只是同标签页跳转。
+  function initGuideLinks() {
+    document.querySelectorAll<HTMLAnchorElement>('.prose a[href^="http"]').forEach((a) => {
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+    });
+  }
+
+  initGuideLinks();
+  document.addEventListener('astro:page-load', initGuideLinks);
+</script>

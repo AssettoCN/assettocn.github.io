@@ -1,5 +1,5 @@
 ---
-order: 1
+order: 2
 title: 购买与安装游戏
 summary: 在 Steam 上买到并装好《神力科莎》本体,为后续装 mod 打好基础。
 draft: true

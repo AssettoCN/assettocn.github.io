@@ -1,28 +1,55 @@
 ---
-order: 3
-title: Install mods (cars & tracks)
-summary: Install car and track mods with Content Manager, and where to find trustworthy ones.
+order: 4
+title: Installing mods (cars & tracks)
+summary: Getting car and track mods into the game root folder correctly, and where to find mods worth installing.
 draft: true
 ---
 
-## Easiest: drag into Content Manager
+## Know the root folder first
 
-Most mods come as an archive (`.zip` / `.rar` / `.7z`). **Just drag the archive into the Content Manager window** — CM detects it and installs it to the right place. It then shows up in CM's car / track list.
+Installing mods means putting files into the **game root folder** — the one from the previous level (`...\steamapps\common\assettocorsa`). These are the folders that matter:
 
-## Manual install
+| Folder | What goes in it |
+| --- | --- |
+| `content\cars\` | Cars |
+| `content\tracks\` | Tracks |
+| `apps\lua\`, `apps\python\` | App mods, split by script type |
+| `extension\` | CSP-related content, commonly `config-ext` (Pure configs, filter script settings) |
+| `system\cfg\` | Post-processing filter files and scripts |
 
-If you need to do it by hand: cars go in `assettocorsa\content\cars\`, tracks in `assettocorsa\content\tracks\`, **one folder per mod**.
+> Right-click the root folder in Explorer and **Pin to Quick access** — you'll be back here often.
+
+## Manual install (recommended)
+
+**Installing by hand is more reliable than dragging into CM.** Content Manager can misplace files or break a mod outright; if a mod installed through CM is misbehaving, redo it manually — that overwrites the bad install.
+
+The thing to check is **which level the archive was packed from**:
+
+- The archive already contains a full path like `content\tracks\some_track\` → drag its contents straight into the **root folder** and merge.
+- The archive only contains `some_track\` → put that inside `content\tracks\` yourself.
+
+Same logic for cars. **One folder per mod** — don't mix files from different mods together.
+
+## Dragging into Content Manager
+
+The quick way: drag the archive onto the CM window and let it detect and install. This works fine for well-packaged mods, and they show up in CM's car / track lists afterwards.
+
+But as above — if something doesn't appear, textures look wrong, or the track won't load, **redo it manually**.
 
 ## Where to find mods
 
-- Browse this site's [authors](/en/authors) — we list Chinese modders, and each author's page points to their own release channels (Bilibili, Afdian, etc.).
-- We **don't host mods directly**; we send you to the author's own release page so you get the genuine, latest version.
+- Browse the [authors](/authors) here — we list Chinese modders, and each profile links to where they actually publish (Bilibili, Afdian and so on).
+- We **don't host mods**. We point you at the author's own release page, so you get the genuine, current version.
 
-## Watch out
+## Installed but not showing up?
 
-- Trust the source — don't install files of unknown origin.
-- Some cars / tracks **require CSP** or specific DLC; if something doesn't show up, check those first.
+Work through these in order:
+
+1. **Wrong folder level** — by far the most common cause. Re-check the section above.
+2. **Needs CSP** — many newer mods require it, sometimes a specific version.
+3. **Needs official DLC** — some mods reuse car or track assets from paid DLC.
+4. Stick to sources you trust; don't install files of unknown origin.
 
 ## Next
 
-Car installed? Head online and **join a server**.
+Cars sorted — now look at the tools the community actually runs, in **Recommended mods**.

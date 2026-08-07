@@ -1,8 +1,9 @@
 ---
 import SectionHead from './SectionHead.astro';
 import { UI } from '../data/ui.js';
-// index:段号由 HomePage 按实际渲染的段顺序下发(见那里的注释),不在此硬编码。
-const { lang, index } = Astro.props;
+// index / surface:段号与明暗均由 HomePage 按实际渲染的段顺序下发(见那里的注释),
+// 不在此硬编码。
+const { lang, index, surface = false } = Astro.props;
 const p = UI[lang].pillars;
 
 const items = [
@@ -11,7 +12,7 @@ const items = [
   { num: '03', title: p.p3t, body: p.p3b },
 ];
 ---
-<section class="snap-section home-sec">
+<section class:list={['snap-section', 'home-sec', surface && 'home-sec--surface', 'pillars-sec']}>
   <div class="home-inner">
     <SectionHead index={index} eyebrow="MISSION" title={p.title} />
     <div class="pillars__grid">

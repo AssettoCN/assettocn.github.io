@@ -1,5 +1,6 @@
 ---
 import Hero from '../Hero.astro';
+import Pillars from '../Pillars.astro';
 import StartPreview from '../StartPreview.astro';
 import WorksPreview from '../WorksPreview.astro';
 import AuthorsPreview from '../AuthorsPreview.astro';
@@ -11,11 +12,9 @@ import { getAuthors, getServers, getGallery } from '../../lib/content.js';
 // Single-page landing: poster hero + preview bands that link out to the full
 // routed pages (/start, /works, /authors, /servers, /gallery).
 //
-// 排序理由:入门排第一 —— 它是导航第一项,也是新玩家真正需要的第一件事;作品第二 ——
-// 它是站上最大的内容集,而且 Hero 的主 CTA 就指向 /works。此前这两块在首页都没有位置,
-// 反倒是只有 1 条数据的服务器和 0 条的截图各占一整屏。
-// (Mission/Pillars 板块已从首页移出 —— 它和 /about 的三段内容基本重合,而首页每多一段
-//  就是多一屏必须划过的 scroll-snap。组件文件仍在,想加回来在这里补一行即可。)
+// 排序理由:Mission 打头,先交代这站是什么;入门紧随其后 —— 它是导航第一项,也是新玩家
+// 真正需要的第一件事;作品第三 —— 站上最大的内容集,Hero 的主 CTA 就指向 /works。
+// 入门与作品此前在首页都没有位置,反倒是只有 1 条数据的服务器和 0 条的截图各占一整屏。
 //
 // 这里同时负责三件事,都是**按实际渲染出来的顺序**算的,不许回到组件里硬编码:
 //   1. 没有内容的板块整段不渲染(首页是 mandatory snap,空板块 = 一整屏空白)
@@ -29,6 +28,7 @@ const [authors, servers, shots] = await Promise.all([
 ]);
 
 const shown = [
+  'pillars',
   'start',
   'works',
   authors.length && 'authors',
@@ -44,6 +44,7 @@ const band = (key) => ({ lang, index: idx(key), surface: surface(key) });
 ---
 <div class="home">
   <Hero lang={lang} />
+  <Pillars {...band('pillars')} />
   <StartPreview {...band('start')} />
   <WorksPreview {...band('works')} />
   {authors.length > 0 && <AuthorsPreview {...band('authors')} />}

@@ -3,6 +3,7 @@ order: 8
 title: 常见问题
 summary: 新手最常撞到的几个坑:进不去服、mod 不显示、画面 / 性能等。
 draft: true
+updated: '2026-08-04'
 ---
 
 ## 进服被踢 / 进不去?

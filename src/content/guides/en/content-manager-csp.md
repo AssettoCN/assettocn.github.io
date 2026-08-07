@@ -3,6 +3,7 @@ order: 3
 title: Content Manager & CSP
 summary: Install the two essentials of modern AC — Content Manager (launcher / manager) and CSP (graphics & features patch).
 draft: true
+updated: '2026-08-04'
 ---
 
 ## Why you need them

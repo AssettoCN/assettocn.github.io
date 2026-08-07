@@ -4,6 +4,7 @@ category: visuals
 title: 'Post-processing filters (PPFilters)'
 summary: 'PPFilters set the final look of the game — colour, contrast, bloom, depth of field. What they do, which ones to try, and how to install them.'
 draft: false
+updated: '2026-08-07'
 sourceName: 'AssettoCN docs (community)'
 ---
 A post-processing filter (PPFilter) is a config file (`.ini`) that controls the game's final image in real time. It covers everything from colour grading and contrast to advanced effects like bloom, lens flare and depth of field. It's the main tool for getting a particular visual style in Assetto Corsa.

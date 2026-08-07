@@ -3,6 +3,7 @@ order: 3
 title: Content Manager 与 CSP
 summary: 装上现代神力科莎的两件套 —— Content Manager(启动器 / 管理器)和 CSP(画质与功能补丁)。
 draft: true
+updated: '2026-08-04'
 ---
 
 ## 为什么要装

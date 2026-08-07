@@ -3,6 +3,7 @@ order: 7
 title: Wheel & gamepad setup
 summary: The basics of getting a wheel or gamepad feeling right in Assetto Corsa.
 draft: true
+updated: '2026-08-04'
 ---
 
 ## You can play without a wheel

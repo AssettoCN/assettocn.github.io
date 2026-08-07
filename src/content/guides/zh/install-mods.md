@@ -3,6 +3,7 @@ order: 4
 title: 安装 mod(车辆与地图)
 summary: 把车辆、赛道等 mod 正确装进游戏根目录,以及去哪找靠谱的 mod。
 draft: true
+updated: '2026-08-04'
 ---
 
 ## 先认识根目录

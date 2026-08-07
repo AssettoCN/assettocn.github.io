@@ -3,6 +3,7 @@ order: 6
 title: Join servers online
 summary: Join a server with one click via Content Manager, or connect manually by IP.
 draft: true
+updated: '2026-08-04'
 ---
 
 ## One-click join (easiest)

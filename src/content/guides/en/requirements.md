@@ -3,6 +3,7 @@ order: 1
 title: System & software requirements
 summary: Check your PC can run the game, and install the few runtimes almost every mod depends on.
 draft: true
+updated: '2026-08-07'
 ---
 
 ## Game version

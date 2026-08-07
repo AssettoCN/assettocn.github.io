@@ -4,6 +4,7 @@ category: modding
 title: 'The game root folder'
 summary: 'What each folder in the root directory holds — your map when installing mods and when something goes wrong.'
 draft: false
+updated: '2026-08-07'
 sourceName: 'AssettoCN docs (community)'
 ---
 The root folder is Assetto Corsa's main install directory. It holds the core game files, and most mods are installed into it. Knowing your way around it matters for both installing mods and troubleshooting them.

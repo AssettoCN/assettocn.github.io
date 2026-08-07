@@ -82,6 +82,9 @@ const guides = defineCollection({
     title: z.string(),
     summary: z.string(),
     draft: z.boolean().default(false),
+    // 首次进仓库的日期(YYYY-MM-DD),RSS 用它排序与生成 pubDate。
+    // 现有条目由 git 历史回填,不是手编的;新增时填当天即可。
+    updated: z.string().optional(),
   }),
 });
 
@@ -115,6 +118,7 @@ const tutorials = defineCollection({
     title: z.string(),
     summary: z.string(),
     draft: z.boolean().default(false),     // true 显示「待审校」
+    updated: z.string().optional(),        // YYYY-MM-DD,同 guides:供 RSS 排序
     // 内容来源(可选)。移植自外部文档时标注出处,列在页面底部。
     sourceName: z.string().optional(),
     sourceUrl: z.string().optional(),

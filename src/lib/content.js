@@ -115,7 +115,7 @@ const guideSlug = (id) => id.split('/').slice(1).join('/');
 export async function getGuides(lang) {
   const list = (await getCollection('guides')).filter((g) => guideLang(g.id) === lang);
   return list
-    .map((g) => ({ slug: guideSlug(g.id), title: g.data.title, summary: g.data.summary, order: g.data.order ?? 0, draft: g.data.draft }))
+    .map((g) => ({ slug: guideSlug(g.id), title: g.data.title, summary: g.data.summary, order: g.data.order ?? 0, draft: g.data.draft, updated: g.data.updated }))
     .sort((a, b) => a.order - b.order);
 }
 
@@ -144,6 +144,7 @@ export async function getTutorials(lang) {
       category: t.data.category,
       order: t.data.order ?? 0,
       draft: t.data.draft,
+      updated: t.data.updated,
       sourceName: t.data.sourceName,
       sourceUrl: t.data.sourceUrl,
     }))

@@ -4,6 +4,7 @@ category: visuals
 title: '后处理滤镜(PPFilter)'
 summary: 'PPFilter 决定游戏最终的画面风格 —— 色彩、对比、光晕、景深。这里是它的作用、推荐清单与安装方法。'
 draft: false
+updated: '2026-08-07'
 sourceName: 'AssettoCN 文档(社区整理)'
 ---
 后处理滤镜（Post-Processing Filter，简称 PPFilter）是一个配置文件（.ini），用于实时控制游戏的最终画面效果。它可调整从色彩分级、对比度到高级效果（如光晕、镜头眩光和景深）等各个方面。这是在 Assetto Corsa 中实现特定视觉风格的主要工具。

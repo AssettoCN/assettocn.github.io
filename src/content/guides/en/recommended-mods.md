@@ -3,6 +3,7 @@ order: 5
 title: Recommended mods
 summary: The app-style mods the community actually runs — HUDs, gamepad assists, chase cams and camera tools.
 draft: true
+updated: '2026-08-07'
 ---
 
 These are the **app mods** (tools that live in `apps/`) the community uses most — not cars or tracks. They're all stable, good-looking and quick to get going. For how to install them, see the previous level, **Installing mods**.

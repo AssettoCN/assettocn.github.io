@@ -4,6 +4,7 @@ category: hardware
 title: 'VR 指南'
 summary: '在 CSP 下把 VR 跑起来并调到可用画质:头显设置、分辨率与重投影、视频与 CSP 预设、OpenXR 工具链。'
 draft: true
+updated: '2026-08-07'
 sourceName: 'AssettoCN 文档(社区整理)'
 ---
 > **说明**

@@ -104,6 +104,7 @@ export const UI = {
           { label: '进阶教程', href: '/tutorials' },
           { label: '文档中心', href: SITE.docsUrl },
           { label: '动态交流', href: SITE.discussionsUrl },
+          { label: 'RSS 订阅', href: '/rss.xml' },
         ] },
         { title: '关注', links: [
           { label: 'Bilibili', href: SITE.social.bilibili },
@@ -112,6 +113,7 @@ export const UI = {
         ] },
       ],
     },
+    feed: { title: 'AssettoCN · 社区更新', desc: '新收录的作品、新的入门指南与进阶教程。' },
     footer: 'AssettoCN · 由社区驱动',
     viewLabel: '查看', coverHint: '封面',
     commentsTitle: '留言',
@@ -221,6 +223,7 @@ export const UI = {
           { label: 'Tutorials', href: '/tutorials' },
           { label: 'Docs', href: SITE.docsUrl },
           { label: 'Discussions', href: SITE.discussionsUrl },
+          { label: 'RSS', href: '/rss.xml' },
         ] },
         { title: 'Follow', links: [
           { label: 'Bilibili', href: SITE.social.bilibili },
@@ -229,6 +232,7 @@ export const UI = {
         ] },
       ],
     },
+    feed: { title: 'AssettoCN · Community updates', desc: 'Newly listed works, new getting-started guides and tutorials.' },
     footer: 'AssettoCN · Community-driven',
     viewLabel: 'View', coverHint: 'cover',
     commentsTitle: 'Comments',

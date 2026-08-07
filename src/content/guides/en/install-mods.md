@@ -3,6 +3,7 @@ order: 4
 title: Installing mods (cars & tracks)
 summary: Getting car and track mods into the game root folder correctly, and where to find mods worth installing.
 draft: true
+updated: '2026-08-04'
 ---
 
 ## Know the root folder first

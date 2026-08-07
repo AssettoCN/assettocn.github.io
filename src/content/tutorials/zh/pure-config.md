@@ -4,6 +4,7 @@ category: visuals
 title: 'Pure Config 设置详解'
 summary: 'Pure Config 里每个标签页、每项设置的含义速查。'
 draft: true
+updated: '2026-08-07'
 sourceName: 'AssettoCN 文档(社区整理)'
 ---
 本页面将列出 Pure Config 中包含的所有功能及其说明。

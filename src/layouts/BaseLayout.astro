@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { localizePath } from '../lib/i18n.js';
+import { UI } from '../data/ui.js';
 
 /**
  * Site chrome + <head>. Every page renders through this.
@@ -72,6 +73,8 @@ const fullTitle = title ? `${title} · AssettoCN` : 'AssettoCN · Assetto Corsa 
     {description && <meta name="twitter:description" content={description} />}
     <meta name="twitter:image" content={ogImageUrl} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {/* Feed 自动发现:阅读器只要拿到站内任意一页就能找到订阅地址。每个语言一份。 */}
+    <link rel="alternate" type="application/rss+xml" title={UI[lang].feed.title} href={localizePath(lang, '/rss.xml')} />
     <!-- 字体同源自托管(见 src/styles/fonts.css);正文字体提前预载,避免首屏字体闪烁。 -->
     <link rel="preload" href="/fonts/figtree-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/caprasimo-latin.woff2" as="font" type="font/woff2" crossorigin />

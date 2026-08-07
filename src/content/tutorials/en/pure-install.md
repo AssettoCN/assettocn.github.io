@@ -4,6 +4,7 @@ category: visuals
 title: 'Installing Pure'
 summary: 'Pure is the weather and lighting extension for CSP, and a prerequisite for Pure Config and most PPFilters. Here is how to install and enable it.'
 draft: false
+updated: '2026-08-07'
 sourceName: 'AssettoCN docs (community)'
 ---
 Pure is a weather and graphics extension for **Assetto Corsa** and **Custom Shaders Patch (CSP)**, developed by Peter Boese. It brings improved lighting, realistic weather, shadows, reflections, and broad post-processing filter (PPFilter) support.

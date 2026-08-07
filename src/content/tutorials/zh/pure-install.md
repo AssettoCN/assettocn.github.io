@@ -4,6 +4,7 @@ category: visuals
 title: 'Pure 安装'
 summary: 'Pure 是 CSP 的天气与光照增强,也是 Pure Config / PPFilter 的前提。这里是安装与启用步骤。'
 draft: false
+updated: '2026-08-07'
 sourceName: 'AssettoCN 文档(社区整理)'
 ---
 Pure 是 Peter Boese 为 **神力科莎** 和 **Custom Shaders Patch (CSP)** 开发的天气与图形增强。它提供增强的光照、真实天气、阴影、反射和广泛的后期处理滤镜（PPFilter）支持。

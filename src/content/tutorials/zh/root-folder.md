@@ -4,6 +4,7 @@ category: modding
 title: '游戏根目录详解'
 summary: '根目录里每个文件夹分别放什么 —— 装 mod 和排查问题时的地图。'
 draft: false
+updated: '2026-08-07'
 sourceName: 'AssettoCN 文档(社区整理)'
 ---
 根目录是神力科莎的安装主目录，存放核心文件，大多数 MOD 也需要安装于此。了解如何访问和理解该目录对 MOD 安装和故障排除很重要。

@@ -3,6 +3,7 @@ order: 1
 title: 系统与软件依赖
 summary: 装游戏之前先确认电脑跑得动,并装好那几个几乎所有 mod 都要用到的运行库。
 draft: true
+updated: '2026-08-07'
 ---
 
 ## 游戏版本

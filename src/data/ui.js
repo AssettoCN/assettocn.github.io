@@ -89,6 +89,7 @@ export const UI = {
     footer: 'AssettoCN · 由社区驱动',
     viewLabel: '查看', coverHint: '封面',
     commentsTitle: '留言',
+    notFound: { code: '404', title: '这一页跑出赛道了', sub: '链接可能已经失效,或者地址打错了。', home: '回首页', start: '去看入门' },
   },
   en: {
     langLabel: '中',
@@ -177,5 +178,6 @@ export const UI = {
     footer: 'AssettoCN · Community-driven',
     viewLabel: 'View', coverHint: 'cover',
     commentsTitle: 'Comments',
+    notFound: { code: '404', title: 'This page went off track', sub: 'The link may be dead, or the address was mistyped.', home: 'Back home', start: 'Start here' },
   },
 };

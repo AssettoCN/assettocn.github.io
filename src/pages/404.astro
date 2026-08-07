@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { UI } from '../data/ui.js';
+import { localizePath, ROUTES } from '../lib/i18n.js';
+
+// GitHub Pages 只认仓库根目录的一个 404.html —— 它同时兜底 / 和 /en/ 下的所有
+// 404,没法按语言分别出页。所以这一页服务端按默认语言(zh)渲染,英文文案同屏
+// 给出;底部脚本在访客确实来自 /en/ 时,把 CTA 换成 /en 路由并把中英主次对调。
+// 无 JS 时也是可用的:两种语言都看得到,链接指向 zh 路由(默认语言,不会再 404)。
+const lang = 'zh';
+const zh = UI.zh.notFound;
+const en = UI.en.notFound;
+---
+<BaseLayout lang={lang} path="/404" title={zh.title} description={zh.sub} noindex>
+  <div class="shell fade-in nf">
+    <p class="nf__code" aria-hidden="true">{zh.code}</p>
+
+    <div class="nf__body">
+      <h1 class="nf__title" data-en={en.title}>{zh.title}</h1>
+      <p class="nf__sub text-muted" data-en={en.sub}>{zh.sub}</p>
+      <p class="nf__alt" data-nf-alt data-zh={`${zh.title} · ${zh.sub}`}>{en.title} · {en.sub}</p>
+    </div>
+
+    <div class="nf__cta">
+      <a
+        class="btn btn-primary"
+        href={localizePath('zh', ROUTES.home)}
+        data-en={en.home}
+        data-href-en={localizePath('en', ROUTES.home)}
+      >{zh.home}<Icon name="arrow-right" size={16} /></a>
+      <a
+        class="btn btn-secondary"
+        href={localizePath('zh', ROUTES.start)}
+        data-en={en.start}
+        data-href-en={localizePath('en', ROUTES.start)}
+      >{zh.start}</a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .nf {
+    padding: var(--space-8) 0;
+    min-height: calc(100vh - 64px - 220px);
+    min-height: calc(100dvh - 64px - 220px);
+    display: flex; flex-direction: column; justify-content: center;
+    align-items: flex-start; gap: var(--space-6);
+  }
+  .nf__code {
+    font-family: var(--font-mono);
+    font-size: clamp(72px, 18vw, 168px);
+    font-weight: 700; line-height: .9; letter-spacing: -.04em;
+    margin: 0; color: var(--color-accent);
+  }
+  .nf__body { max-width: 56ch; }
+  .nf__title { font-size: clamp(24px, 4vw, 34px); margin: 0; }
+  .nf__sub { font-size: 16px; line-height: 1.7; margin: var(--space-2) 0 0; text-wrap: pretty; }
+  /* 次语言:同样的信息,弱化一档,不抢主语言的层级。 */
+  .nf__alt {
+    font-size: 13px; line-height: 1.6; margin: var(--space-3) 0 0;
+    color: var(--color-neutral-500);
+    padding-top: var(--space-3); border-top: 1px solid var(--color-divider);
+  }
+  .nf__cta { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+</style>
+
+<script is:inline>
+  // 访客来自 /en/… 时把主次语言对调,并把 CTA 指向 /en 路由。
+  (function () {
+    if (!/^\/en(\/|$)/.test(location.pathname)) return;
+    document.documentElement.lang = 'en';
+    document.querySelectorAll('[data-en]').forEach(function (el) {
+      var href = el.getAttribute('data-href-en');
+      if (href) el.setAttribute('href', href);
+      // 只改第一个非空文本节点,保留按钮里的图标 svg。
+      var text = el.getAttribute('data-en');
+      var swapped = false;
+      Array.prototype.forEach.call(el.childNodes, function (n) {
+        if (!swapped && n.nodeType === 3 && n.textContent.trim()) { n.textContent = text; swapped = true; }
+      });
+      if (!swapped) el.textContent = text;
+    });
+    // 主次对调:次语言那行换成中文。
+    var alt = document.querySelector('[data-nf-alt]');
+    if (alt) alt.textContent = alt.getAttribute('data-zh');
+  })();
+</script>

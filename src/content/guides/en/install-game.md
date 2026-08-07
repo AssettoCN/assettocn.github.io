@@ -24,6 +24,8 @@ You'll need the install folder later for mods and CSP. It's usually:
 
 In your Steam library, right-click the game → **Manage → Browse local files** to open it.
 
+![Right-clicking the game in the Steam library and choosing Manage → Browse local files](/images/guides/install-game-root-folder.png)
+
 ## Next
 
 With the base game in place, don't settle for the stock launcher — next, install **Content Manager and CSP**, the de-facto standard for modern AC.

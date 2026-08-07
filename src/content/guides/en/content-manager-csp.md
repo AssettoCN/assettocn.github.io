@@ -13,7 +13,10 @@ draft: true
 ## Install order
 
 1. Download Content Manager from the **acstuff** site, unzip and run it. On first launch, point it at your game folder (the one from the previous guide).
-2. Install **CSP** inside CM: `Settings → Custom Shaders Patch`, then pick a version — start with the recommended / stable one.
+2. Install **CSP** inside CM: `Settings → Custom Shaders Patch`, then pick a version — start with the recommended / stable one. Before it's installed, that page shows a "not installed" notice with an Install button:
+
+   ![CM's Custom Shaders Patch page showing "Custom Shaders Patch is not installed" with an Install button](/images/guides/content-manager-csp-install.png)
+
 3. (Optional) Add weather/lighting extensions like **Sol / PURE** for a big visual boost — get the basics working first.
 
 ## Tips

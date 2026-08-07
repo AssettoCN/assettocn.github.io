@@ -24,6 +24,8 @@ draft: true
 
 在 Steam 库里右键游戏 → **管理 → 浏览本地文件**,就能直接打开它。
 
+![Steam 库中右键游戏,选择「管理 → 浏览本地文件」](/images/guides/install-game-root-folder.png)
+
 ## 下一步
 
 本体装好后,先别急着一直用原版启动器 —— 下一篇装上 **Content Manager 与 CSP**,它们几乎是现代神力科莎的标配。

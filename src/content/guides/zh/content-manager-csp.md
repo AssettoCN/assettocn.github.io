@@ -13,7 +13,10 @@ draft: true
 ## 安装顺序
 
 1. 从 **acstuff** 官网下载 Content Manager,解压后运行。首次启动会让你指向游戏目录(上一篇记下的那个)。
-2. 在 CM 里装 **CSP**:`Settings → Custom Shaders Patch`,选一个版本安装 —— 新手先用推荐 / 稳定版。
+2. 在 CM 里装 **CSP**:`Settings → Custom Shaders Patch`,选一个版本安装 —— 新手先用推荐 / 稳定版。没装过的话,这一页会直接显示「未安装」和一个 Install 按钮:
+
+   ![CM 的 Custom Shaders Patch 页面显示「未安装」,旁边是 Install 按钮](/images/guides/content-manager-csp-install.png)
+
 3. (可选)装 **Sol / PURE** 等天气光照扩展,画面提升明显 —— 先把基础跑通再折腾。
 
 ## 小贴士

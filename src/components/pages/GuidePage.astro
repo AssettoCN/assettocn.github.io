@@ -82,6 +82,16 @@ const editHref = editUrl(`src/content/guides/${lang}/${slug}.md`);
   .prose :global(a) { color: var(--color-accent-700); text-decoration: underline; text-underline-offset: 2px; }
   .prose :global(code) { font-family: ui-monospace, monospace; font-size: 13px; background: var(--color-surface); padding: 1px 6px; border-radius: 6px; }
   .prose :global(strong) { font-weight: 700; }
+  /* 正文配图:界面截图基本都比正文栏窄,所以不拉满宽度、按原始尺寸显示即可,
+     加一圈描边把它和页面底色分开(截图自身多为深色 UI)。 */
+  .prose :global(img) {
+    max-width: 100%; height: auto;
+    margin: var(--space-4) 0;
+    border: 1px solid var(--color-divider);
+    border-radius: var(--radius-sm);
+  }
+  /* 列表项里的图跟着缩进走,不要顶到列表标记上。 */
+  .prose :global(li img) { margin: var(--space-3) 0; }
   .prose :global(blockquote) { margin: 0 0 var(--space-3); padding: var(--space-2) var(--space-4); border-left: 3px solid var(--color-accent); background: var(--color-accent-100); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
   .prose :global(blockquote p) { margin: 0; }
 

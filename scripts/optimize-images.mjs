@@ -25,6 +25,7 @@ const BUDGET = {
   authors: { maxPx: 400, maxKB: 60 },   // 头像最大渲染 104px;400 已是现有约定的 2x+
   gallery: { maxPx: 1600, maxKB: 500 }, // 截图会被点开看,留足分辨率
   works: { maxPx: 1200, maxKB: 300 },   // 作品封面只做卡片图
+  guides: { maxPx: 1200, maxKB: 250 },  // 指南配图是界面截图,正文栏最宽 ~720px
 };
 const QUALITY = 82;
 const ROOT = 'public/images';

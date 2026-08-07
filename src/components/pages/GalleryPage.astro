@@ -8,50 +8,239 @@ import { issueFormUrl } from '../../data/site.js';
 
 const { lang } = Astro.props;
 const ui = UI[lang];
+const g = ui.galleryPage;
 const shots = await getGallery(lang);
 // When a GitHub repo is configured, "submit a shot" opens the Issue Form that
 // the Action turns into a gallery PR; otherwise it stays an inert placeholder.
 const submitUrl = issueFormUrl('gallery-submission.yml');
+
+/** Lightbox caption: "摄影 X · 车辆 Y · 赛道 Z · 滤镜 W",跳过没填的字段。 */
+function caption(s) {
+  return [
+    s.by && `${g.photoBy} ${s.by}`,
+    s.car && `${g.car} ${s.car}`,
+    s.track && `${g.track} ${s.track}`,
+    s.ppfilter && `${g.ppfilter} ${s.ppfilter}`,
+  ].filter(Boolean).join(' · ');
+}
 ---
 <div class="shell fade-in page-head">
-  <PageHead eyebrow={ui.nav.gallery} title={ui.galleryPage.title} sub={ui.galleryPage.sub}>
+  <PageHead eyebrow={ui.nav.gallery} title={g.title} sub={g.sub}>
     {submitUrl ? (
       <a class="btn btn-primary list-head__action" href={submitUrl} target="_blank" rel="noopener">
         <Icon name="image-plus" size={16} />
-        {ui.galleryPage.submit}
+        {g.submit}
       </a>
     ) : (
       <button type="button" class="btn btn-primary list-head__action">
         <Icon name="image-plus" size={16} />
-        {ui.galleryPage.submit}
+        {g.submit}
       </button>
     )}
   </PageHead>
+
   {shots.length === 0 && <p class="empty-state">{ui.empty.gallery}</p>}
-  <div class="gallery-masonry">
-    {shots.map((s) => (
-      <figure class="card elev-sm gallery-shot">
-        <div class="gallery-shot__media" style={`aspect-ratio: ${s.ratio};`}>
-          <ImageSlot src={s.cover} seed={s.title} placeholder={s.coverPlaceholder} />
-        </div>
+
+  {shots.length > 0 && (
+    <div class="gallery-filter">
+      <input
+        type="search"
+        class="gallery-filter__input"
+        placeholder={g.search}
+        aria-label={g.searchLabel}
+        data-gallery-search
+        autocomplete="off"
+      />
+      <span class="gallery-filter__count text-muted" data-gallery-count>{shots.length} {g.count}</span>
+    </div>
+  )}
+
+  <div class="gallery-masonry" data-gallery-grid>
+    {shots.map((s, i) => (
+      <figure
+        class="card elev-sm gallery-shot"
+        data-shot
+        data-index={i}
+        data-search={s.search}
+        data-full={s.cover}
+        data-caption={caption(s)}
+        data-title={s.title}
+      >
+        {/* 有真图时整张卡可点开灯箱;没有封面的条目只是占位,不可点。 */}
+        <button type="button" class="gallery-shot__btn" data-shot-open disabled={!s.cover} aria-label={`${g.zoom}: ${s.title}`}>
+          <div class="gallery-shot__media" style={`aspect-ratio: ${s.ratio};`}>
+            <ImageSlot src={s.cover} seed={s.title} placeholder={s.coverPlaceholder} washed={false} />
+          </div>
+        </button>
         <figcaption class="gallery-shot__cap">
           <span class="gallery-shot__title">{s.title}</span>
-          <span class="text-muted gallery-shot__by">{s.by}</span>
+          {s.by && <span class="text-muted gallery-shot__by">{g.by} {s.by}</span>}
+          {(s.car || s.track) && (
+            <span class="gallery-shot__facets text-muted">{[s.car, s.track].filter(Boolean).join(' · ')}</span>
+          )}
         </figcaption>
       </figure>
     ))}
   </div>
+
+  {shots.length > 0 && <p class="empty-state gallery-noresult" hidden data-gallery-noresult>{g.noResults}</p>}
 </div>
 
+{shots.length > 0 && (
+  /* 原生 <dialog>:Esc 关闭、焦点陷阱、惰性背景都由浏览器负责,比手写 overlay 稳。 */
+  <dialog class="lb" data-lb aria-label={g.zoom}>
+    {/* 注:Icon 里的 "x" 是 X(推特)的 logo,不是关闭图标,别拿来用。 */}
+    <button type="button" class="lb__close" data-lb-close aria-label={g.close}>&times;</button>
+    <button type="button" class="lb__nav lb__nav--prev" data-lb-prev aria-label={g.prev}>‹</button>
+    <button type="button" class="lb__nav lb__nav--next" data-lb-next aria-label={g.next}>›</button>
+    <figure class="lb__figure">
+      <img class="lb__img" data-lb-img alt="" />
+      <figcaption class="lb__cap">
+        <span class="lb__cap-title" data-lb-title></span>
+        <span class="lb__cap-meta" data-lb-cap></span>
+      </figcaption>
+    </figure>
+  </dialog>
+)}
+
 <style>
+  .gallery-filter { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-6); flex-wrap: wrap; }
+  .gallery-filter__input {
+    flex: 1; min-width: 220px; max-width: 420px;
+    padding: 10px var(--space-3);
+    font: inherit; font-size: 14px; color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid var(--color-divider); border-radius: var(--radius-md);
+  }
+  .gallery-filter__input:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 1px; border-color: transparent; }
+  .gallery-filter__count { font-size: 13px; font-family: var(--font-mono); }
+
   .gallery-masonry { columns: 3; column-gap: var(--space-4); }
   .gallery-shot { padding: 0; overflow: hidden; break-inside: avoid; margin: 0 0 var(--space-4); gap: 0; transition: box-shadow .16s ease; }
   .gallery-shot:hover { box-shadow: var(--shadow-md); }
+  .gallery-shot[hidden] { display: none; }
+  /* 图片本身就是内容,按钮只是可点区域,不要带任何按钮外观。 */
+  .gallery-shot__btn { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
+  .gallery-shot__btn:disabled { cursor: default; }
   .gallery-shot__media { width: 100%; }
-  .gallery-shot__cap { padding: var(--space-3); display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); }
+  .gallery-shot__cap { padding: var(--space-3); display: flex; flex-direction: column; gap: 3px; }
   .gallery-shot__title { font-size: 14px; font-weight: 600; }
   .gallery-shot__by { font-size: 12px; }
+  .gallery-shot__facets { font-size: 11px; line-height: 1.45; }
+  .gallery-noresult { margin-top: var(--space-4); }
 
   @media (max-width: 860px) { .gallery-masonry { columns: 2; } }
   @media (max-width: 560px) { .gallery-masonry { columns: 1; } }
+
+  /* ── 灯箱 ─────────────────────────────────────────────────────────────── */
+  .lb {
+    width: min(96vw, 1400px); max-width: none;
+    max-height: 94vh; padding: 0; border: 0;
+    background: transparent; color: #fff; overflow: visible;
+  }
+  .lb::backdrop { background: rgba(8, 7, 6, .88); }
+  .lb__figure { margin: 0; display: flex; flex-direction: column; gap: var(--space-3); align-items: center; }
+  .lb__img {
+    max-width: 100%; max-height: 82vh; width: auto; height: auto;
+    border-radius: var(--radius-md); background: #000;
+  }
+  .lb__cap { display: flex; flex-direction: column; gap: 4px; text-align: center; padding-bottom: var(--space-2); }
+  .lb__cap-title { font-size: 15px; font-weight: 600; }
+  .lb__cap-meta { font-size: 12px; color: rgba(255, 255, 255, .68); font-family: var(--font-mono); }
+
+  .lb__close, .lb__nav {
+    position: fixed; z-index: 1; display: grid; place-items: center;
+    color: #fff; background: rgba(255, 255, 255, .1);
+    border: 1px solid rgba(255, 255, 255, .18); border-radius: 999px;
+    cursor: pointer; line-height: 1;
+  }
+  .lb__close:hover, .lb__nav:hover { background: rgba(255, 255, 255, .22); }
+  .lb__close { top: 16px; right: 16px; width: 40px; height: 40px; font-size: 26px; padding-bottom: 3px; }
+  .lb__nav { top: 50%; transform: translateY(-50%); width: 44px; height: 44px; font-size: 28px; padding-bottom: 4px; }
+  .lb__nav--prev { left: 16px; }
+  .lb__nav--next { right: 16px; }
+  /* 只有一张(或筛选后只剩一张)时不显示左右翻页 */
+  .lb[data-single] .lb__nav { display: none; }
+
+  @media (max-width: 560px) {
+    .lb__nav { width: 38px; height: 38px; font-size: 24px; }
+    .lb__nav--prev { left: 6px; }
+    .lb__nav--next { right: 6px; }
+  }
 </style>
+
+<script>
+  // 画廊:纯前端筛选 + 灯箱。所有截图都是服务端渲染的(SEO + 无 JS 也能看),
+  // 这里只做显示/隐藏和放大,不重新渲染。
+  function initGallery() {
+    const grid = document.querySelector<HTMLElement>('[data-gallery-grid]');
+    const dialog = document.querySelector<HTMLDialogElement>('[data-lb]');
+    if (!grid) return;
+
+    const shots = Array.from(grid.querySelectorAll<HTMLElement>('[data-shot]'));
+    const search = document.querySelector<HTMLInputElement>('[data-gallery-search]');
+    const countEl = document.querySelector<HTMLElement>('[data-gallery-count]');
+    const noResult = document.querySelector<HTMLElement>('[data-gallery-noresult]');
+    const countUnit = countEl?.textContent?.replace(/^\s*\d+\s*/, '') ?? '';
+
+    // 当前可见(且有大图)的条目 —— 灯箱只在这些之间翻页,筛选后不会跳到被隐藏的图。
+    let live: HTMLElement[] = [];
+    let pos = 0;
+
+    function refresh() {
+      const q = (search?.value ?? '').trim().toLowerCase();
+      let visible = 0;
+      shots.forEach((el) => {
+        const hit = !q || (el.dataset.search ?? '').includes(q);
+        el.hidden = !hit;
+        if (hit) visible++;
+      });
+      live = shots.filter((el) => !el.hidden && el.dataset.full);
+      if (countEl) countEl.textContent = `${visible} ${countUnit}`.trim();
+      if (noResult) noResult.hidden = visible !== 0;
+    }
+
+    function show(i: number) {
+      if (!dialog || !live.length) return;
+      pos = (i + live.length) % live.length;
+      const el = live[pos];
+      const img = dialog.querySelector<HTMLImageElement>('[data-lb-img]');
+      const title = dialog.querySelector<HTMLElement>('[data-lb-title]');
+      const cap = dialog.querySelector<HTMLElement>('[data-lb-cap]');
+      if (img) {
+        img.src = el.dataset.full ?? '';
+        img.alt = el.dataset.title ?? '';
+      }
+      if (title) title.textContent = el.dataset.title ?? '';
+      if (cap) cap.textContent = el.dataset.caption ?? '';
+      dialog.toggleAttribute('data-single', live.length < 2);
+      if (!dialog.open) dialog.showModal();
+    }
+
+    search?.addEventListener('input', refresh);
+
+    grid.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-shot-open]');
+      if (!btn) return;
+      const shot = btn.closest<HTMLElement>('[data-shot]');
+      if (!shot || !shot.dataset.full) return;
+      const i = live.indexOf(shot);
+      if (i >= 0) show(i);
+    });
+
+    dialog?.querySelector('[data-lb-close]')?.addEventListener('click', () => dialog.close());
+    dialog?.querySelector('[data-lb-prev]')?.addEventListener('click', () => show(pos - 1));
+    dialog?.querySelector('[data-lb-next]')?.addEventListener('click', () => show(pos + 1));
+    // 点背景关闭:<dialog> 的点击落在 dialog 本身(而非内容)时即为点了 backdrop。
+    dialog?.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+    dialog?.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); show(pos - 1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); show(pos + 1); }
+    });
+
+    refresh();
+  }
+
+  initGallery();
+  document.addEventListener('astro:page-load', initGallery);
+</script>

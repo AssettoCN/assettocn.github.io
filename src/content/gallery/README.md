@@ -8,17 +8,26 @@ gallery-submission.yml` 表单 → Action 自动在这里生成 yaml 并开 PR,�
 
 ```yaml
 order: 1
-ratio: '16/9'            # 卡片宽高比,masonry 靠它排版
-by: '@某人'
+ratio: '1600/900'        # 卡片宽高比,masonry 靠它排版;写实际像素最省事
+by: 'sql'                # 作者;不详就留空字符串
 title:
   zh: 纽北日落
   en: Sunset at the Ring
-cover: '/images/shots/nordschleife-sunset.jpg'
+cover: '/images/gallery/nordschleife-sunset.jpg'
+car: 'Porsche 911 GT3 RS'          # 以下三项可选,都参与画廊页搜索框的匹配
+track: 'Shutoko Revival Project'
+ppfilter: 'C13'
 ```
 
+`car` / `track` / `ppfilter` 是专有名词,中英一致,所以**不做双语**——只有 `title`
+是双语的。三项都会拼进 `search` 字段(见 `lib/content.js` 的 `getGallery`),画廊页
+的筛选框按它做纯前端匹配。
+
+**图片先压再进仓库。** 原图动辄几 MB 甚至十几 MB,而画廊卡最宽也就 ~500px。走投稿
+流水线的会被 `scripts/optimize-images.mjs` 自动收口(gallery 预算 1600px / 500KB);
+手动加的话自己跑一遍那个脚本。
+
 这个目录空着也不会构建失败——列表页会显示空状态,首页的截图板块整段不渲染
-(见 `src/components/pages/HomePage.astro`)。构建时 Astro 会提示这个集合为空
-(`[WARN] No files found matching "**/*.yaml"`),属实,收到第一条投稿就没了。
-但这个 README 要留着:目录本身不存在时警告会更难看(`base directory does not exist`)。
+(见 `src/components/pages/HomePage.astro`)。
 
 > 本文件是 Markdown,不匹配集合的 `**/*.yaml`,所以不会被当成一条内容。

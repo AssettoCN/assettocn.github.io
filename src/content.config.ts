@@ -90,9 +90,14 @@ const gallery = defineCollection({
   schema: z.object({
     order: z.number().default(0),
     ratio: z.string().default('4/3'),   // 卡片宽高比,如 '4/3' '1/1' '16/9'
-    by: z.string(),                     // 投稿者(@handle)
+    by: z.string().default(''),         // 投稿者(@handle);留空表示作者不详
     title: bilingual,
     cover: z.string().optional(),       // 截图,填 '/images/xxx.jpg'
+    // 拍摄信息 —— 都是专有名词(车型 / 赛道 / 滤镜名),中英一致,故不做双语。
+    // 三个都参与画廊页的搜索框匹配,填了才显示。
+    car: z.string().optional(),
+    track: z.string().optional(),
+    ppfilter: z.string().optional(),
   }),
 });
 

@@ -172,6 +172,8 @@ export async function getGallery(lang) {
   const list = (await getCollection('gallery')).sort(byOrder);
   return list.map((e) => {
     const s = e.data;
+    // car / track / ppfilter 是专有名词,不随语言变;拼进 search 供画廊页做纯前端过滤。
+    const facets = [s.car, s.track, s.ppfilter, s.by].filter(Boolean);
     return {
       id: e.id,
       ratio: s.ratio,
@@ -179,6 +181,10 @@ export async function getGallery(lang) {
       cover: s.cover,
       title: s.title[lang],
       coverPlaceholder: s.title[lang],
+      car: s.car,
+      track: s.track,
+      ppfilter: s.ppfilter,
+      search: [s.title.zh, s.title.en, ...facets].join(' ').toLowerCase(),
     };
   });
 }

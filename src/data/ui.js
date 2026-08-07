@@ -25,7 +25,14 @@ export const UI = {
       title: '服务器列表', sub: '社区收录的各家 Assetto Corsa 服务器,可按玩法(围场 / 漂移 / 山路 / 漫游)筛选,点击即可获取接入信息。运营自己的服务器?也欢迎申请收录。',
       connect: '接入信息', join: '一键接入(CM)', homepage: '主页', apply: '申请收录服务器', online: '在线', offline: '离线',
     },
-    galleryPage: { title: '截图画廊', sub: '社区玩家投稿的游戏截图 —— 分享你镜头下的神力科莎。', submit: '投稿截图', by: '投稿者' },
+    galleryPage: {
+      title: '截图画廊', sub: '社区玩家投稿的游戏截图 —— 分享你镜头下的神力科莎。',
+      submit: '投稿截图', by: '投稿者',
+      search: '按作者、车辆、赛道、滤镜筛选…', searchLabel: '筛选截图',
+      noResults: '没有匹配的截图。', count: '张',
+      car: '车辆', track: '赛道', ppfilter: '滤镜', photoBy: '摄影',
+      close: '关闭', prev: '上一张', next: '下一张', zoom: '查看大图',
+    },
     about: {
       title: '关于 AssettoCN',
       lead: 'AssettoCN(简称 ACN)是面向国内玩家的神力科莎(Assetto Corsa)中文社区。我们把国内的 modder、作品、服务器与资料聚到一起,帮助中文玩家更轻松地上手这款模拟赛车游戏,并找到值得关注的创作者。',
@@ -124,7 +131,14 @@ export const UI = {
       title: 'Server list', sub: 'Assetto Corsa servers listed by the community — filter by discipline (circuit / drift / touge / cruise) and click for connection details. Running your own? You are welcome to apply.',
       connect: 'Connection info', join: 'Join via CM', homepage: 'Homepage', apply: 'Apply to list a server', online: 'Online', offline: 'Offline',
     },
-    galleryPage: { title: 'Screenshot gallery', sub: 'Screenshots submitted by community players — share your view of Assetto Corsa.', submit: 'Submit a shot', by: 'by' },
+    galleryPage: {
+      title: 'Screenshot gallery', sub: 'Screenshots submitted by community players — share your view of Assetto Corsa.',
+      submit: 'Submit a shot', by: 'by',
+      search: 'Filter by author, car, track, filter…', searchLabel: 'Filter screenshots',
+      noResults: 'No screenshots match that.', count: 'shots',
+      car: 'Car', track: 'Track', ppfilter: 'PPFilter', photoBy: 'Photo by',
+      close: 'Close', prev: 'Previous', next: 'Next', zoom: 'View full size',
+    },
     about: {
       title: 'About AssettoCN',
       lead: 'AssettoCN (ACN for short) is a Chinese-language community for Assetto Corsa. We gather Chinese modders, their work, servers and resources in one place — helping Chinese players get into the sim more easily and find creators worth following.',

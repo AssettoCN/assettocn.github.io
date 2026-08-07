@@ -3,6 +3,11 @@
    改站点深色配色时这里要同步。浅色见 giscus-theme-light.css。
    字体:跨域 iframe 内不取本站自托管字体(要赌 CORS),用系统字栈。 */
 
+/* 先引官方主题再覆盖 —— 理由同 giscus-theme-light.css 里的说明:自定义主题是整份
+   替换,只列自己关心的变量会让其余组件失去底色和边框。深色底上没有浅色那么刺眼,
+   但一样是坏的。 */
+@import url('https://giscus.app/themes/dark.css');
+
 main {
   /* 文字 */
   --color-fg-default: #f2efec;

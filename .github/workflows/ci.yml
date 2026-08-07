@@ -1,0 +1,44 @@
+name: Build check
+
+# 对 PR 跑一次真实构建。
+#
+# 为什么必须有:content-submission.yml 会把投稿 issue 自动转成
+# src/content/**/<id>.yaml 并直接开 PR。content.config.ts 里的 Zod schema 是严格的
+# ——少一个 en 字段、type 枚举拼错、authorId 指向不存在的作者,都是**构建期**报错。
+# 没有这道门禁的话,机器生成的 YAML 从未被验证过就等着合并,合进 main 才发现,
+# 那时 deploy.yml 已经挂了、线上站停在上一版。
+#
+# 这个 workflow 只读、不部署;部署仍然只由 deploy.yml 在 push main 时负责。
+on:
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# 同一个 PR 连续推送时,取消进行中的旧 run。
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # npm ci 而非 install:锁定 package-lock.json,和 deploy 时装的是同一套依赖。
+      - name: Install
+        run: npm ci
+
+      # 构建即校验:Content Collections 的 schema 在这一步执行。
+      - name: Build
+        run: npm run build

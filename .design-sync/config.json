@@ -1,6 +1,0 @@
-{
-  "projectId": "f45800c1-d1e5-4ae4-9911-e1c3d8fdd919",
-  "shape": "foundation",
-  "readmeHeader": ".design-sync/conventions.md",
-  "note": "Hand-authored foundation-only sync — this repo is an Astro static site with no bundlable component library. Rebuild the bundle with: node scripts/gen-dsbundle.mjs"
-}

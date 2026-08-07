@@ -1,7 +1,9 @@
 name: Deploy to GitHub Pages
 
 # 把 Astro 静态站构建后发布到 GitHub Pages。
-# 组织站仓库(assettocn.github.io)发布在根路径 https://assettocn.github.io/。
+# 组织站仓库(assettocn.github.io)发布在根路径,但对外的正式地址是自定义域名
+# https://assetto.cn/ —— github.io 那个地址会 301 跳过来。域名写在 src/data/site.js
+# (并由 public/CNAME 固化进构建产物),别在这里另写一份。
 # 生效前需在仓库 Settings → Pages 把 Source 设为 "GitHub Actions"。
 # Builds the Astro static site and publishes it to GitHub Pages.
 

@@ -5,7 +5,8 @@
 
 /* 先引官方主题再覆盖 —— 理由同 giscus-theme-light.css 里的说明:自定义主题是整份
    替换,只列自己关心的变量会让其余组件失去底色和边框。深色底上没有浅色那么刺眼,
-   但一样是坏的。 */
+   但一样是坏的。那份说明里还有一条更要命的:**本文件的 URL 必须走 assetto.cn**,
+   github.io 的 301 会让 giscus 的 CORS 取主题直接失败。 */
 @import url('https://giscus.app/themes/dark.css');
 
 main {

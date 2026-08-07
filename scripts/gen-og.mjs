@@ -19,6 +19,8 @@
 // Run from repo root:  node scripts/gen-og.mjs
 import { mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
+// 卡片底部那行域名跟着 SITE.url 走 —— 换域名时不该有第二处要记得改。
+import { SITE } from '../src/data/site.js';
 
 const OUT = 'public/og.png';
 const CACHE = '.cache/og-fonts';
@@ -94,7 +96,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" 
 
   <rect x="80" y="545" width="54" height="4" fill="${RED}"/>
   <text x="80" y="590" font-family="Figtree" font-weight="600" font-size="22" fill="${MUTED}"
-        >assettocn.github.io</text>
+        >${SITE.url.replace(/^https?:\/\//, '')}</text>
 </svg>`;
 
 const { default: sharp } = await import('sharp');

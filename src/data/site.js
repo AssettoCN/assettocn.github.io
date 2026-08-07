@@ -5,9 +5,15 @@
 export const SITE = {
   // 正式域名。astro.config.mjs 的 site、robots.txt、以及每个页面的
   // canonical / hreflang / Open Graph 链接都会自动读取这里。
-  // 组织站 assettocn.github.io 发布在根路径。将来上自定义域名只改这一行
-  // (再加 public/CNAME),repo 不用动。
-  url: 'https://assettocn.github.io',
+  //
+  // **必须是自定义域名 assetto.cn,不能写 assettocn.github.io。** 仓库虽然是组织站
+  // (发布在根路径),但 Pages 已绑了自定义域名,github.io 那个地址现在**永久 301**
+  // 跳到 assetto.cn —— 而 301 那一跳**不带** Access-Control-Allow-Origin。凡是以
+  // CORS 方式取本站资源的第三方都会在跳转处失败,而不是跟着跳过去:
+  //   - giscus 自定义主题(文档要求 ACAO)→ 主题取不到 → 评论区退化成全白
+  //   - 部分社交抓取器不跟跳转 → og:image 分享无图
+  // 换域名只改这一行(并同步 public/CNAME),repo 字段不用动(那是仓库名)。
+  url: 'https://assetto.cn',
 
   // GitHub 仓库(格式 'owner/repo')。填了之后,各列表页的投稿按钮会跳到
   // GitHub Issue 表单(见 .github/ISSUE_TEMPLATE/*.yml),投稿经 Action 自动

@@ -4,6 +4,7 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { localizePath } from '../lib/i18n.js';
 import { UI } from '../data/ui.js';
+import { clean } from '../lib/jsonld.js';
 
 /**
  * Site chrome + <head>. Every page renders through this.
@@ -15,8 +16,9 @@ import { UI } from '../data/ui.js';
  *   description meta description
  *   snap        true on the home route → enables full-page scroll-snap
  *   noindex     true → robots noindex (404 页用;不应进索引也不该有 canonical 指向)
+ *   jsonLd      schema.org 对象(或数组),见 lib/jsonld.js。只标页面上真实有的东西。
  */
-const { lang, section = null, path = '/', title, description, snap = false, noindex = false } = Astro.props;
+const { lang, section = null, path = '/', title, description, snap = false, noindex = false, jsonLd = null } = Astro.props;
 
 const site = Astro.site ?? new URL('http://localhost:4321');
 const zhUrl = new URL(localizePath('zh', path), site).href;
@@ -72,6 +74,9 @@ const fullTitle = title ? `${title} · AssettoCN` : 'AssettoCN · Assetto Corsa 
     <meta name="twitter:title" content={fullTitle} />
     {description && <meta name="twitter:description" content={description} />}
     <meta name="twitter:image" content={ogImageUrl} />
+    {jsonLd && (Array.isArray(jsonLd) ? jsonLd : [jsonLd]).map((obj) => (
+      <script type="application/ld+json" set:html={JSON.stringify(clean(obj))} />
+    ))}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     {/* Feed 自动发现:阅读器只要拿到站内任意一页就能找到订阅地址。每个语言一份。 */}
     <link rel="alternate" type="application/rss+xml" title={UI[lang].feed.title} href={localizePath(lang, '/rss.xml')} />

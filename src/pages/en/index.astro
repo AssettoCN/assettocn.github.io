@@ -2,9 +2,11 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import HomePage from '../../components/pages/HomePage.astro';
 import { UI } from '../../data/ui.js';
+import { homeJsonLd } from '../../lib/jsonld.js';
 
 const lang = 'en';
 ---
-<BaseLayout lang={lang} section="home" path="/" description={UI[lang].hero.sub} snap>
+<BaseLayout lang={lang} section="home" path="/" description={UI[lang].hero.sub} snap
+  jsonLd={homeJsonLd({ lang, description: UI[lang].hero.sub })}>
   <HomePage lang={lang} />
 </BaseLayout>

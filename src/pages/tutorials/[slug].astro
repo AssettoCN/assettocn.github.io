@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import TutorialPage from '../../components/pages/TutorialPage.astro';
 import { tutorialSlugs, getTutorials } from '../../lib/content.js';
+import { articleJsonLd } from '../../lib/jsonld.js';
 
 export async function getStaticPaths() {
   const slugs = await tutorialSlugs('zh');
@@ -13,6 +14,7 @@ const { slug } = Astro.params;
 const all = await getTutorials(lang);
 const meta = all.find((t) => t.slug === slug);
 ---
-<BaseLayout lang={lang} section="tutorials" path={`/tutorials/${slug}`} title={meta?.title} description={meta?.summary}>
+<BaseLayout lang={lang} section="tutorials" path={`/tutorials/${slug}`} title={meta?.title} description={meta?.summary}
+  jsonLd={meta && articleJsonLd({ title: meta.title, description: meta.summary, url: `/tutorials/${slug}`, lang, datePublished: meta.updated })}>
   <TutorialPage lang={lang} slug={slug} />
 </BaseLayout>

@@ -12,11 +12,12 @@ const href = localizePath(lang, ROUTES.author(author.id));
 ---
 <a class:list={['card', 'elev-sm', 'author-card', { 'author-card--preview': preview }]} href={href}>
   <div class="author-card__head">
+    <!-- 头像 img 的 width/height 取 avatarCss 的 sm 尺寸(64px):写死内在比例,图到位前不抖版。 -->
     <div class="author-card__avatar" style={author.avatarStyle}>
       {author.official
         ? <BrandMark width={30} />
         : author.avatar
-          ? <img class="author-card__avatar-img" src={author.avatar} alt={author.name} loading="lazy" />
+          ? <img class="author-card__avatar-img" src={author.avatar} alt={author.name} width="64" height="64" loading="lazy" decoding="async" />
           : author.initials}
     </div>
     <div>

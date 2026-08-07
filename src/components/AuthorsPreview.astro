@@ -5,7 +5,8 @@ import { UI } from '../data/ui.js';
 import { getAuthors } from '../lib/content.js';
 import { localizePath, ROUTES } from '../lib/i18n.js';
 
-const { lang } = Astro.props;
+// index:段号由 HomePage 按实际渲染的段顺序下发,不在此硬编码。
+const { lang, index } = Astro.props;
 const ui = UI[lang];
 const authors = (await getAuthors(lang)).slice(0, 3);
 const moreHref = localizePath(lang, ROUTES.authors);
@@ -13,7 +14,7 @@ const moreHref = localizePath(lang, ROUTES.authors);
 <section class="snap-section home-sec home-sec--surface authors-sec">
   <div class="home-inner">
     <SectionHead
-      index="02"
+      index={index}
       eyebrow={ui.nav.authors}
       title={ui.authorsPage.title}
       sub={ui.authorsPage.sub}

@@ -27,6 +27,7 @@ const submitUrl = issueFormUrl('gallery-submission.yml');
       </button>
     )}
   </PageHead>
+  {shots.length === 0 && <p class="empty-state">{ui.empty.gallery}</p>}
   <div class="gallery-masonry">
     {shots.map((s) => (
       <figure class="card elev-sm gallery-shot">

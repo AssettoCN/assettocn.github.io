@@ -26,16 +26,21 @@ const submitUrl = issueFormUrl('server-submission.yml');
       </button>
     )}
   </PageHead>
-  <div class="servers-filters" role="group" aria-label={ui.serversPage.title}>
-    {filters.map((f) => (
-      <button
-        type="button"
-        class:list={['btn', f.key === 'all' ? 'btn-primary' : 'btn-secondary', 'servers-filter']}
-        data-filter={f.key}
-        aria-pressed={f.key === 'all' ? 'true' : 'false'}
-      >{f.label}</button>
-    ))}
-  </div>
+  {/* 没有内容时不渲染筛选条 —— 否则只剩一个孤零零的「全部」按钮悬在空列表上方。 */}
+  {servers.length > 0 && (
+    <div class="servers-filters" role="group" aria-label={ui.serversPage.title}>
+      {filters.map((f) => (
+        <button
+          type="button"
+          class:list={['btn', f.key === 'all' ? 'btn-primary' : 'btn-secondary', 'servers-filter']}
+          data-filter={f.key}
+          aria-pressed={f.key === 'all' ? 'true' : 'false'}
+        >{f.label}</button>
+      ))}
+    </div>
+  )}
+
+  {servers.length === 0 && <p class="empty-state">{ui.empty.servers}</p>}
 
   <div id="servers-list" class="servers-grid">
     {servers.map((s) => <ServerCard server={s} lang={lang} />)}

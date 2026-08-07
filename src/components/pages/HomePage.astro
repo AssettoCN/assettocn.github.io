@@ -5,16 +5,35 @@ import AuthorsPreview from '../AuthorsPreview.astro';
 import ServersPreview from '../ServersPreview.astro';
 import GalleryPreview from '../GalleryPreview.astro';
 import JoinCta from '../JoinCta.astro';
+import { getAuthors, getServers, getGallery } from '../../lib/content.js';
 
 // Single-page landing: poster hero + preview bands that link out to the full
 // routed pages (/authors, /servers, /gallery, /works).
+//
+// 没有内容的板块整段不渲染 —— 首页是 scroll-snap mandatory,空板块不是「一块留白」,
+// 而是一整屏必须划过去的空白(截图集合现在就是 0 条)。
+// 段号也在这里按**实际渲染出来的**顺序编号,所以隐藏任意一段都不会出现 01/02/04
+// 这种断号(此前段号硬编码在各个 Preview 组件里,一隐藏就断)。
 const { lang } = Astro.props;
+const [authors, servers, shots] = await Promise.all([
+  getAuthors(lang),
+  getServers(lang),
+  getGallery(lang),
+]);
+
+const shown = [
+  'pillars',
+  authors.length && 'authors',
+  servers.length && 'servers',
+  shots.length && 'gallery',
+].filter(Boolean);
+const idx = (key) => String(shown.indexOf(key) + 1).padStart(2, '0');
 ---
 <div class="home">
   <Hero lang={lang} />
-  <Pillars lang={lang} />
-  <AuthorsPreview lang={lang} />
-  <ServersPreview lang={lang} />
-  <GalleryPreview lang={lang} />
+  <Pillars lang={lang} index={idx('pillars')} />
+  {authors.length > 0 && <AuthorsPreview lang={lang} index={idx('authors')} />}
+  {servers.length > 0 && <ServersPreview lang={lang} index={idx('servers')} />}
+  {shots.length > 0 && <GalleryPreview lang={lang} index={idx('gallery')} />}
   <JoinCta lang={lang} />
 </div>

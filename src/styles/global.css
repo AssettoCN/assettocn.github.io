@@ -281,6 +281,17 @@ figure { margin: 0; }
 .list-head .page-title { margin-bottom: var(--space-2); }
 .list-head__sub { font-size: 17px; margin: 0; max-width: 56ch; }
 .list-head__action { min-height: 46px; padding-inline: 24px; font-size: 15px; white-space: nowrap; }
+
+/* 空状态 —— 集合还没有内容时列表页显示这个,而不是一片什么都没有的空白。
+   文案在 ui.js 的 empty.*。首页对应板块的处理不同:整段不渲染(见 HomePage)。 */
+.empty-state {
+  border: 1px dashed var(--color-divider);
+  border-radius: var(--radius-md);
+  padding: var(--space-8) var(--space-6);
+  text-align: center;
+  font-size: 15px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
 @keyframes acnFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 .fade-in { animation: acnFade .35s ease both; }
 

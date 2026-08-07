@@ -25,6 +25,7 @@ const submitUrl = issueFormUrl('author-submission.yml');
       </button>
     )}
   </PageHead>
+  {authors.length === 0 && <p class="empty-state">{ui.empty.authors}</p>}
   <div class="authors-grid">
     {authors.map((a) => <AuthorCard author={a} lang={lang} />)}
   </div>

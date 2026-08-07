@@ -21,11 +21,13 @@ const authorsHref = localizePath(lang, ROUTES.authors);
 
   <header class="detail-hero">
     <span class="detail-hero__blob" aria-hidden="true"></span>
+    <!-- 头像 img 的 width/height 取 avatarCss 的 lg 尺寸(104px):写死内在比例,
+         图到位前不抖版。首屏元素,不加 loading="lazy"。 -->
     <div class="detail-hero__avatar" style={sel.avatarStyleLg}>
       {sel.official
         ? <BrandMark width={52} />
         : sel.avatar
-          ? <img class="detail-hero__avatar-img" src={sel.avatar} alt={sel.name} />
+          ? <img class="detail-hero__avatar-img" src={sel.avatar} alt={sel.name} width="104" height="104" decoding="async" />
           : sel.initials}
     </div>
     <div class="detail-hero__info">

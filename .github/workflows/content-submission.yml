@@ -56,6 +56,17 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: node .github/scripts/issue-to-content.mjs
 
+      # 上一步是原样下载投稿图(转换脚本刻意零依赖),这里统一规范尺寸和体积。
+      # 没有这一步,投稿者拖进表单的原图会原封不动进仓库——曾经有过一张 1080px /
+      # 833KB 的头像,而它只渲染到 104px。脚本是幂等的,已达标的图不会被重编码。
+      # continue-on-error:优化失败不该拦住投稿,PR 照开,大不了人工再压一次。
+      - name: Optimise downloaded images
+        if: steps.convert.outputs.status == 'ok'
+        continue-on-error: true
+        run: |
+          npm ci --no-audit --no-fund
+          node scripts/optimize-images.mjs
+
       - name: Open pull request
         id: cpr
         if: steps.convert.outputs.status == 'ok'

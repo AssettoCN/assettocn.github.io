@@ -1,7 +1,8 @@
 ---
 import SectionHead from './SectionHead.astro';
 import { UI } from '../data/ui.js';
-const { lang } = Astro.props;
+// index:段号由 HomePage 按实际渲染的段顺序下发(见那里的注释),不在此硬编码。
+const { lang, index } = Astro.props;
 const p = UI[lang].pillars;
 
 const items = [
@@ -12,7 +13,7 @@ const items = [
 ---
 <section class="snap-section home-sec">
   <div class="home-inner">
-    <SectionHead index="01" eyebrow="MISSION" title={p.title} />
+    <SectionHead index={index} eyebrow="MISSION" title={p.title} />
     <div class="pillars__grid">
       {items.map((it, i) => (
         <div class="pillar" data-reveal data-reveal-delay={i}>

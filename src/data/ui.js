@@ -89,6 +89,13 @@ export const UI = {
     footer: 'AssettoCN · 由社区驱动',
     viewLabel: '查看', coverHint: '封面',
     commentsTitle: '留言',
+    // 空状态:某个集合还没有内容时列表页显示的话术(首页对应板块则整段不渲染)。
+    empty: {
+      gallery: '还没有截图。社区的第一张图,可以是你的。',
+      servers: '还没有收录服务器。开服的话欢迎提交。',
+      works: '还没有收录作品。',
+      authors: '还没有入驻作者。',
+    },
     notFound: { code: '404', title: '这一页跑出赛道了', sub: '链接可能已经失效,或者地址打错了。', home: '回首页', start: '去看入门' },
   },
   en: {
@@ -178,6 +185,12 @@ export const UI = {
     footer: 'AssettoCN · Community-driven',
     viewLabel: 'View', coverHint: 'cover',
     commentsTitle: 'Comments',
+    empty: {
+      gallery: 'No screenshots yet — the first one could be yours.',
+      servers: 'No servers listed yet. Running one? Submit it.',
+      works: 'No works listed yet.',
+      authors: 'No authors listed yet.',
+    },
     notFound: { code: '404', title: 'This page went off track', sub: 'The link may be dead, or the address was mistyped.', home: 'Back home', start: 'Start here' },
   },
 };

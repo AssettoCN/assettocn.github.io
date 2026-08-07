@@ -304,6 +304,13 @@ figure { margin: 0; }
 /* mandatory + snap-stop:always:强制吸附、且一次滚动最多走一段(不会划过头)。 */
 html[data-snap] { scroll-snap-type: y mandatory; scroll-padding-top: 64px; }
 .snap-section { scroll-snap-align: start; scroll-snap-stop: always; }
+/* 页脚必须也是吸附点,否则拉到底会被弹回上一屏。
+   页脚排在最后一个 .snap-section 之后,本身不是吸附目标;mandatory 之下,一旦滚过
+   最后一段的 start,下方就再没有可吸附的位置,浏览器只能把你拉回那一段的 start ——
+   于是页脚永远够不着。这里用 end 对齐(不是 start):页脚的**下边缘**对齐视口底部,
+   恰好就是文档末尾,所以这个吸附点一定可达;用 start 的话它落在最大滚动位置之外,
+   等于没加。 */
+html[data-snap] .acn-footer { scroll-snap-align: end; }
 /* 触屏 / 窄屏 / 矮视口:关掉整页吸附。触屏上强制吸附与惯性滚动打架;矮视口下分段可能
    高过窗口,mandatory 会把中间内容卡住够不到 —— 这些情况交还原生顺滑滚动。 */
 @media (max-width: 720px), (pointer: coarse), (max-height: 640px) {

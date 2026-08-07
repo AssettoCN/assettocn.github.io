@@ -107,6 +107,31 @@ export async function authorIds() {
   return authors.map((a) => a.id);
 }
 
+/** All work ids — for getStaticPaths. */
+export async function workIds() {
+  const works = await allWorks();
+  return works.map((w) => w.id);
+}
+
+/** One work plus its resolved author, for the detail page. null if missing. */
+export async function getWork(id, lang) {
+  const [works, authors] = await Promise.all([allWorks(), allAuthors()]);
+  const entry = works.find((w) => w.id === id);
+  if (!entry) return null;
+  const byId = new Map(authors.map((a) => [a.id, a]));
+  const work = resolveWorkEntry(entry, lang, byId);
+  const authorEntry = byId.get(entry.data.authorId);
+  // 同作者的其他作品(排掉自己)—— 详情页最实在的一块内容。
+  const siblings = works
+    .filter((w) => w.data.authorId === entry.data.authorId && w.id !== id)
+    .map((w) => resolveWorkEntry(w, lang, byId));
+  return {
+    work,
+    author: authorEntry ? resolveAuthorEntry(authorEntry, lang, works) : null,
+    siblings,
+  };
+}
+
 // 入门指南:id 形如 'zh/install-game' —— 前段是语言,其余是 slug(中/英同 slug 配成一页)。
 const guideLang = (id) => id.split('/')[0];
 const guideSlug = (id) => id.split('/').slice(1).join('/');

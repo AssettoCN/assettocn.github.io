@@ -10,6 +10,8 @@ import { localizePath, ROUTES } from '../lib/i18n.js';
 const { work, lang } = Astro.props;
 const ui = UI[lang];
 const authorHref = localizePath(lang, ROUTES.author(work.authorId));
+// 标题 → 本站详情页;下面的「查看」按钮 → 作者自己的发布页。两个去处不同,刻意分开。
+const workHref = localizePath(lang, ROUTES.work(work.id));
 ---
 <article class="card elev-sm work-row" data-type={work.type}>
   <div class="work-row__cover">
@@ -21,7 +23,7 @@ const authorHref = localizePath(lang, ROUTES.author(work.authorId));
       <span class:list={['tag', work.tagClass]}>{work.typeLabel}</span>
       <span class="text-muted" style="font-size:12px; font-family: var(--font-mono);">{work.version} · {work.updated}</span>
     </div>
-    <h3 class="card-title work-row__title">{work.title}</h3>
+    <h3 class="card-title work-row__title"><a class="work-row__titlelink" href={workHref}>{work.title}</a></h3>
     <div class="text-muted work-row__by">
       by <a href={authorHref} class="work-row__author">{work.authorName}</a>
     </div>
@@ -55,6 +57,8 @@ const authorHref = localizePath(lang, ROUTES.author(work.authorId));
     font-size: 10.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
   }
   .work-row__title { font-size: 22px; line-height: 1.15; margin: 0; }
+  .work-row__titlelink { color: inherit; text-decoration: none; }
+  .work-row__titlelink:hover { color: var(--color-accent); }
   .work-row__by { font-size: 13px; }
   .work-row__author { cursor: pointer; color: var(--color-accent-700); text-decoration: none; }
   .work-row__author:hover { text-decoration: underline; }

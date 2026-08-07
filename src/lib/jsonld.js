@@ -76,6 +76,28 @@ export function articleJsonLd({ title, description, url, lang, datePublished, se
   };
 }
 
+/** 作品详情页。有独立 URL 之后 CreativeWork 才成立(此前作品没有页面,故不标)。 */
+export function workJsonLd({ work, author, url, lang }) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: work.title,
+    description: work.desc,
+    url: abs(url),
+    mainEntityOfPage: abs(url),
+    inLanguage: lang === 'zh' ? 'zh-Hans' : 'en',
+    genre: work.typeLabel,
+    // 作品的实际发布地在作者自己的渠道,不在本站 —— 如实标注。
+    sameAs: work.link || undefined,
+    image: work.cover ? abs(work.cover) : undefined,
+    author: author ? { '@type': 'Person', name: author.name, url: abs(`/authors/${author.id}`) } : undefined,
+    // 只有 YYYY-MM 精度,补成当月 1 号;schema.org 接受 ISO 日期。
+    dateModified: /^\d{4}-\d{2}$/.test(work.updated) ? `${work.updated}-01` : undefined,
+    isAccessibleForFree: true,
+    publisher: { '@id': `${SITE.url}/#org` },
+  };
+}
+
 /** 递归去掉 undefined —— JSON-LD 里出现 null/undefined 会被校验器判为错误。 */
 export function clean(value) {
   if (Array.isArray(value)) return value.map(clean);

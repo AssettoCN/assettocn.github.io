@@ -41,13 +41,14 @@ export async function buildFeed(lang) {
   for (const w of works) {
     const date = rfc822(w.updated);
     if (!date) continue;
+    // 作品现在有详情页了,所以链本站 —— 读者在那儿能看到作者、其他作品和评论,
+    // 再从那里去作者自己的发布页。guid 用同一个 URL(永久链接)。
+    const url = abs(localizePath(lang, ROUTES.work(w.id)));
     items.push({
       title: `${ui.nav.works} · ${w.title}`,
-      // 作品没有详情页,所以指向作者自己的发布页 —— 那才是读者真正想去的地方。
-      // 没有外链的就退回作品列表。guid 用稳定 id,不受链接变化影响。
-      link: w.link || abs(localizePath(lang, ROUTES.works)),
-      guid: `work:${w.id}`,
-      guidIsPermaLink: false,
+      link: url,
+      guid: url,
+      guidIsPermaLink: true,
       desc: w.desc,
       date,
     });

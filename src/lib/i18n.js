@@ -31,4 +31,5 @@ export const ROUTES = {
   gallery: '/gallery',
   about: '/about',
   author: (id) => `/authors/${id}`,
+  work: (id) => `/works/${id}`,
 };

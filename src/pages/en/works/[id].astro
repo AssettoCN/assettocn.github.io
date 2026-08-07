@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import WorkDetailPage from '../../../components/pages/WorkDetailPage.astro';
+import { getWork, workIds } from '../../../lib/content.js';
+import { workJsonLd } from '../../../lib/jsonld.js';
+
+export async function getStaticPaths() {
+  const ids = await workIds();
+  return ids.map((id) => ({ params: { id } }));
+}
+
+const lang = 'en';
+const { id } = Astro.params;
+const { work, author } = await getWork(id, lang);
+---
+<BaseLayout lang={lang} section="works" path={`/works/${id}`} title={work.title} description={work.desc}
+  jsonLd={workJsonLd({ work, author, url: `/works/${id}`, lang })}>
+  <WorkDetailPage lang={lang} id={id} />
+</BaseLayout>

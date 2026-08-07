@@ -1,0 +1,129 @@
+---
+import ImageSlot from '../ImageSlot.astro';
+import WorkRow from '../WorkRow.astro';
+import Icon from '../Icon.astro';
+import BrandMark from '../BrandMark.astro';
+import Comments from '../Comments.astro';
+import { UI } from '../../data/ui.js';
+import { getWork } from '../../lib/content.js';
+import { localizePath, ROUTES } from '../../lib/i18n.js';
+
+// 作品详情页。作品本身的数据很薄(一句话描述 + 类型 + 版本),所以这一页的价值
+// 不在复述那句话,而在把它变成这件作品的**落脚点**:是谁做的、去哪拿、TA 还做过
+// 什么、以及一个能讨论的地方。缺任何一块,它就真的只是个放大的列表行了。
+const { lang, id } = Astro.props;
+const ui = UI[lang];
+const d = ui.workDetail;
+const { work, author, siblings } = await getWork(id, lang);
+const worksHref = localizePath(lang, ROUTES.works);
+const authorHref = author ? localizePath(lang, ROUTES.author(author.id)) : null;
+---
+<div class="shell fade-in work-detail">
+  <a class="btn btn-ghost wd-back" href={worksHref}>
+    <Icon name="arrow-left" size={15} />
+    {d.back}
+  </a>
+
+  <article class="wd-top">
+    <div class="wd-cover">
+      <ImageSlot src={work.cover} seed={work.title} placeholder={work.coverPlaceholder} />
+    </div>
+
+    <div class="wd-head">
+      <div class="wd-tags">
+        {work.official && <span class="tag wd-official">{ui.official}</span>}
+        <span class:list={['tag', work.tagClass]}>{work.typeLabel}</span>
+      </div>
+      <h1 class="wd-title">{work.title}</h1>
+      <p class="wd-desc">{work.desc}</p>
+
+      <dl class="wd-meta">
+        <div><dt>{d.meta}</dt><dd>{work.version} · {work.updated}</dd></div>
+      </dl>
+
+      {work.link ? (
+        <div class="wd-cta">
+          <a class="btn btn-primary wd-get" href={work.link} target="_blank" rel="noopener noreferrer">
+            {d.get}
+            <Icon name="external" size={16} />
+          </a>
+          <p class="wd-cta__hint text-muted">{d.getHint}</p>
+        </div>
+      ) : (
+        <p class="wd-cta__hint text-muted">{d.noLink}</p>
+      )}
+    </div>
+  </article>
+
+  {author && (
+    <section class="wd-author card elev-sm">
+      <a class="wd-author__avatar" href={authorHref} style={author.avatarStyle} aria-hidden="true">
+        {author.official
+          ? <BrandMark width={30} />
+          : author.avatar
+            ? <img class="wd-author__img" src={author.avatar} alt="" width="64" height="64" loading="lazy" decoding="async" />
+            : author.initials}
+      </a>
+      <div class="wd-author__body">
+        <div class="wd-author__kicker">{d.byAuthor}</div>
+        <a class="wd-author__name" href={authorHref}>{author.name}</a>
+        <p class="wd-author__bio text-muted">{author.bio}</p>
+      </div>
+    </section>
+  )}
+
+  {siblings.length > 0 && (
+    <section class="wd-more">
+      <h2 class="wd-more__title">{d.moreBy}</h2>
+      <div class="list-stack">
+        {siblings.map((w) => <WorkRow work={w} lang={lang} />)}
+      </div>
+    </section>
+  )}
+
+  <a class="wd-all" href={worksHref}>{d.allWorks} →</a>
+
+  {/* 同一件作品的中/英页面共用一条评论串(term 不含语言)。 */}
+  <Comments lang={lang} term={`work:${work.id}`} />
+</div>
+
+<style>
+  .work-detail { padding-top: var(--space-6); padding-bottom: var(--space-8); }
+  .wd-back { padding-left: 0; gap: 6px; margin-bottom: var(--space-4); }
+
+  .wd-top { display: grid; grid-template-columns: minmax(0, 420px) 1fr; gap: var(--space-8); align-items: start; }
+  .wd-cover { border-radius: var(--radius-md); overflow: hidden; background: var(--color-surface); aspect-ratio: 16 / 10; }
+
+  .wd-tags { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: var(--space-3); }
+  .wd-official { background: var(--color-accent); color: #fff; }
+  .wd-title { font-size: clamp(28px, 4.5vw, 40px); margin: 0 0 var(--space-3); }
+  .wd-desc { font-size: 17px; line-height: 1.7; margin: 0 0 var(--space-4); max-width: 56ch; text-wrap: pretty; }
+
+  .wd-meta { margin: 0 0 var(--space-6); display: flex; flex-wrap: wrap; gap: var(--space-6); }
+  .wd-meta div { display: flex; flex-direction: column; gap: 2px; }
+  .wd-meta dt { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--color-neutral-500); }
+  .wd-meta dd { margin: 0; font-family: var(--font-mono); font-size: 14px; }
+
+  .wd-cta { display: flex; flex-direction: column; gap: var(--space-2); align-items: flex-start; }
+  .wd-get { min-height: 48px; padding-inline: 26px; font-size: 15px; }
+  .wd-cta__hint { font-size: 13px; margin: 0; max-width: 46ch; line-height: 1.6; }
+
+  .wd-author { flex-direction: row; align-items: center; gap: var(--space-4); margin-top: var(--space-8); padding: var(--space-4); }
+  .wd-author__avatar { overflow: hidden; text-decoration: none; flex: none; }
+  .wd-author__img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+  .wd-author__body { min-width: 0; }
+  .wd-author__kicker { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--color-neutral-500); margin-bottom: 2px; }
+  .wd-author__name { font-family: var(--font-heading); font-size: 19px; color: var(--color-text); text-decoration: none; }
+  .wd-author__name:hover { color: var(--color-accent); }
+  .wd-author__bio { font-size: 13px; line-height: 1.6; margin: 4px 0 0; }
+
+  .wd-more { margin-top: var(--space-8); }
+  .wd-more__title { font-size: 21px; margin: 0 0 var(--space-4); }
+  .wd-all { display: inline-block; margin-top: var(--space-6); font-size: 14px; color: var(--color-neutral-600); text-decoration: none; }
+  .wd-all:hover { color: var(--color-accent); }
+
+  @media (max-width: 860px) {
+    .wd-top { grid-template-columns: 1fr; gap: var(--space-4); }
+    .wd-cover { aspect-ratio: 16 / 9; }
+  }
+</style>

@@ -81,6 +81,16 @@ export const UI = {
       homeCta: '开始闯关',
     },
     guide: { toc: '入门指南', prev: '上一篇', next: '下一篇', draft: '初稿 · 待审校', edit: '在 GitHub 上编辑此页' },
+    workDetail: {
+      back: '返回作品列表',
+      byAuthor: '作者',
+      get: '前往作品页',
+      getHint: '我们不托管 mod —— 这个链接指向作者本人的发布页。',
+      noLink: '这件作品暂时没有公开的发布链接,可以到作者页看看其他渠道。',
+      moreBy: 'TA 的其他作品',
+      allWorks: '浏览全部作品',
+      meta: '版本 · 更新',
+    },
     detail: {
       back: '返回作者列表', aboutTitle: '关于', linksTitle: '链接', worksTitle: 'TA 的作品',
       statsWorks: '作品',
@@ -202,6 +212,16 @@ export const UI = {
       homeCta: 'Start the track',
     },
     guide: { toc: 'Guides', prev: 'Previous', next: 'Next', draft: 'Draft · under review', edit: 'Edit this page on GitHub' },
+    workDetail: {
+      back: 'Back to works',
+      byAuthor: 'Author',
+      get: 'Go to the release page',
+      getHint: "We don't host mods — this link goes to the author's own release page.",
+      noLink: 'No public release link for this one yet. Check the author page for their other channels.',
+      moreBy: 'More from this author',
+      allWorks: 'Browse all works',
+      meta: 'Version · Updated',
+    },
     detail: {
       back: 'Back to authors', aboutTitle: 'About', linksTitle: 'Links', worksTitle: 'Their works',
       statsWorks: 'Works',

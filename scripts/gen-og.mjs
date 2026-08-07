@@ -17,7 +17,7 @@
 // sharp loads, hence the dynamic import at the bottom.
 //
 // Run from repo root:  node scripts/gen-og.mjs
-import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const OUT = 'public/og.png';

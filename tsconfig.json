@@ -1,5 +1,15 @@
 {
-  "extends": "astro/tsconfigs/strict",
+  // base 而非 strict:本站是纯 JS(.js + .astro,没有一行 .ts),而 strict 的
+  // noImplicitAny / strictNullChecks 要求的标注这里全都没有 —— 开着它 `astro check`
+  // 会报 57 个错,清一色是「UI[lang] 用 string 索引」「回调参数隐式 any」「可能为 null」,
+  // 没有一个是真 bug。给一个社区维护的内容站加满 JSDoc 类型不划算,反而会劝退投稿。
+  //
+  // base 保留的才是这里真正有用的部分:未解析的 import、Astro 组件 props 误用、
+  // 以及**内容集合的字段类型**(.astro/types.d.ts 由 content.config.ts 生成)——
+  // 最后这条对一个内容驱动的站点价值最大。
+  //
+  // 将来若逐步给 src/lib 和 src/data 补上 JSDoc 类型,可以再切回 strict。
+  "extends": "astro/tsconfigs/base",
   "include": [".astro/types.d.ts", "**/*"],
   "exclude": ["dist"]
 }

@@ -39,6 +39,11 @@ jobs:
       - name: Install
         run: npm ci
 
+      # 类型检查。tsconfig 用 astro/tsconfigs/base(见 tsconfig.json 里的说明),
+      # 抓的是 .astro 里的坏 import、组件 props 误用和内容集合字段错用。
+      - name: Check
+        run: npm run check
+
       # 构建即校验:Content Collections 的 schema 在这一步执行。
       - name: Build
         run: npm run build

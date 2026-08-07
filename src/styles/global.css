@@ -268,6 +268,10 @@ figure { margin: 0; }
 /* home landing sections — full-viewport bands, centered content */
 .home-sec { min-height: calc(100vh - 64px); min-height: calc(100dvh - 64px); display: flex; align-items: center; }
 .home-sec--surface { background: var(--color-surface); }
+/* 板块与卡片的底色互补:.card 默认是 --color-surface,落在 surface 板块上就糊成
+   一片,所以在那里翻成页面底色。明暗由 HomePage 按板块位置交替下发(不是各组件
+   自己写死的),所以这条规则必须跟着 class 走,不能在组件里硬编码卡片底色。 */
+.home-sec--surface .card { background: var(--color-bg); }
 .home-inner { width: 100%; max-width: 1200px; margin: 0 auto; padding: var(--space-8) var(--space-6); }
 
 /* list-page headers + vertical stacks (authors / works) */

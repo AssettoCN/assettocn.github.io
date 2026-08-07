@@ -1,0 +1,38 @@
+---
+import SectionHead from './SectionHead.astro';
+import WorkRow from './WorkRow.astro';
+import { UI } from '../data/ui.js';
+import { getWorks } from '../lib/content.js';
+import { localizePath, ROUTES } from '../lib/i18n.js';
+
+// 作品是站上最大的内容集,Hero 的主 CTA 也指向 /works —— 此前首页却一条作品都不露。
+// getWorks 已把官方作品置顶,这里取前 3 条。
+// index:段号由 HomePage 按实际渲染的段顺序下发,不在此硬编码。
+const { lang, index, surface = false } = Astro.props;
+const ui = UI[lang];
+const works = (await getWorks(lang)).slice(0, 3);
+const moreHref = localizePath(lang, ROUTES.works);
+---
+<section class:list={['snap-section', 'home-sec', surface && 'home-sec--surface', 'works-sec']}>
+  <div class="home-inner">
+    <SectionHead
+      index={index}
+      eyebrow={ui.nav.works}
+      title={ui.featured.title}
+      sub={ui.featured.sub}
+      moreHref={moreHref}
+      moreLabel={ui.featured.more}
+    />
+    <div class="works-sec__stack">
+      {works.map((w, i) => (
+        <div data-reveal data-reveal-delay={i}>
+          <WorkRow work={w} lang={lang} />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .works-sec__stack { display: flex; flex-direction: column; gap: var(--space-3); }
+</style>

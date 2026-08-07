@@ -18,7 +18,7 @@ export const UI = {
       p3t: '交流与共建', p3b: '分享经验、参与讨论,与作者直接交流,一起把中文社区做得更好。',
     },
     join: { title: '成为社区的一部分', sub: '无论你是想找作者、查资料,还是分享自己的作品,都欢迎加入 AssettoCN。', ctaA: '认识作者', ctaB: '浏览作品', docs: '文档中心' },
-    featured: { title: '精选作品', more: '查看全部' },
+    featured: { title: '精选作品', sub: '社区作者创作与整理的车辆、地图、工具与资料。', more: '查看全部' },
     authorsPage: { title: '社区作者', sub: '认识这些为 ACN 持续创作的 modder,点开可查看完整介绍与作品。', submit: '申请入驻' },
     worksPage: { title: '社区作品', sub: '由 ACN 社区创作与整理 —— 车辆、地图、工具、教程与文档资料,帮你更好地上手 Assetto Corsa。可按类型筛选。', submit: '投稿作品' },
     serversPage: {
@@ -57,6 +57,9 @@ export const UI = {
       finishTitle: '整备完成,准备发车', finishTitleDone: '全部通关,你已就绪 🏁',
       finishSub: '通关全部关卡,你已经具备进服开跑的一切。去服务器列表,选一台开跑吧。',
       go: '去服务器',
+      // 首页板块专用:比 /start 页的 sub 更短,不提进度存储这类细节。
+      homeSub: '第一次玩神力科莎?六关带你从装游戏一路走到进服开跑。',
+      homeCta: '开始闯关',
     },
     guide: { toc: '入门指南', prev: '上一篇', next: '下一篇', draft: '初稿 · 待审校', edit: '在 GitHub 上编辑此页' },
     detail: {
@@ -114,7 +117,7 @@ export const UI = {
       p3t: 'Community & co-building', p3b: 'Share experience, join discussions and talk to authors directly — building a better Chinese community together.',
     },
     join: { title: 'Become part of the community', sub: 'Whether you are here to find authors, look up resources, or share your own work — you are welcome in AssettoCN.', ctaA: 'Meet the authors', ctaB: 'Browse works', docs: 'Docs' },
-    featured: { title: 'Featured works', more: 'See all' },
+    featured: { title: 'Featured works', sub: 'Cars, tracks, tools and references built and curated by community authors.', more: 'See all' },
     authorsPage: { title: 'Community authors', sub: 'Meet the modders building for ACN. Open a card for the full profile and catalogue.', submit: 'Apply as author' },
     worksPage: { title: 'Community works', sub: 'Created and curated by the ACN community — vehicles, maps, tools, guides and documentation to help you get the most out of Assetto Corsa. Filter by type.', submit: 'Submit a work' },
     serversPage: {
@@ -153,6 +156,8 @@ export const UI = {
       finishTitle: 'Prep done — ready to launch', finishTitleDone: "All cleared — you're ready 🏁",
       finishSub: "You've cleared every level and have everything you need to get on track. Head to the server list and pick one.",
       go: 'To servers',
+      homeSub: 'New to Assetto Corsa? Six levels take you from installing the game to your first online race.',
+      homeCta: 'Start the track',
     },
     guide: { toc: 'Guides', prev: 'Previous', next: 'Next', draft: 'Draft · under review', edit: 'Edit this page on GitHub' },
     detail: {

@@ -1,0 +1,110 @@
+---
+import SectionHead from './SectionHead.astro';
+import Icon from './Icon.astro';
+import { UI } from '../data/ui.js';
+import { getGuides } from '../lib/content.js';
+import { levelMeta } from '../data/start-levels.js';
+import { localizePath, ROUTES } from '../lib/i18n.js';
+
+// 首页的入门板块:把 /start 那条竖直闯关赛道压成一条横向的关卡带。
+// 它是导航第一项、也是新玩家真正需要的第一件事,所以排在 Hero 之后第一段。
+// index:段号由 HomePage 按实际渲染的段顺序下发,不在此硬编码。
+const { lang, index, surface = false } = Astro.props;
+const ui = UI[lang];
+const guides = await getGuides(lang);
+const startHref = localizePath(lang, ROUTES.start);
+
+const levels = guides.map((g, i) => ({
+  no: String(i + 1).padStart(2, '0'),
+  title: g.title,
+  minutes: levelMeta(g.slug).minutes,
+  href: localizePath(lang, ROUTES.start + '/' + g.slug),
+}));
+---
+<section class:list={['snap-section', 'home-sec', surface && 'home-sec--surface', 'start-sec']}>
+  <div class="home-inner">
+    <SectionHead
+      index={index}
+      eyebrow={ui.startPage.kicker}
+      title={ui.startPage.title}
+      sub={ui.startPage.homeSub}
+      moreHref={startHref}
+      moreLabel={ui.featured.more}
+    />
+
+    <ol class="start-sec__track" data-reveal>
+      {levels.map((lv, i) => (
+        <li class="start-sec__lv" data-reveal-delay={i}>
+          <a class="start-sec__card" href={lv.href}>
+            <span class="start-sec__no">{lv.no}</span>
+            <span class="start-sec__title">{lv.title}</span>
+            <span class="start-sec__time">{lv.minutes} {ui.startPage.min}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+
+    <div class="start-sec__cta" data-reveal>
+      <a class="btn btn-primary start-sec__btn" href={startHref}>
+        {ui.startPage.homeCta}
+        <Icon name="arrow-right" size={16} />
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* 关卡带:等宽栅格 + 一条贯穿的赛道线。窄屏退化成两列/一列,线自动消失。 */
+  .start-sec__track {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--space-3);
+    position: relative;
+  }
+  .start-sec__track::before {
+    content: ''; position: absolute; left: 0; right: 0; top: 26px;
+    height: 2px; background: var(--color-divider);
+  }
+  .start-sec__lv { display: flex; }
+  .start-sec__card {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column; gap: 6px; width: 100%;
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-divider);
+    /* 关卡卡片不是 .card,拿不到 global.css 那条互补规则,这里自己翻一次面 ——
+       否则这一段将来被排到白底位置时,卡片会和板块糊在一起。 */
+    text-decoration: none; color: inherit;
+    transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+  }
+  .start-sec__card:hover {
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  :global(.home-sec--surface) .start-sec__card { background: var(--color-bg); }
+  .start-sec__no {
+    font-family: var(--font-mono); font-size: 13px; font-weight: 700;
+    color: var(--color-accent);
+  }
+  .start-sec__title { font-size: 14px; font-weight: 600; line-height: 1.35; }
+  .start-sec__time {
+    font-family: var(--font-mono); font-size: 11px;
+    color: color-mix(in srgb, var(--color-text) 50%, transparent);
+    margin-top: auto;
+  }
+  .start-sec__cta { margin-top: var(--space-6); }
+  .start-sec__btn { min-height: 46px; padding-inline: 24px; font-size: 15px; }
+
+  @media (max-width: 900px) {
+    .start-sec__track { grid-template-columns: repeat(3, 1fr); }
+    .start-sec__track::before { display: none; }
+  }
+  @media (max-width: 560px) {
+    .start-sec__track { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .start-sec__card { transition: none; }
+    .start-sec__card:hover { transform: none; }
+  }
+</style>

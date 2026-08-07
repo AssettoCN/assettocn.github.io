@@ -1,6 +1,7 @@
 ---
 import Hero from '../Hero.astro';
-import Pillars from '../Pillars.astro';
+import StartPreview from '../StartPreview.astro';
+import WorksPreview from '../WorksPreview.astro';
 import AuthorsPreview from '../AuthorsPreview.astro';
 import ServersPreview from '../ServersPreview.astro';
 import GalleryPreview from '../GalleryPreview.astro';
@@ -8,12 +9,18 @@ import JoinCta from '../JoinCta.astro';
 import { getAuthors, getServers, getGallery } from '../../lib/content.js';
 
 // Single-page landing: poster hero + preview bands that link out to the full
-// routed pages (/authors, /servers, /gallery, /works).
+// routed pages (/start, /works, /authors, /servers, /gallery).
 //
-// 没有内容的板块整段不渲染 —— 首页是 scroll-snap mandatory,空板块不是「一块留白」,
-// 而是一整屏必须划过去的空白(截图集合现在就是 0 条)。
-// 段号也在这里按**实际渲染出来的**顺序编号,所以隐藏任意一段都不会出现 01/02/04
-// 这种断号(此前段号硬编码在各个 Preview 组件里,一隐藏就断)。
+// 排序理由:入门排第一 —— 它是导航第一项,也是新玩家真正需要的第一件事;作品第二 ——
+// 它是站上最大的内容集,而且 Hero 的主 CTA 就指向 /works。此前这两块在首页都没有位置,
+// 反倒是只有 1 条数据的服务器和 0 条的截图各占一整屏。
+// (Mission/Pillars 板块已从首页移出 —— 它和 /about 的三段内容基本重合,而首页每多一段
+//  就是多一屏必须划过的 scroll-snap。组件文件仍在,想加回来在这里补一行即可。)
+//
+// 这里同时负责三件事,都是**按实际渲染出来的顺序**算的,不许回到组件里硬编码:
+//   1. 没有内容的板块整段不渲染(首页是 mandatory snap,空板块 = 一整屏空白)
+//   2. 段号 index —— 硬编码过,隐藏一段就出现 01/02/04 这种断号
+//   3. 明暗交替 surface —— 也硬编码过,一换序就会连着两段同色
 const { lang } = Astro.props;
 const [authors, servers, shots] = await Promise.all([
   getAuthors(lang),
@@ -22,18 +29,25 @@ const [authors, servers, shots] = await Promise.all([
 ]);
 
 const shown = [
-  'pillars',
+  'start',
+  'works',
   authors.length && 'authors',
   servers.length && 'servers',
   shots.length && 'gallery',
 ].filter(Boolean);
-const idx = (key) => String(shown.indexOf(key) + 1).padStart(2, '0');
+
+const at = (key) => shown.indexOf(key);
+const idx = (key) => String(at(key) + 1).padStart(2, '0');
+// 第一段用页面底色,之后逐段翻面。
+const surface = (key) => at(key) % 2 === 1;
+const band = (key) => ({ lang, index: idx(key), surface: surface(key) });
 ---
 <div class="home">
   <Hero lang={lang} />
-  <Pillars lang={lang} index={idx('pillars')} />
-  {authors.length > 0 && <AuthorsPreview lang={lang} index={idx('authors')} />}
-  {servers.length > 0 && <ServersPreview lang={lang} index={idx('servers')} />}
-  {shots.length > 0 && <GalleryPreview lang={lang} index={idx('gallery')} />}
+  <StartPreview {...band('start')} />
+  <WorksPreview {...band('works')} />
+  {authors.length > 0 && <AuthorsPreview {...band('authors')} />}
+  {servers.length > 0 && <ServersPreview {...band('servers')} />}
+  {shots.length > 0 && <GalleryPreview {...band('gallery')} />}
   <JoinCta lang={lang} />
 </div>

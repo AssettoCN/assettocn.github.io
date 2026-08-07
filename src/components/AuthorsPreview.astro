@@ -6,12 +6,12 @@ import { getAuthors } from '../lib/content.js';
 import { localizePath, ROUTES } from '../lib/i18n.js';
 
 // index:段号由 HomePage 按实际渲染的段顺序下发,不在此硬编码。
-const { lang, index } = Astro.props;
+const { lang, index, surface = false } = Astro.props;
 const ui = UI[lang];
 const authors = (await getAuthors(lang)).slice(0, 3);
 const moreHref = localizePath(lang, ROUTES.authors);
 ---
-<section class="snap-section home-sec home-sec--surface authors-sec">
+<section class:list={['snap-section', 'home-sec', surface && 'home-sec--surface', 'authors-sec']}>
   <div class="home-inner">
     <SectionHead
       index={index}
@@ -34,6 +34,6 @@ const moreHref = localizePath(lang, ROUTES.authors);
 <style>
   .authors-sec__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
   .authors-sec__grid > div { display: flex; }
-  .authors-sec__grid > div > :global(.author-card) { width: 100%; background: var(--color-bg); }
+  .authors-sec__grid > div > :global(.author-card) { width: 100%; }
   @media (max-width: 860px) { .authors-sec__grid { grid-template-columns: 1fr; } }
 </style>

@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TutorialsPage from '../../components/pages/TutorialsPage.astro';
+import { UI } from '../../data/ui.js';
+
+const lang = 'zh';
+const ui = UI[lang];
+---
+<BaseLayout lang={lang} section="tutorials" path="/tutorials" title={ui.tutorialsPage.title} description={ui.tutorialsPage.sub}>
+  <TutorialsPage lang={lang} />
+</BaseLayout>

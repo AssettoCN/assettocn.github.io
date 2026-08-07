@@ -1,9 +1,13 @@
 ---
 import BrandMark from './BrandMark.astro';
 import { UI } from '../data/ui.js';
+import { localizePath } from '../lib/i18n.js';
 const { lang } = Astro.props;
 const ui = UI[lang];
 const cols = ui.footerLinks.cols;
+// ui.js 里存的是**规范路径**(locale-agnostic,如 '/authors'),和 ROUTES 一致。
+// 这里按当前语言本地化 —— 否则英文页的页脚会把人送回中文页。外链原样保留。
+const href = (raw) => (raw.startsWith('http') ? raw : localizePath(lang, raw));
 ---
 <footer class="acn-footer">
   <div class="acn-footer__top">
@@ -22,7 +26,7 @@ const cols = ui.footerLinks.cols;
           return (
             <a
               class="acn-footer__link"
-              href={lk.href}
+              href={href(lk.href)}
               target={external ? '_blank' : undefined}
               rel={external ? 'noopener noreferrer' : undefined}
             >{lk.label}</a>

@@ -6,6 +6,7 @@ import { UI } from '../data/ui.js';
 import { TYPE } from '../data/work-types.js';
 import { SERVER_TYPE } from '../data/server-types.js';
 import { LINK_PLATFORM } from '../data/link-platforms.js';
+import { TUTORIAL_CATEGORY, CATEGORY_ORDER } from '../data/tutorial-categories.js';
 
 // The official AssettoCN publisher identity. Authors/works with this id get an
 // "official" badge + logo avatar, and official works are pinned to the top.
@@ -128,6 +129,51 @@ export async function getGuideEntry(slug, lang) {
 export async function guideSlugs(lang) {
   const list = await getCollection('guides');
   return [...new Set(list.filter((g) => guideLang(g.id) === lang).map((g) => guideSlug(g.id)))];
+}
+
+// 教程(tutorials):目录结构与 guides 相同('<lang>/<slug>'),但按分类分组、不排序号。
+// 某篇只有中文时,英文站就不构建它 —— 列表和详情页都取自同一份过滤结果,不会出现
+// 列表里有、点进去 404 的情况。
+export async function getTutorials(lang) {
+  const list = (await getCollection('tutorials')).filter((t) => guideLang(t.id) === lang);
+  return list
+    .map((t) => ({
+      slug: guideSlug(t.id),
+      title: t.data.title,
+      summary: t.data.summary,
+      category: t.data.category,
+      order: t.data.order ?? 0,
+      draft: t.data.draft,
+      sourceName: t.data.sourceName,
+      sourceUrl: t.data.sourceUrl,
+    }))
+    .sort((a, b) => a.order - b.order);
+}
+
+/** The collection entry for one tutorial (pass to render()); null if missing. */
+export async function getTutorialEntry(slug, lang) {
+  const list = await getCollection('tutorials');
+  return list.find((t) => guideLang(t.id) === lang && guideSlug(t.id) === slug) || null;
+}
+
+/** Tutorial slugs present in a locale — for getStaticPaths. */
+export async function tutorialSlugs(lang) {
+  const list = await getCollection('tutorials');
+  return [...new Set(list.filter((t) => guideLang(t.id) === lang).map((t) => guideSlug(t.id)))];
+}
+
+/** Tutorials grouped by category, in CATEGORY_ORDER; empty categories dropped. */
+export async function tutorialsByCategory(lang) {
+  const list = await getTutorials(lang);
+  return CATEGORY_ORDER
+    .map((key) => ({
+      key,
+      label: TUTORIAL_CATEGORY[key].label[lang],
+      desc: TUTORIAL_CATEGORY[key].desc[lang],
+      tag: TUTORIAL_CATEGORY[key].tag,
+      items: list.filter((t) => t.category === key),
+    }))
+    .filter((g) => g.items.length > 0);
 }
 
 /** Servers, resolved for the given locale (status/labels computed here). */

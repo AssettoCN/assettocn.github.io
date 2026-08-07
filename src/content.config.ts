@@ -3,6 +3,7 @@ import { glob } from 'astro/loaders';
 import { TYPE } from './data/work-types.js';
 import { SERVER_TYPE } from './data/server-types.js';
 import { LINK_PLATFORM } from './data/link-platforms.js';
+import { TUTORIAL_CATEGORY } from './data/tutorial-categories.js';
 
 // 双语字段的通用 schema —— zh / en 都必须填,漏一个构建时会报错并指出文件。
 const bilingual = z.object({ zh: z.string(), en: z.string() });
@@ -101,4 +102,23 @@ const gallery = defineCollection({
   }),
 });
 
-export const collections = { authors, works, servers, gallery, guides };
+// 教程集合:src/content/tutorials/<lang>/<slug>.md
+// 与 guides 的分工:guides 是线性的入门闯关(有序号、有进度),tutorials 是按主题
+// 归类的参考型内容(Pure 配置、VR 调优这类),不排号、不计进度、不进闯关。
+// 语言同样由目录决定;某篇只有中文时,英文站就不会构建它(而不是显示半成品)。
+const tutorialCategoryKeys = Object.keys(TUTORIAL_CATEGORY) as [string, ...string[]];
+const tutorials = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/tutorials' }),
+  schema: z.object({
+    order: z.number().default(0),          // 同一分类内的顺序
+    category: z.enum(tutorialCategoryKeys),
+    title: z.string(),
+    summary: z.string(),
+    draft: z.boolean().default(false),     // true 显示「待审校」
+    // 内容来源(可选)。移植自外部文档时标注出处,列在页面底部。
+    sourceName: z.string().optional(),
+    sourceUrl: z.string().optional(),
+  }),
+});
+
+export const collections = { authors, works, servers, gallery, guides, tutorials };

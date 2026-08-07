@@ -24,6 +24,7 @@ export function localizePath(lang, canonical) {
 export const ROUTES = {
   home: '/',
   start: '/start',
+  tutorials: '/tutorials',
   authors: '/authors',
   works: '/works',
   servers: '/servers',

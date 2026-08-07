@@ -1,0 +1,101 @@
+---
+import { render } from 'astro:content';
+import Icon from '../Icon.astro';
+import { UI } from '../../data/ui.js';
+import { editUrl } from '../../data/site.js';
+import { getTutorials, getTutorialEntry } from '../../lib/content.js';
+import { TUTORIAL_CATEGORY } from '../../data/tutorial-categories.js';
+import { localizePath, ROUTES } from '../../lib/i18n.js';
+
+// 教程详情。结构接近 GuidePage,但侧栏按分类分组,而且**没有上一篇/下一篇** ——
+// 教程是非线性的,硬给它排前后顺序会暗示一条并不存在的阅读路径。
+const { lang, slug } = Astro.props;
+const ui = UI[lang];
+const t = ui.tutorialsPage;
+const all = await getTutorials(lang);
+const meta = all.find((x) => x.slug === slug);
+const entry = await getTutorialEntry(slug, lang);
+const { Content } = await render(entry);
+const href = (s) => localizePath(lang, ROUTES.tutorials + '/' + s);
+const cat = TUTORIAL_CATEGORY[meta.category];
+const editHref = editUrl(`src/content/tutorials/${lang}/${slug}.md`);
+
+// 侧栏:同分类的排前面,其余按分类分组跟在后面。
+const groups = Object.keys(TUTORIAL_CATEGORY)
+  .map((key) => ({ key, label: TUTORIAL_CATEGORY[key].label[lang], items: all.filter((x) => x.category === key) }))
+  .filter((g) => g.items.length > 0);
+---
+<div class="shell fade-in guide">
+  <aside class="guide-side">
+    <a class="guide-side__top" href={localizePath(lang, ROUTES.tutorials)}>← {t.title}</a>
+    <nav class="guide-side__list">
+      {groups.map((g) => (
+        <div class="tut-side__group">
+          <div class="tut-side__cat">{g.label}</div>
+          {g.items.map((x) => (
+            <a href={href(x.slug)} aria-current={x.slug === slug ? 'page' : undefined}>{x.title}</a>
+          ))}
+        </div>
+      ))}
+    </nav>
+  </aside>
+
+  <article class="guide-main">
+    <div class="guide-main__head">
+      <span class:list={['tag', cat.tag]}>{cat.label[lang]}</span>
+      {meta.draft && <span class="tag guide-draft">{ui.guide.draft}</span>}
+    </div>
+    <h1 class="guide-title">{meta.title}</h1>
+    <p class="tut-lead text-muted">{meta.summary}</p>
+
+    <div class="prose"><Content /></div>
+
+    <div class="tut-foot">
+      {meta.sourceName && (
+        <p class="tut-source text-muted">
+          {t.source}
+          {meta.sourceUrl
+            ? <a href={meta.sourceUrl} target="_blank" rel="noopener noreferrer">{meta.sourceName}</a>
+            : <span>{meta.sourceName}</span>}
+        </p>
+      )}
+      {editHref && (
+        <a class="guide-edit" href={editHref} target="_blank" rel="noopener noreferrer">
+          <Icon name="github" size={14} />
+          {ui.guide.edit}
+        </a>
+      )}
+    </div>
+  </article>
+</div>
+
+<style>
+  .guide { padding-top: var(--space-6); padding-bottom: var(--space-8); display: grid; grid-template-columns: 220px 1fr; gap: var(--space-8); align-items: start; }
+  .guide-side { position: sticky; top: 84px; display: flex; flex-direction: column; gap: var(--space-2); }
+  .guide-side__top { font-size: 13px; color: var(--color-neutral-600); text-decoration: none; margin-bottom: var(--space-2); }
+  .guide-side__top:hover { color: var(--color-accent); }
+  .guide-side__list { display: flex; flex-direction: column; gap: var(--space-3); }
+  .guide-side__list a { font-size: 14px; color: var(--color-text); text-decoration: none; padding: 6px 10px; border-radius: var(--radius-sm); border-left: 2px solid transparent; display: block; }
+  .guide-side__list a:hover { background: var(--color-surface); }
+  .guide-side__list a[aria-current='page'] { color: var(--color-accent); border-left-color: var(--color-accent); font-weight: 600; }
+  .tut-side__group { display: flex; flex-direction: column; gap: 2px; }
+  .tut-side__cat { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--color-neutral-500); padding: 0 10px 4px; }
+
+  .guide-main { min-width: 0; }
+  .guide-main__head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: var(--space-3); }
+  .guide-title { font-size: clamp(26px, 4vw, 34px); margin: 0 0 var(--space-2); }
+  .guide-draft { background: var(--color-neutral-200); color: var(--color-neutral-700); font-size: 11px; }
+  .tut-lead { font-size: 16px; line-height: 1.7; margin: 0 0 var(--space-6); max-width: 62ch; }
+
+  .tut-foot { margin-top: var(--space-8); padding-top: var(--space-4); border-top: 1px solid var(--color-divider); display: flex; flex-wrap: wrap; gap: var(--space-4); justify-content: space-between; align-items: center; }
+  .tut-source { font-size: 13px; margin: 0; }
+  .guide-edit { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--color-neutral-600); text-decoration: none; }
+  .guide-edit:hover { color: var(--color-accent); }
+  .guide-edit :global(svg) { opacity: .75; }
+
+  @media (max-width: 820px) {
+    .guide { grid-template-columns: 1fr; gap: var(--space-4); }
+    .guide-side { position: static; top: auto; border-bottom: 1px solid var(--color-divider); padding-bottom: var(--space-3); }
+    .guide-side__list { flex-flow: row wrap; gap: var(--space-4); }
+  }
+</style>

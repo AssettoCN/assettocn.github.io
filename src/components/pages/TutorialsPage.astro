@@ -1,0 +1,67 @@
+---
+import PageHead from '../PageHead.astro';
+import { UI } from '../../data/ui.js';
+import { tutorialsByCategory } from '../../lib/content.js';
+import { localizePath, ROUTES } from '../../lib/i18n.js';
+
+// 教程索引:按分类分组,不排序号、不计进度 —— 和 /start 的线性闯关刻意区分开。
+// 某个分类下一篇都没有(比如英文版还没翻译)时,该分类整组不渲染。
+const { lang } = Astro.props;
+const ui = UI[lang];
+const t = ui.tutorialsPage;
+const groups = await tutorialsByCategory(lang);
+const href = (slug) => localizePath(lang, ROUTES.tutorials + '/' + slug);
+const startHref = localizePath(lang, ROUTES.start);
+---
+<div class="shell fade-in page-head">
+  <PageHead eyebrow={ui.nav.tutorials} title={t.title} sub={t.sub}>
+    <a class="btn btn-secondary list-head__action" href={startHref}>{t.toStart}</a>
+  </PageHead>
+
+  {groups.length === 0 && <p class="empty-state">{t.empty}</p>}
+
+  {groups.map((g) => (
+    <section class="tut-group">
+      <div class="tut-group__head">
+        <h2 class="tut-group__title">{g.label}</h2>
+        <p class="tut-group__desc text-muted">{g.desc}</p>
+      </div>
+      <div class="tut-grid">
+        {g.items.map((it) => (
+          <a class="card elev-sm tut-card" href={href(it.slug)}>
+            <div class="tut-card__top">
+              <span class:list={['tag', g.tag]}>{g.label}</span>
+              {it.draft && <span class="tag tut-card__draft">{ui.guide.draft}</span>}
+            </div>
+            <h3 class="card-title tut-card__title">{it.title}</h3>
+            <p class="card-body tut-card__sum">{it.summary}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+  ))}
+</div>
+
+<style>
+  .tut-group { margin-bottom: var(--space-8); }
+  .tut-group__head { margin-bottom: var(--space-4); }
+  .tut-group__title { font-size: 22px; margin: 0 0 4px; }
+  .tut-group__desc { font-size: 14px; margin: 0; max-width: 60ch; }
+  .tut-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+  .tut-card {
+    text-decoration: none; color: inherit; gap: var(--space-2);
+    transition: transform .16s ease, box-shadow .16s ease;
+  }
+  .tut-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+  .tut-card__top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .tut-card__draft { background: var(--color-neutral-200); color: var(--color-neutral-700); font-size: 11px; }
+  .tut-card__title { margin: 0; }
+  .tut-card__sum { opacity: .75; }
+
+  @media (max-width: 860px) { .tut-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .tut-grid { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) {
+    .tut-card { transition: none; }
+    .tut-card:hover { transform: none; }
+  }
+</style>

@@ -9,6 +9,7 @@ const ui = UI[lang];
 const guides = await getGuides(lang);
 const total = guides.length;
 const serversHref = localizePath(lang, ROUTES.servers);
+const tutorialsHref = localizePath(lang, ROUTES.tutorials);
 
 // 每关:序号、赛车味的左右交替、难度点、用时、正文链接。
 const levels = guides.map((g, i) => {
@@ -93,6 +94,14 @@ const levels = guides.map((g, i) => {
         <div class="finish__title" data-finish-title>{ui.startPage.finishTitle}</div>
         <p class="finish__sub">{ui.startPage.finishSub}</p>
         <a class="btn btn-primary" href={serversHref}>{ui.startPage.go} →</a>
+      </div>
+
+      {/* 通关之后往哪走。教程不进闯关(非线性、不计进度),入口放这里最自然 ——
+          读者刚走完线性的路,正好是想深入的时候。 */}
+      <div class="after">
+        <div class="after__t">{ui.tutorialsPage.fromStart}</div>
+        <p class="after__sub text-muted">{ui.tutorialsPage.fromStartSub}</p>
+        <a class="btn btn-secondary" href={tutorialsHref}>{ui.tutorialsPage.fromStartCta} →</a>
       </div>
     </div>
   </div>
@@ -234,6 +243,11 @@ const levels = guides.map((g, i) => {
   .finish__kicker { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--color-accent); margin-bottom: var(--space-2); }
   .finish__title { font-family: var(--font-heading); font-size: 28px; line-height: 1.1; margin-bottom: var(--space-2); }
   .finish__sub { font-size: 14px; color: var(--color-neutral-700); margin: 0 auto var(--space-4); max-width: 44ch; }
+
+  /* 通关之后 → 进阶教程。刻意低一档:它不是闯关的一部分,别抢终点卡的视觉重量。 */
+  .after { text-align: center; max-width: 44ch; margin-top: var(--space-4); display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .after__t { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--color-neutral-500); }
+  .after__sub { font-size: 14px; line-height: 1.6; margin: 0 0 var(--space-2); }
 
   @media (max-width: 720px) {
     .track { max-width: 560px; }

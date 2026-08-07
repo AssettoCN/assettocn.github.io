@@ -4,7 +4,7 @@ import { SITE } from './site.js';
 export const UI = {
   zh: {
     langLabel: 'EN',
-    nav: { start: '入门', authors: '作者', works: '作品', servers: '服务器', gallery: '截图', docs: '文档' },
+    nav: { start: '入门', tutorials: '教程', authors: '作者', works: '作品', servers: '服务器', gallery: '截图', docs: '文档' },
     hero: {
       kicker: 'ASSETTO CORSA · 中文社区', title: '神力科莎中文社区',
       sub: 'AssettoCN 是聚集国内 modder 与玩家的中文社区。我们链接创作者、沉淀 AC 相关的资料与文档,帮你找到值得关注的作者与作品。',
@@ -53,6 +53,18 @@ export const UI = {
         { label: 'GitHub', href: SITE.social.github },
       ],
     },
+    // 教程区(/tutorials)。和入门闯关刻意区分:闯关是一条线性的路,教程是按主题
+    // 归类的参考内容,不排号、不计进度。暂不进顶栏,入口在闯关终点和页脚。
+    tutorialsPage: {
+      title: '进阶教程',
+      sub: '通关入门之后的深入内容 —— 画质调校、模组细节、硬件与性能。按主题查,不用按顺序读。',
+      toStart: '← 回到入门闯关',
+      empty: '这个语言下还没有教程。',
+      source: '内容来源:',
+      fromStart: '通关之后',
+      fromStartSub: '想把画面调得更好、或者遇到更细的问题?去看进阶教程。',
+      fromStartCta: '浏览教程',
+    },
     startPage: {
       kicker: '入门闯关',
       title: '八关,从装游戏到进服开跑',
@@ -76,6 +88,8 @@ export const UI = {
     },
     filterAll: '全部',
     official: '官方',
+    // 注:footerLinks 里的站内 href 一律写**规范路径**(不带 /en 前缀),
+    // 由 Footer.astro 按当前语言本地化。两个语言块都遵守这条,别手写 /en/…。
     footerLinks: {
       blurb: '神力科莎中文社区 —— 链接创作者,沉淀 AC 资料与文档。',
       cols: [
@@ -86,6 +100,8 @@ export const UI = {
           { label: '加入我们', href: SITE.discussionsUrl },
         ] },
         { title: '资料', links: [
+          { label: '入门闯关', href: '/start' },
+          { label: '进阶教程', href: '/tutorials' },
           { label: '文档中心', href: SITE.docsUrl },
           { label: '动态交流', href: SITE.discussionsUrl },
         ] },
@@ -110,7 +126,7 @@ export const UI = {
   },
   en: {
     langLabel: '中',
-    nav: { start: 'Guide', authors: 'Authors', works: 'Works', servers: 'Servers', gallery: 'Shots', docs: 'Docs' },
+    nav: { start: 'Guide', tutorials: 'Tutorials', authors: 'Authors', works: 'Works', servers: 'Servers', gallery: 'Shots', docs: 'Docs' },
     hero: {
       kicker: 'ASSETTO CORSA · CN COMMUNITY', title: 'The Assetto Corsa community, in Chinese',
       sub: 'AssettoCN is a Chinese community of Assetto Corsa modders and players. We connect creators and collect AC resources and docs to help you find authors and work worth following.',
@@ -159,6 +175,16 @@ export const UI = {
         { label: 'GitHub', href: SITE.social.github },
       ],
     },
+    tutorialsPage: {
+      title: 'Tutorials',
+      sub: 'The deeper material, once you\'re through the getting-started track — visuals, modding details, hardware and performance. Browse by topic; there is no set order.',
+      toStart: '← Back to the track',
+      empty: 'No tutorials in this language yet.',
+      source: 'Source: ',
+      fromStart: 'After the track',
+      fromStartSub: 'Want a better-looking game, or hit something more specific? The tutorials go deeper.',
+      fromStartCta: 'Browse tutorials',
+    },
     startPage: {
       kicker: 'GETTING STARTED',
       title: 'Eight levels, from install to on-track',
@@ -185,12 +211,14 @@ export const UI = {
       blurb: 'The Assetto Corsa Chinese community — connecting creators and collecting AC resources.',
       cols: [
         { title: 'Community', links: [
-          { label: 'About ACN', href: '/en/about' },
-          { label: 'Authors', href: '/en/authors' },
-          { label: 'Works', href: '/en/works' },
+          { label: 'About ACN', href: '/about' },
+          { label: 'Authors', href: '/authors' },
+          { label: 'Works', href: '/works' },
           { label: 'Join us', href: SITE.discussionsUrl },
         ] },
         { title: 'Resources', links: [
+          { label: 'Getting started', href: '/start' },
+          { label: 'Tutorials', href: '/tutorials' },
           { label: 'Docs', href: SITE.docsUrl },
           { label: 'Discussions', href: SITE.discussionsUrl },
         ] },

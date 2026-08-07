@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import TutorialPage from '../../../components/pages/TutorialPage.astro';
+import { tutorialSlugs, getTutorials } from '../../../lib/content.js';
+
+export async function getStaticPaths() {
+  const slugs = await tutorialSlugs('en');
+  return slugs.map((slug) => ({ params: { slug } }));
+}
+
+const lang = 'en';
+const { slug } = Astro.params;
+const all = await getTutorials(lang);
+const meta = all.find((t) => t.slug === slug);
+---
+<BaseLayout lang={lang} section="tutorials" path={`/tutorials/${slug}`} title={meta?.title} description={meta?.summary}>
+  <TutorialPage lang={lang} slug={slug} />
+</BaseLayout>

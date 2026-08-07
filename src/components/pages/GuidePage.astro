@@ -73,43 +73,6 @@ const editHref = editUrl(`src/content/guides/${lang}/${slug}.md`);
   .guide-pager__next { text-align: right; margin-left: auto; }
   .guide-pager__link:hover { color: var(--color-accent); }
 
-  /* Markdown body (rendered <Content/> — target descendants with :global). */
-  .prose :global(h2) { font-size: 21px; margin: var(--space-6) 0 var(--space-3); }
-  .prose :global(h3) { font-size: 17px; margin: var(--space-4) 0 var(--space-2); }
-  .prose :global(p) { font-size: 15px; line-height: 1.75; margin: 0 0 var(--space-3); text-wrap: pretty; }
-  .prose :global(ul), .prose :global(ol) { font-size: 15px; line-height: 1.75; padding-left: 1.4em; margin: 0 0 var(--space-3); }
-  .prose :global(li) { margin: 4px 0; }
-  .prose :global(a) { color: var(--color-accent-700); text-decoration: underline; text-underline-offset: 2px; }
-  .prose :global(code) { font-family: ui-monospace, monospace; font-size: 13px; background: var(--color-surface); padding: 1px 6px; border-radius: 6px; }
-  .prose :global(strong) { font-weight: 700; }
-  /* 正文配图:界面截图基本都比正文栏窄,所以不拉满宽度、按原始尺寸显示即可,
-     加一圈描边把它和页面底色分开(截图自身多为深色 UI)。 */
-  .prose :global(img) {
-    max-width: 100%; height: auto;
-    margin: var(--space-4) 0;
-    border: 1px solid var(--color-divider);
-    border-radius: var(--radius-sm);
-  }
-  /* 列表项里的图跟着缩进走,不要顶到列表标记上。 */
-  .prose :global(li img) { margin: var(--space-3) 0; }
-  /* 表格(依赖清单、配置要求这类)。窄屏时让表格自己横向滚,不要把整页撑宽。 */
-  .prose :global(table) {
-    width: 100%; margin: var(--space-4) 0;
-    border-collapse: collapse; font-size: 14px;
-    display: block; overflow-x: auto;
-  }
-  .prose :global(th), .prose :global(td) {
-    padding: var(--space-2) var(--space-3);
-    border-bottom: 1px solid var(--color-divider);
-    text-align: left; vertical-align: top;
-  }
-  .prose :global(th) {
-    font-weight: 700; white-space: nowrap;
-    border-bottom-color: var(--color-text);
-  }
-  .prose :global(tbody tr:last-child td) { border-bottom: 0; }
-  .prose :global(blockquote) { margin: 0 0 var(--space-3); padding: var(--space-2) var(--space-4); border-left: 3px solid var(--color-accent); background: var(--color-accent-100); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
-  .prose :global(blockquote p) { margin: 0; }
 
   @media (max-width: 820px) {
     .guide { grid-template-columns: 1fr; gap: var(--space-4); }
@@ -118,16 +81,3 @@ const editHref = editUrl(`src/content/guides/${lang}/${slug}.md`);
   }
 </style>
 
-<script>
-  // 正文里的外链改为新标签页打开。站内别处的外链(导航「文档」、投稿按钮、画廊)
-  // 都是这个行为,但 Markdown 渐进增强:没有 JS 时链接照样能点,只是同标签页跳转。
-  function initGuideLinks() {
-    document.querySelectorAll<HTMLAnchorElement>('.prose a[href^="http"]').forEach((a) => {
-      a.target = '_blank';
-      a.rel = 'noopener noreferrer';
-    });
-  }
-
-  initGuideLinks();
-  document.addEventListener('astro:page-load', initGuideLinks);
-</script>

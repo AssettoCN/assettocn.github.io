@@ -299,6 +299,73 @@ figure { margin: 0; }
 @keyframes acnFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 .fade-in { animation: acnFade .35s ease both; }
 
+/* ── Markdown 正文(.prose)─────────────────────────────────────────────────
+   渲染后的 Markdown 共用样式。入门指南(GuidePage)和教程(TutorialPage)都用它,
+   所以放在全局而不是各自的 scoped <style> 里 —— scoped 样式要靠 :global() 才能
+   命中 <Content/> 生成的元素,两处各写一份必然会漂。
+   容器类元素(details / aside)的样式在下面另一块。 */
+.prose h2 { font-size: 21px; margin: var(--space-6) 0 var(--space-3); }
+.prose h3 { font-size: 17px; margin: var(--space-4) 0 var(--space-2); }
+.prose p { font-size: 15px; line-height: 1.75; margin: 0 0 var(--space-3); text-wrap: pretty; }
+.prose ul, .prose ol { font-size: 15px; line-height: 1.75; padding-left: 1.4em; margin: 0 0 var(--space-3); }
+.prose li { margin: 4px 0; }
+.prose a { color: var(--color-accent-700); text-decoration: underline; text-underline-offset: 2px; }
+.prose code { font-family: ui-monospace, monospace; font-size: 13px; background: var(--color-surface); padding: 1px 6px; border-radius: 6px; }
+.prose strong { font-weight: 700; }
+/* 正文配图:界面截图基本都比正文栏窄,所以不拉满宽度、按原始尺寸显示即可,
+   加一圈描边把它和页面底色分开(截图自身多为深色 UI)。 */
+.prose img {
+  max-width: 100%; height: auto;
+  margin: var(--space-4) 0;
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-sm);
+}
+/* 列表项里的图跟着缩进走,不要顶到列表标记上。 */
+.prose li img { margin: var(--space-3) 0; }
+/* 表格(依赖清单、配置要求这类)。窄屏时让表格自己横向滚,不要把整页撑宽。 */
+.prose table {
+  width: 100%; margin: var(--space-4) 0;
+  border-collapse: collapse; font-size: 14px;
+  display: block; overflow-x: auto;
+}
+.prose th, .prose td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-divider);
+  text-align: left; vertical-align: top;
+}
+.prose th {
+  font-weight: 700; white-space: nowrap;
+  border-bottom-color: var(--color-text);
+}
+.prose tbody tr:last-child td { border-bottom: 0; }
+.prose blockquote { margin: 0 0 var(--space-3); padding: var(--space-2) var(--space-4); border-left: 3px solid var(--color-accent); background: var(--color-accent-100); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.prose blockquote p { margin: 0; }
+
+/* VitePress 容器转换过来的两种块(见 scripts/convert-vitepress.mjs):
+   :::details → <details>,:::info/tip/warning/danger → <aside class="cx cx--*">。
+   两者内部都靠「前后各留一个空行」让 Markdown 继续被解析,所以这里只管外观。 */
+.prose details {
+  margin: var(--space-3) 0; padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-divider); border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+.prose details[open] { padding-bottom: var(--space-3); }
+.prose summary { cursor: pointer; font-weight: 600; font-size: 14px; padding: var(--space-2) 0; }
+.prose summary::marker { color: var(--color-accent); }
+.prose details details { background: var(--color-bg); }
+
+.prose .cx {
+  margin: var(--space-3) 0; padding: var(--space-3) var(--space-4);
+  border-left: 3px solid var(--color-neutral-400);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--color-neutral-100);
+  font-size: 14px;
+}
+.prose .cx > :last-child { margin-bottom: 0; }
+.prose .cx__t { display: block; font-weight: 700; margin-bottom: 4px; }
+.prose .cx--tip { border-left-color: var(--color-accent-2-500); background: var(--color-accent-2-100); }
+.prose .cx--warning, .prose .cx--danger { border-left-color: var(--color-accent); background: var(--color-accent-100); }
+
 /* Home is a single-page scroll-snap landing; other pages scroll normally.
    BaseLayout adds data-snap to <html> only on the home route. */
 /* mandatory + snap-stop:always:强制吸附、且一次滚动最多走一段(不会划过头)。 */

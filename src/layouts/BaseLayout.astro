@@ -83,6 +83,17 @@ const fullTitle = title ? `${title} · AssettoCN` : 'AssettoCN · Assetto Corsa 
     </main>
     <Footer lang={lang} />
     <script is:inline>
+      // Markdown 正文(.prose,入门指南与教程共用)里的外链改为新标签页打开。
+      // 站内别处的外链都是这个行为,但 Markdown 里写不了 target —— 只能在这里补。
+      // 渐进增强:没有 JS 时链接照样能点,只是同标签页跳转。
+      (function () {
+        document.querySelectorAll('.prose a[href^="http"]').forEach(function (a) {
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+        });
+      })();
+    </script>
+    <script is:inline>
       // Scroll reveal — reveal-once as elements enter the viewport.
       (function () {
         var els = document.querySelectorAll('[data-reveal]');

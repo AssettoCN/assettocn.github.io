@@ -392,9 +392,14 @@ html[data-snap] .acn-footer { scroll-snap-align: end; }
   transition: opacity .6s cubic-bezier(.22,.61,.36,1), transform .6s cubic-bezier(.22,.61,.36,1);
 }
 
+/* reduced-motion 只关**动画**,不关整页吸附。
+   我们没有 scroll-behavior: smooth —— 吸附是「离散地把某段对到视口顶」,没有过渡动画,
+   不属于 prefers-reduced-motion 想抑制的那种运动。之前把 scroll-snap 一并关掉是过度处理:
+   Windows 上「动画效果」常被系统/企业镜像默认关闭 → 浏览器上报 reduce → 整个首页设计的
+   分屏体验就没了。真正的运动是下面的淡入/上移 reveal,那个继续关。
+   (触屏 / 窄屏 / 矮视口的吸附关闭在上面另一条 @media 里,与此无关,保留。) */
 @media (prefers-reduced-motion: reduce) {
   .fade-in { animation: none; }
-  html[data-snap] { scroll-snap-type: none; }
   .js [data-reveal] { opacity: 1; transform: none; }
   .js [data-reveal].is-in { transition: none; }
 }

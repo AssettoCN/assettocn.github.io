@@ -1,0 +1,20 @@
+order: 1009
+initials: "T"
+tint: "--color-neutral-300"
+ink: "--color-neutral-900"
+name:
+  zh: "蒂姆迈尔斯"
+  en: "LRAC-Tim_Miles"
+handle: "@TimMiles0629"
+skills:
+  zh:
+    - "车辆制作，车辆物理"
+  en:
+    - "Car Modding"
+    - "Car Physics"
+bio:
+  zh: "业余AC modder，现役FSAER"
+  en: "业余AC modder，现役FSAER"
+links:
+  - { platform: bilibili, url: "https://space.bilibili.com/437748087?spm_id_from=333.788.0.0" }
+  - { platform: qq, url: "555433599" }

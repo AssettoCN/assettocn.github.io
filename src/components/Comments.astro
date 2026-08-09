@@ -16,10 +16,18 @@ const themes = {
   light: `${SITE.url}/giscus-theme-light.css`,
   dark: `${SITE.url}/giscus-theme-dark.css`,
 };
+// giscus 依赖 giscus.app + GitHub,大陆网络常访问不到(和自托管字体同一个原因)。
+// 加载失败时露出一个兜底,指向本仓库 Discussions 分类,让用户能直接去 GitHub 留言,
+// 而不是对着一片空白。分类名做成 slug(GitHub 的分类 URL 用小写)。
+const discussionsUrl = `https://github.com/${g.repo}/discussions/categories/${g.category.toLowerCase()}`;
 ---
 {enabled && (
   <section class="comments">
     <h4 class="comments__title">{ui.commentsTitle}</h4>
+    {/* 默认隐藏;giscus 在超时内没就绪就由下面的脚本露出(晚到会再收起)。 */}
+    <p class="comments__fallback" hidden data-giscus-fallback>
+      {ui.commentsFallback}<a href={discussionsUrl} target="_blank" rel="noopener">{ui.commentsFallbackLink}</a>{ui.commentsFallbackTail}
+    </p>
     <script is:inline define:vars={{ g, mapping, term, giscusLang, themes }}>
       (function () {
         var host = document.currentScript;
@@ -40,6 +48,21 @@ const themes = {
         };
         Object.keys(attrs).forEach(function (k) { s.setAttribute('data-' + k, attrs[k]); });
         host.parentNode.insertBefore(s, host);
+
+        // 加载兜底:giscus 就绪时会从自己的 origin 往父页 postMessage(带 giscus 命名空间,
+        // 如 resize 高度)。收到即视为加载成功。若 10s 内一条都没收到 —— giscus.app 或
+        // GitHub 被墙/被安全软件拦,client.js 根本没跑或 iframe 里取不到数据 —— 就露出兜底
+        // 链接。晚到的消息会把兜底再收起,避免与正常评论区并存。
+        var fallback = host.parentNode.querySelector('[data-giscus-fallback]');
+        var loaded = false;
+        window.addEventListener('message', function (e) {
+          if (e.origin !== ORIGIN || !e.data || !e.data.giscus) return;
+          loaded = true;
+          if (fallback) fallback.hidden = true;
+        });
+        setTimeout(function () {
+          if (!loaded && fallback) fallback.hidden = false;
+        }, 10000);
         // 明暗切换时同步 giscus 主题(观察 <html data-theme>)。
         var sync = function () {
           var f = document.querySelector('iframe.giscus-frame');
@@ -58,4 +81,13 @@ const themes = {
 <style>
   .comments { margin-top: var(--space-8); padding-top: var(--space-6); border-top: 1px solid var(--color-divider); }
   .comments__title { font-size: 22px; margin: 0 0 var(--space-4); }
+  /* 不设 display,让 [hidden] 的 UA 默认(display:none)生效;露出时才是块级。 */
+  .comments__fallback {
+    font-size: 14px; line-height: 1.6;
+    color: color-mix(in srgb, var(--color-text) 78%, transparent);
+    background: var(--color-surface);
+    border: 1px solid var(--color-divider); border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+  }
+  .comments__fallback a { color: var(--color-accent); }
 </style>

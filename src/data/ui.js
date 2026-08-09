@@ -127,6 +127,10 @@ export const UI = {
     footer: 'AssettoCN · 由社区驱动',
     viewLabel: '查看', coverHint: '封面',
     commentsTitle: '留言',
+    // 评论(giscus)加载失败时的兜底 —— 大陆网络常访问不到 giscus.app / GitHub。
+    commentsFallback: '评论区没能加载出来 —— 可能是当前网络访问 GitHub 受限。你也可以直接到 ',
+    commentsFallbackLink: 'GitHub 讨论区',
+    commentsFallbackTail: ' 留言。',
     // 空状态:某个集合还没有内容时列表页显示的话术(首页对应板块则整段不渲染)。
     empty: {
       gallery: '还没有截图。社区的第一张图,可以是你的。',
@@ -256,6 +260,11 @@ export const UI = {
     footer: 'AssettoCN · Community-driven',
     viewLabel: 'View', coverHint: 'cover',
     commentsTitle: 'Comments',
+    // Fallback shown when giscus fails to load (giscus.app / GitHub is often
+    // unreachable from mainland China).
+    commentsFallback: 'Comments didn’t load — GitHub may be unreachable from your network. You can also comment on ',
+    commentsFallbackLink: 'GitHub Discussions',
+    commentsFallbackTail: '.',
     empty: {
       gallery: 'No screenshots yet — the first one could be yours.',
       servers: 'No servers listed yet. Running one? Submit it.',

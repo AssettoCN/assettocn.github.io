@@ -1,0 +1,12 @@
+{
+  // 阿里云 ESA(边缘安全加速)Pages 部署配置。ESA 跑完构建命令(npm run build)后,
+  // 按 assets.directory 收取静态产物。本配置优先级高于控制台「构建信息」里的设置。
+  //
+  // 本站是纯静态 Astro(多页,有真实的 dist/404.html,无 EdgeRoutine 函数),
+  // 所以只声明静态目录、不配 entry/函数入口。Astro 默认输出目录即 ./dist。
+  //
+  // 注:此文件对 GitHub Pages / Astro 构建无影响(它们不读这个文件),两套部署互不干扰。
+  "assets": {
+    "directory": "./dist"
+  }
+}

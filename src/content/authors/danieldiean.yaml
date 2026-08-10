@@ -1,0 +1,24 @@
+order: 1013
+initials: "D"
+tint: "--color-accent-200"
+ink: "--color-accent-900"
+avatar: "/images/authors/danieldiean.jpg"
+name:
+  zh: "DanielDi"
+  en: "DanielDi"
+handle: "@DanielDiean"
+skills:
+  zh:
+    - "冷门车辆"
+    - "原厂车"
+    - "游戏转模"
+  en:
+    - "Unicorns vehicles"
+    - "factory cars"
+    - "game-to-model conversion"
+bio:
+  zh: "专门制作各种冷门，或者各种赛车游戏没有出现过的车款，有需要的时候也会填补高质量主流车款"
+  en: "specialize in creating various niche or unseen car models in Racing Games, and also fill in high-quality mainstream car models when needed."
+links:
+  - { platform: bilibili, url: "https://b23.tv/XY7H9eh" }
+  - { platform: qq, url: "756910420" }

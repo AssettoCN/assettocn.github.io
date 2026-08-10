@@ -65,7 +65,7 @@ export const SITE = {
   //                 所以必须再配一个国内的兜住主力受众。
   //   baiduTongji → 百度统计的站点 hash(即 hm.js? 后面那串),国内可达、零后端。
   analytics: {
-    ga4: '',
+    ga4: 'G-HHJ4PKZFDZ',
     baiduTongji: '9928ca51458f3dac4d963412c2518095',
   },
 };

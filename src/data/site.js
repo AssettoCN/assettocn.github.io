@@ -48,6 +48,26 @@ export const SITE = {
     category: 'Comments',
     categoryId: 'DIC_kwDOSAqXx84DCoqj',
   },
+
+  // 搜索引擎站长验证串(全部可选,留空即不在 <head> 输出对应 meta,和 giscus 同套路)。
+  // 到各站长平台添加 https://assetto.cn 后,选「HTML 标签」验证方式,把给的串填这里:
+  //   baidu → <meta name="baidu-site-verification">(百度站长平台;国内受众优先做这个)
+  //   bing  → <meta name="msvalidate.01">(Bing Webmaster Tools)
+  // 验证通过后到平台里提交 sitemap 地址:https://assetto.cn/sitemap-index.xml
+  verify: {
+    baidu: '',
+    bing: '',
+  },
+
+  // 访问统计(两个都可选、都是纯前端 snippet、留空不加载任何脚本、不拖构建)。
+  //   ga4         → Google Analytics 4 测量 ID(形如 G-XXXXXXXXXX)。
+  //                 ⚠ GA 在大陆被墙,只统计得到海外/翻墙访客,国内主力量它看不到 ——
+  //                 所以必须再配一个国内的兜住主力受众。
+  //   baiduTongji → 百度统计的站点 hash(即 hm.js? 后面那串),国内可达、零后端。
+  analytics: {
+    ga4: '',
+    baiduTongji: '9928ca51458f3dac4d963412c2518095',
+  },
 };
 
 /** GitHub「新建 issue(用某个模板)」链接;未配置 repo 时返回 null。 */

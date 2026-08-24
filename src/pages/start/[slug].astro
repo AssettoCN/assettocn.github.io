@@ -1,8 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import GuidePage from '../../components/pages/GuidePage.astro';
-import { guideSlugs, getGuides } from '../../lib/content.js';
-import { articleJsonLd } from '../../lib/jsonld.js';
+import { guideSlugs, getGuides, getGuideEntry } from '../../lib/content.js';
+import { articleJsonLd, breadcrumbJsonLd, faqJsonLd } from '../../lib/jsonld.js';
 
 export async function getStaticPaths() {
   const slugs = await guideSlugs('zh');
@@ -11,10 +11,19 @@ export async function getStaticPaths() {
 
 const lang = 'zh';
 const { slug } = Astro.params;
+const url = `/start/${slug}`;
 const guides = await getGuides(lang);
 const meta = guides.find((g) => g.slug === slug);
+// faqJsonLd 自己判断正文是不是问答结构,不是就返回 null(见 lib/jsonld.js)。
+const entry = await getGuideEntry(slug, lang);
+const jsonLd = meta
+  ? [
+      articleJsonLd({ title: meta.title, description: meta.summary, url, lang, datePublished: meta.updated }),
+      breadcrumbJsonLd({ lang, section: 'start', name: meta.title, url }),
+      faqJsonLd({ body: entry?.body, url, lang }),
+    ].filter(Boolean)
+  : null;
 ---
-<BaseLayout lang={lang} section="start" path={`/start/${slug}`} title={meta?.title} description={meta?.summary}
-  jsonLd={meta && articleJsonLd({ title: meta.title, description: meta.summary, url: `/start/${slug}`, lang, datePublished: meta.updated })}>
+<BaseLayout lang={lang} section="start" path={url} title={meta?.title} description={meta?.summary} jsonLd={jsonLd}>
   <GuidePage lang={lang} slug={slug} />
 </BaseLayout>

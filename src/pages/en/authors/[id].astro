@@ -2,7 +2,7 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import AuthorDetailPage from '../../../components/pages/AuthorDetailPage.astro';
 import { getAuthor, authorIds } from '../../../lib/content.js';
-import { personJsonLd } from '../../../lib/jsonld.js';
+import { personJsonLd, breadcrumbJsonLd } from '../../../lib/jsonld.js';
 
 export async function getStaticPaths() {
   const ids = await authorIds();
@@ -11,9 +11,13 @@ export async function getStaticPaths() {
 
 const lang = 'en';
 const { id } = Astro.params;
+const url = `/authors/${id}`;
 const author = await getAuthor(id, lang);
 ---
-<BaseLayout lang={lang} section="authors" path={`/authors/${id}`} title={author.name} description={author.bio}
-  jsonLd={personJsonLd({ author, url: `/authors/${id}`, lang })}>
+<BaseLayout lang={lang} section="authors" path={url} title={author.name} description={author.bio}
+  jsonLd={[
+    personJsonLd({ author, url, lang }),
+    breadcrumbJsonLd({ lang, section: 'authors', name: author.name, url }),
+  ]}>
   <AuthorDetailPage lang={lang} id={id} />
 </BaseLayout>

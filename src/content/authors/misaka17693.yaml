@@ -1,0 +1,21 @@
+order: 1024
+initials: "M"
+tint: "--color-neutral-300"
+ink: "--color-neutral-900"
+avatar: "/images/authors/misaka17693.jpg"
+name:
+  zh: "御坂17693"
+  en: "Misaka17693"
+handle: "@Misaka17693"
+skills:
+  zh:
+    - "国内逼车制作，可能做点特供车"
+  en:
+    - "Making Chinese band car or other Chinese Market verzion"
+bio:
+  zh: "一切起源来自未能发布的影豹，促使了今天好几十个Mod，不能说个个效果都OK，但是足够满足国风交通流需求，再怎么样也比初期只有零星几台的好"
+  en: "It all began with that GAC Empow mod that never made it to market, which in turn gave rise to the dozens of mods we have today. While not every one delivers exactly the results you’d hope for, they’re more than enough to meet the demands of the national‑style traffic scene; at any rate, they’re far better than the handful of vehicles we started with."
+links:
+  - { platform: bilibili, url: "【传祺昊铂埃安-御坂17693的个人空间-哔哩哔哩】 https://b23.tv/P0NjXHs" }
+  - { platform: qq, url: "QQ群1108776355" }
+  - { platform: patreon, url: "https://www.patreon.com/u87716063?utm_campaign=creatorshare_creator" }

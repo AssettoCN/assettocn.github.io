@@ -1,0 +1,22 @@
+order: 1017
+initials: "烟"
+tint: "--color-accent-2-200"
+ink: "--color-accent-2-900"
+avatar: "/images/authors/yansui.png"
+name:
+  zh: "烟随"
+  en: "yansui"
+handle: "@yansui"
+skills:
+  zh:
+    - "车辆改装，小配件制作，涂装制作，科研物理"
+  en:
+    - "Car modifications"
+    - "making small parts"
+    - "painting"
+    - "and physics research"
+bio:
+  zh: "没事就喜欢捣鼓小玩意，做涂装，科研物理"
+  en: "I like tinkering with little gadgets in my free time, doing painting, and research in physics."
+links:
+  - { platform: bilibili, url: "https://space.bilibili.com/336652193?spm_id_from=333.337.0.0" }

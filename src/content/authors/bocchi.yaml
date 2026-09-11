@@ -1,0 +1,19 @@
+order: 1019
+initials: "B"
+tint: "--color-neutral-300"
+ink: "--color-neutral-900"
+avatar: "/images/authors/bocchi.png"
+name:
+  zh: "滑稽wwwwwww"
+  en: "Bocchi"
+handle: "@bocchi"
+skills:
+  zh:
+    - "算雪铁龙，特斯拉和蔚来专精。。。？会写extension，灯光类的"
+  en:
+    - "I guess only do nio tesla and citroen？light config and other extension ig"
+bio:
+  zh: "B车作者，专注搞奇奇怪怪的老登车（雪铁龙，特斯拉，蔚来）"
+  en: "Citroen Tesla Nio focused"
+links:
+  - { platform: bilibili, url: "https://space.bilibili.com/631861872?spm_id_from=333.1007.0.0" }

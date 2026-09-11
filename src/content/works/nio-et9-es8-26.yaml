@@ -1,0 +1,13 @@
+order: 1026
+authorId: "bocchi"
+type: "vehicle"
+version: "v114"
+updated: "2026-09"
+title:
+  zh: "蔚来ET9&ES8"
+  en: "Nio ET9&ES8"
+desc:
+  zh: "ET9有主动悬挂，ES8有双腔cdc空气悬挂"
+  en: "ET9 has the full active suspension，the ES8 has the dual chamber cdc air suspension."
+cover: "/images/works/nio-et9-es8-26.png"
+link: "https://www.bilibili.com/opus/1239439300112678920?spm_id_from=333.1387.0.0"

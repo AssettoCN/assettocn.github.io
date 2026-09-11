@@ -1,0 +1,13 @@
+order: 1015
+authorId: "danieldiean"
+type: "vehicle"
+version: "v1.0"
+updated: "2026-08"
+title:
+  zh: "McLaren F1 GT '97"
+  en: "McLaren F1 GT '97"
+desc:
+  zh: "McLaren F1 GT\n工作名单:\n\n基於 Yasuo McLaren F1基础混合 RTM McLaren F1 GT基礎打造\n\n模型出处: CSR2\n\n模型转换工作:DanielDi\n\n车漆:@LRAC_拓海taKum1​\n\nCSP车灯:Ryu-2hu\n\nCSP功能: Ryu-2hu,DanielDi,@LRAC_拓海taKum1\n\nEXTRA_A = 打开车尾雾灯\n\nEXTRA_B = 左车门\n\nEXTRA_C = 右车门\n\nEXTRA_D = 后盖"
+  en: "McLaren F1 GT\n工作名单:\n\n基於 Yasuo McLaren F1基础混合 RTM McLaren F1 GT基礎打造\n\n模型出处: CSR2\n\n模型转换工作:DanielDi\n\n车漆:@LRAC_拓海taKum1​\n\nCSP车灯:Ryu-2hu\n\nCSP功能: Ryu-2hu,DanielDi,@LRAC_拓海taKum1\n\nEXTRA_A = 打开车尾雾灯\n\nEXTRA_B = 左车门\n\nEXTRA_C = 右车门\n\nEXTRA_D = 后盖"
+cover: "/images/works/mclaren-f1-gt-97-15.png"
+link: "https://www.bilibili.com/opus/1235512634807156793?spm_id_from=333.1387.0.0"

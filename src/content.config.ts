@@ -39,11 +39,16 @@ const authorLink = z
     }
   });
 
+// 投稿 bot 的归属记录:能通过投稿直接更新这条记录的 GitHub 账号。不在页面上显示。
+// 空 = 没有关联账号,任何人投稿修改都要维护者核实(见 .github/SUBMISSIONS.md)。
+const owners = z.array(z.string().regex(/^[A-Za-z0-9-]{1,39}$/, '必须是 GitHub 账号名')).default([]);
+
 // 作者集合:src/content/authors/<id>.yaml —— 文件名即作者 id(详情页 URL)。
 const authors = defineCollection({
   loader: glob({ pattern: '**/*.yaml', base: './src/content/authors' }),
   schema: z.object({
     order: z.number().default(0),          // 列表显示顺序
+    owners,
     initials: z.string(),                  // 字母头像上的字
     tint: z.string(),                      // 字母头像底色(CSS 变量名)
     ink: z.string(),                       // 字母头像字色(CSS 变量名)
@@ -64,6 +69,7 @@ const works = defineCollection({
   loader: glob({ pattern: '**/*.yaml', base: './src/content/works' }),
   schema: z.object({
     order: z.number().default(0),
+    owners,                                // 投稿人的 GitHub 账号
     authorId: z.string(),                  // 必须对应某个作者文件名
     type: z.enum(typeKeys),                // 工具/应用/教程/文档/资料
     version: z.string(),

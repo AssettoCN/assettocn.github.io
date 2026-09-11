@@ -8,7 +8,9 @@ body:
       value: |
         填好下面几项、提交后会自动生成一个 Pull Request,维护者审核合并后作品就会
         出现在作品页。**作者必须已经收录**——请先用「作者入驻」提交作者。
+        请用提交该作者资料的同一个 GitHub 账号投稿,否则需要维护者核实身份后才会合并。
         The author must already be listed — submit the author first if needed.
+        Submit from the GitHub account that submitted the author profile; otherwise a maintainer has to verify it first.
   - type: input
     id: author
     attributes:
@@ -79,7 +81,7 @@ body:
     id: cover
     attributes:
       label: 封面图(可选) / Cover image (optional)
-      description: 可把封面图拖进来上传 / drag a cover image here
+      description: 可把封面图拖进来上传,仅支持 PNG / JPG / WebP,不接受外站图片链接 / drag a cover image here (PNG, JPG or WebP; no external links)
       placeholder: 拖入图片… / drop image here…
     validations:
       required: false

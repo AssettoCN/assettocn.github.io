@@ -22,11 +22,14 @@ concurrency:
 
 jobs:
   build-entry:
+    # 只处理开着的 issue。PR 合并后 issue 自动关闭,之后再编辑它不该重新生成内容:
+    # 作品的 updated 按当月生成,跨月编辑就会开出一个新 PR,盖掉维护者后来的修改。
     if: >
+      github.event.issue.state == 'open' && (
       contains(github.event.issue.labels.*.name, 'gallery-submission') ||
       contains(github.event.issue.labels.*.name, 'server-submission') ||
       contains(github.event.issue.labels.*.name, 'author-submission') ||
-      contains(github.event.issue.labels.*.name, 'work-submission')
+      contains(github.event.issue.labels.*.name, 'work-submission'))
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -54,6 +57,9 @@ jobs:
           KIND: ${{ steps.kind.outputs.kind }}
           ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
+          # 用于核对「更新已有作者 / 作品挂在谁名下」的账号归属,见脚本里的 owners
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+          ISSUE_AUTHOR_ASSOCIATION: ${{ github.event.issue.author_association }}
         run: node .github/scripts/issue-to-content.mjs
 
       # 上一步是原样下载投稿图(转换脚本刻意零依赖),这里统一规范尺寸和体积。
@@ -76,40 +82,47 @@ jobs:
           branch: submission/${{ steps.convert.outputs.kind }}-issue-${{ github.event.issue.number }}
           commit-message: "${{ steps.convert.outputs.kind }}: add ${{ steps.convert.outputs.id }} (closes #${{ github.event.issue.number }})"
           title: "${{ steps.convert.outputs.kind }}: ${{ steps.convert.outputs.title }} (#${{ github.event.issue.number }})"
-          labels: ${{ steps.convert.outputs.kind }}-submission
+          # 账号对不上时脚本会多给一个 needs-verification(见 notice)
+          labels: ${{ steps.convert.outputs.labels }}
           body: |
             自动生成自投稿 #${{ github.event.issue.number }}(类型:${{ steps.convert.outputs.kind }})。
             Auto-generated from submission #${{ github.event.issue.number }} (kind: ${{ steps.convert.outputs.kind }}).
 
             - 条目 / entry: `${{ steps.convert.outputs.path }}`
+            - 投稿账号 / submitted by: `${{ github.event.issue.user.login }}`
+
+            ${{ steps.convert.outputs.notice }}
 
             审核合并即上线;合并会自动关闭原 issue。
             Merge to publish; merging closes the original issue.
 
-      - name: Comment — PR opened
-        if: steps.convert.outputs.status == 'ok'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body: `✅ 已根据你的投稿生成 PR:${{ steps.cpr.outputs.pull-request-url }}\n审核合并后就会上线。`,
-            });
-
-      # 报错信息里会带上投稿者填的原文,必须经环境变量传进脚本:若用 ${{ }} 直接拼进 JS
+      # 状态评论。报错信息里会带上投稿者填的原文,必须经环境变量传进脚本:若用 ${{ }} 直接拼进 JS
       # 模板字符串,原文里的反引号或 ${ 就能跳出字符串执行任意代码(而这个 job 有写权限)。
-      - name: Comment — needs fixing
-        if: steps.convert.outputs.status == 'error'
+      # 编辑 issue 会重跑本工作流,以前每次都新发一条一样的「✅ 已生成 PR」(#13 下面有两条)。
+      # 现在和上一条状态评论内容相同就不再发;内容变了(报错 → 通过、换了个报错)才发新的 ——
+      # 不改旧评论,是因为编辑评论不会通知投稿者,新评论会。
+      - name: Comment status on the issue
+        if: steps.convert.outputs.status == 'error' || steps.cpr.outputs.pull-request-url != ''
         uses: actions/github-script@v7
         env:
+          STATUS: ${{ steps.convert.outputs.status }}
           MESSAGE: ${{ steps.convert.outputs.message }}
+          NOTICE: ${{ steps.convert.outputs.notice }}
+          PR_URL: ${{ steps.cpr.outputs.pull-request-url }}
         with:
           script: |
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body: `⚠️ 暂时无法处理这条投稿:\n\n${process.env.MESSAGE}\n\n可以编辑本 issue 补全后再试。`,
-            });
+            const { STATUS, MESSAGE, NOTICE, PR_URL } = process.env;
+            const MARK = '<!-- submission-bot:status -->';
+            const text = STATUS === 'ok'
+              ? `✅ 已根据你的投稿生成 PR:${PR_URL}\n审核合并后就会上线。${NOTICE ? `\n\n${NOTICE}` : ''}`
+              : `⚠️ 暂时无法处理这条投稿:\n\n${MESSAGE}\n\n可以编辑本 issue 补全后再试。`;
+            const body = `${MARK}\n${text}`;
+            const issue = { owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number };
+            const comments = await github.paginate(github.rest.issues.listComments, { ...issue, per_page: 100 });
+            const last = comments.filter((c) => c.user?.type === 'Bot' && (c.body || '').startsWith(MARK)).pop();
+            const norm = (s) => s.replace(/\r\n/g, '\n').trim();
+            if (last && norm(last.body) === norm(body)) {
+              core.info('Status unchanged since the last bot comment; not posting again.');
+              return;
+            }
+            await github.rest.issues.createComment({ ...issue, body });

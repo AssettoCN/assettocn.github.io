@@ -48,7 +48,7 @@ body:
     id: screenshot
     attributes:
       label: 截图 / Screenshot
-      description: 把图片直接拖进这个输入框上传(GitHub 会自动生成链接)。/ Drag & drop the image here to upload.
+      description: 把图片直接拖进这个输入框上传(GitHub 会自动生成链接),仅支持 PNG / JPG / WebP。/ Drag & drop the image here to upload (PNG, JPG or WebP).
       placeholder: 拖入图片… / drop image here…
     validations:
       required: true

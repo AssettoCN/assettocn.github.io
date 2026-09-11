@@ -15,10 +15,10 @@
 1. 访客在对应页面点投稿按钮 → 打开该类型的 GitHub Issue 表单,填字段
    (截图/封面直接拖进输入框上传)。
 2. 提交后 issue 自动带上 `<kind>-submission` 标签 →
-   触发 `workflows/content-submission.yml`。
+   触发 `workflows/content-submission.yml`(只处理**开着的** issue;合并关闭后再编辑不会重跑)。
 3. 工作流按标签判断类型,跑 `scripts/issue-to-content.mjs`:解析表单、
    (gallery/work)下载图片进 `public/images/<dir>/`、生成内容 YAML。
-4. `peter-evans/create-pull-request` 开 PR,并在原 issue 回帖 PR 链接。
+4. `peter-evans/create-pull-request` 开 PR,并在原 issue 回帖 PR 链接(结果和上一条回帖相同就不再重复发)。
 5. 维护者**审核合并 = 通过**;网站按新内容重建,内容上线,原 issue 关闭。
 
 一个脚本 + 一个工作流 + 每类一个表单;新增字段只改脚本里对应 kind 的 builder。
@@ -26,15 +26,25 @@
 ## 约定
 
 - `id`:gallery/server/work = 英文标题(或名称)slug + issue 号(唯一,不会覆盖);
-  author = handle 的 slug(作者 id 就是 `/authors/<id>` 的 URL,保持干净;若与已有
-  作者重名,PR 会显示为「修改已有作者」并在标题标注 ⚠️,由维护者定夺)。
+  author = handle 的 slug(作者 id 就是 `/authors/<id>` 的 URL,保持干净;与已有作者
+  同名即为更新该作者)。
 - `order` = `1000 + issue 号`,永远排在预置数据之后;维护者可在合并前改 PR 里的值。
+  更新已有作者时沿用它原来的 `order` 和 `tint` / `ink`。
+- **账号归属 `owners`**:作者和作品 YAML 里记着投稿人的 GitHub 账号(页面上不显示)。
+  - 更新已有作者:投稿账号在该作者 `owners` 里才算已核实;否则照开 PR,但标题标 ⚠️、
+    打 `needs-verification` 标签、PR 描述写明原因。维护者确认是本人再合并,合并后该账号
+    会加入 `owners`。
+  - 投稿作品:投稿账号不在所挂作者的 `owners` 里同样标待核实;确认后如需关联,手动把账号
+    加进作者的 `owners`。
+  - 组织成员(维护者)代人投稿不标待核实,也不会被记进 `owners`。
+  - `owners` 为空(维护者手工收录的作者)= 任何人来改都要核实。
 - **作品必须挂在已收录的作者名下**:脚本会检查 `src/content/authors/<authorId>.yaml`
   是否存在,不存在则不开 PR、改为在 issue 里提示先投稿作者。
 - 服务器收录默认 `online: true`、`players: 0`、`ping: '—'`;作者头像底色自动分配。
 - 字段靠「表单标题里的关键词」匹配(如中文名需同时含「名称」和「中文」),
   改表单 label 时保留这些关键词即可。
-- 图片下载失败时回退用远程链接,PR 仍会开。
+- 图片只收 GitHub 附件(`github.com/user-attachments/…`),按文件头只放行 PNG / JPG / WebP、
+  最大 10MB;外站链接、其他格式或下载失败都不开 PR,改为在 issue 里提示重新上传。
 
 ## 启用前的设置(一次性)
 
@@ -46,6 +56,7 @@
    gh label create server-submission  -c 00A0FF
    gh label create author-submission  -c 8B5CF6
    gh label create work-submission    -c 22C55E
+   gh label create needs-verification -c D93F0B -d "投稿账号与作者归属不符,合并前需核实身份"
    ```
    (或网页:Issues → Labels → New label。)标签建好后,**新**从表单开的 issue 会
    自动带标签;要对某个 issue 重新触发,**编辑一下该 issue**(工作流监听 `edited`)。

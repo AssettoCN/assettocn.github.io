@@ -1,20 +1,24 @@
 // Generic "submission issue → content entry" engine.
 //
-// Reads env KIND (gallery|server|author|work) + ISSUE_BODY + ISSUE_NUMBER,
+// Reads env KIND (gallery|server|author|work) + ISSUE_BODY + ISSUE_NUMBER
+// (+ ISSUE_AUTHOR / ISSUE_AUTHOR_ASSOCIATION for ownership checks),
 // parses the matching Issue Form, (for gallery/work) downloads the attached
 // image into public/images/<dir>/, writes the content YAML under
 // src/content/<dir>/<id>.yaml, and reports back via GITHUB_OUTPUT:
-//   status=ok|error, kind, id, path, title, message
+//   status=ok|error, kind, id, path, title, message, notice, labels
 //
 // Field values are located by AND-matching distinctive tokens against each
 // form heading (e.g. name_zh needs both '名称' and '中文'), so bilingual labels
 // disambiguate cleanly and small wording tweaks are tolerated.
-import { writeFileSync, mkdirSync, appendFileSync, existsSync } from 'node:fs';
+import { writeFileSync, mkdirSync, appendFileSync, existsSync, readFileSync, rmSync } from 'node:fs';
 import { dirname } from 'node:path';
 
 const KIND = (process.env.KIND || '').trim();
 const body = process.env.ISSUE_BODY || '';
 const issueNumber = parseInt(process.env.ISSUE_NUMBER || '0', 10);
+const issueAuthor = (process.env.ISSUE_AUTHOR || '').trim(); // 开 issue 的 GitHub 账号
+// OWNER / MEMBER = 组织成员,即维护者:代人投稿不标待核实,也不把自己记进 owners。
+const byMaintainer = /^(?:OWNER|MEMBER)$/.test((process.env.ISSUE_AUTHOR_ASSOCIATION || '').trim());
 
 /* ── output / error helpers ─────────────────────────────────────────────── */
 function setOutput(key, value) {
@@ -126,6 +130,33 @@ function qqEntry(value) {
   return num ? { platform: 'qq', text: num[0] } : null;
 }
 
+/* ── 已有条目与归属 ─────────────────────────────────────────────────────── */
+// 脚本零依赖,不引 YAML 库:只读顶层的 `key: 标量` 和 owners 列表。兼容 bot 生成的
+// 双引号写法,以及手写数据的单引号 / 无引号 / 块列表写法。
+function unquote(v) {
+  const s = String(v).trim();
+  const dq = s.match(/^"((?:[^"\\]|\\.)*)"/); // 只取引号内,后面可能跟 # 注释
+  if (dq) { try { return JSON.parse(`"${dq[1]}"`); } catch { return dq[1]; } }
+  const sq = s.match(/^'((?:[^']|'')*)'/);
+  if (sq) return sq[1].replace(/''/g, "'");
+  return s.replace(/\s+#.*$/, '');
+}
+function readEntry(path) {
+  if (!existsSync(path)) return null;
+  const text = readFileSync(path, 'utf8');
+  const scalar = (key) => { const m = text.match(new RegExp(`^${key}:[ \\t]*(\\S.*)$`, 'm')); return m ? unquote(m[1]) : ''; };
+  const flow = text.match(/^owners:[ \t]*\[(.*)\][ \t]*$/m);
+  const block = text.match(/^owners:[ \t]*\r?\n((?:[ \t]+-[ \t]*\S.*(?:\r?\n|$))+)/m);
+  const owners = flow ? flow[1].split(',')
+    : block ? block[1].split(/\r?\n/).map((l) => l.replace(/^[ \t]*-[ \t]*/, ''))
+    : [];
+  return { scalar, owners: owners.map(unquote).filter(Boolean) };
+}
+// owners = 能直接通过投稿更新这条记录的 GitHub 账号(不区分大小写);空 = 只有维护者能确认。
+const ownsIt = (owners) => Boolean(issueAuthor) && owners.some((o) => o.toLowerCase() === issueAuthor.toLowerCase());
+const loginList = (owners) => (owners.length ? owners.map((o) => `\`${o}\``).join('、') : '暂无');
+const ownersYaml = (owners) => (owners.length ? `owners: ${JSON.stringify(owners)}\n` : '');
+
 /** Extract the first image URL from a textarea value (markdown / <img> / bare). */
 function imageUrlFrom(value) {
   const v = value || '';
@@ -138,23 +169,55 @@ function imageUrlFrom(value) {
   ).trim();
 }
 
-const EXT_BY_TYPE = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/jpg': 'jpg', 'image/gif': 'gif', 'image/webp': 'webp' };
-/** Download `url` into public/images/<dir>/<id>.<ext>; fall back to the remote URL. */
-async function downloadImage(url, dir, id) {
-  try {
-    const res = await fetch(url, { redirect: 'follow' });
-    if (!res.ok) throw new Error(`fetch ${res.status}`);
-    const type = (res.headers.get('content-type') || '').split(';')[0].trim().toLowerCase();
-    const urlExt = (url.split('?')[0].match(/\.([a-z0-9]{3,4})$/i) || [])[1];
-    const ext = EXT_BY_TYPE[type] || (urlExt ? urlExt.toLowerCase() : 'png');
-    const path = `public/images/${dir}/${id}.${ext}`;
-    mkdirSync(dirname(path), { recursive: true });
-    writeFileSync(path, Buffer.from(await res.arrayBuffer()));
-    return `/images/${dir}/${id}.${ext}`;
-  } catch (e) {
-    console.warn(`image download failed (${e.message}); using remote URL`);
-    return url;
+/* ── 图片下载 ───────────────────────────────────────────────────────────── */
+// 下载的图会进 public/images/,在 assetto.cn 域名下公开访问,所以:
+// - 只收 GitHub 附件(拖进 issue 输入框上传生成的链接),不替任意外站抓文件;
+// - 按文件头认格式,只放行 png / jpg / webp(和 optimize-images.mjs 能处理的一致),
+//   不看 Content-Type 和链接后缀 —— 以前一个 .svg / .html 链接会原样存进来;
+// - 下载失败直接报错。以前是退回引用远程链接,但附件链接会跳到带时效签名的地址,迟早失效。
+const MAX_IMAGE_BYTES = 10 * 1024 * 1024; // GitHub 图片附件本身的上限也是 10MB
+const IMAGE_EXTS = ['png', 'jpg', 'webp'];
+const isGitHubAttachment = (u) =>
+  u.protocol === 'https:' &&
+  ((u.hostname === 'github.com' && u.pathname.startsWith('/user-attachments/assets/')) ||
+    /^(?:private-)?user-images\.githubusercontent\.com$/.test(u.hostname));
+function sniffImage(buf) {
+  if (buf.length >= 8 && buf.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) return 'png';
+  if (buf.length >= 3 && buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff) return 'jpg';
+  if (buf.length >= 12 && buf.toString('latin1', 0, 4) === 'RIFF' && buf.toString('latin1', 8, 12) === 'WEBP') return 'webp';
+  return '';
+}
+
+/** 下载投稿图到 public/images/<dir>/<id>.<ext>,返回站内路径;不合规直接 fail(label 是表单里的字段名)。 */
+async function downloadImage(raw, dir, id, label) {
+  let url = null;
+  try { url = new URL(raw); } catch { /* 下面统一报错 */ }
+  if (!url || !isGitHubAttachment(url)) {
+    fail(`「${label}」请把图片直接拖进输入框上传(会生成 github.com/user-attachments/… 的链接),不接受外站图片链接。 / "${label}": drag the image into the field to upload it — external image links are not accepted.`);
   }
+  let res, buf;
+  try {
+    res = await fetch(url, { redirect: 'follow' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const host = new URL(res.url || url).hostname; // 跳转后的地址也必须还在 GitHub
+    if (host !== 'github.com' && !host.endsWith('.githubusercontent.com')) throw new Error(`redirected to ${host}`);
+  } catch (e) {
+    fail(`「${label}」图片下载失败(${e.message}),请重新上传后编辑本 issue 再试。 / "${label}": image download failed (${e.message}).`);
+  }
+  const tooBig = `「${label}」图片超过 10MB,请压缩后重新上传。 / "${label}": the image is larger than 10MB.`;
+  if (Number(res.headers.get('content-length')) > MAX_IMAGE_BYTES) fail(tooBig);
+  try { buf = Buffer.from(await res.arrayBuffer()); } catch (e) {
+    fail(`「${label}」图片下载失败(${e.message}),请重新上传后编辑本 issue 再试。 / "${label}": image download failed (${e.message}).`);
+  }
+  if (buf.length > MAX_IMAGE_BYTES) fail(tooBig);
+  const ext = sniffImage(buf);
+  if (!ext) fail(`「${label}」只支持 PNG / JPG / WebP 图片。 / "${label}": only PNG, JPG or WebP images are accepted.`);
+  const path = `public/images/${dir}/${id}.${ext}`;
+  mkdirSync(dirname(path), { recursive: true });
+  // 同一 id 换了格式重传(作者更新头像时 jpg → png)要删掉旧文件,否则旧图一直留在仓库里。
+  for (const other of IMAGE_EXTS) if (other !== ext) rmSync(`public/images/${dir}/${id}.${other}`, { force: true });
+  writeFileSync(path, buf);
+  return `/images/${dir}/${id}.${ext}`;
 }
 
 /** Map a server-category dropdown value (e.g. "漂移 Drift") to a SERVER_TYPE key.
@@ -192,7 +255,7 @@ const BUILDERS = {
     const url = imageUrlFrom(field('screenshot') || field('截图'));
     if (!url) fail('没找到截图,请把图片拖进「截图」框上传。 / No screenshot image found.');
     const id = `${slugify(titleEn, 'shot')}-${issueNumber}`;
-    const cover = await downloadImage(url, 'gallery', id);
+    const cover = await downloadImage(url, 'gallery', id, '截图 Screenshot');
     const yaml =
       `order: ${order}\n` +
       `ratio: ${q(ratio)}\n` +
@@ -240,11 +303,23 @@ const BUILDERS = {
     if (!bioZh || !bioEn) fail('缺少简介(中/英)。 / Missing bio.');
     if (!handle.startsWith('@')) handle = '@' + handle;
     const initials = firstChar(field('initials') || field('头像文字') || nameZh);
-    const [tint, ink] = AVATAR_PALETTE[issueNumber % AVATAR_PALETTE.length];
     const id = slugify(handle.replace(/^@/, ''), `author-${issueNumber}`);
+    if (id === 'acn') fail('官方账号(acn)由维护者直接维护,不接受公开投稿。 / The official acn profile is maintained directly.');
+    // 同 handle 即更新已有作者。只有它 owners 里的账号(或维护者)提交才算已核实;
+    // 否则照样开 PR,但打 needs-verification 标签,维护者确认是本人再合并 —— 合并即把
+    // 投稿账号加进 owners,之后用它更新不用再核实。表单之外的字段(order 排序、
+    // tint/ink 配色)沿用旧值:#30 更新资料时 order 从 11 变成 1030,作者被挤到了列表末尾。
+    const existing = readEntry(`src/content/authors/${id}.yaml`);
+    const verified = !existing || byMaintainer || ownsIt(existing.owners);
+    const owners = existing ? [...existing.owners] : [];
+    if (issueAuthor && !byMaintainer && !ownsIt(owners)) owners.push(issueAuthor);
+    const oldOrder = existing ? parseInt(existing.scalar('order'), 10) : NaN;
+    const [newTint, newInk] = AVATAR_PALETTE[issueNumber % AVATAR_PALETTE.length];
+    const tint = (existing && existing.scalar('tint')) || newTint;
+    const ink = (existing && existing.scalar('ink')) || newInk;
     // 可选头像图:传了就下载到 public/images/authors/;没传留空 → 前端回退到字母头像
     const avatarUrl = imageUrlFrom(field('头像图片') || field('avatar', 'image'));
-    const avatar = avatarUrl ? await downloadImage(avatarUrl, 'authors', id) : '';
+    const avatar = avatarUrl ? await downloadImage(avatarUrl, 'authors', id, '头像图片 Avatar') : '';
     // 外链:每个平台一个专属输入框(平台由填哪个框决定,投稿人无需写平台名);
     // 「其他链接」textarea 每行 "名称 | 链接",按名称/域名归类。
     // 每条外链二选一:url(http/https 网址)或 text(纯文本,如 QQ 群号),schema 里同样校验。
@@ -299,7 +374,8 @@ const BUILDERS = {
     }
     const listBlock = (k, arr) => `${k}:\n  zh:\n${arr.zh.map((x) => `    - ${q(x)}`).join('\n') || '    []'}\n  en:\n${arr.en.map((x) => `    - ${q(x)}`).join('\n') || '    []'}\n`;
     let yaml =
-      `order: ${order}\n` +
+      `order: ${Number.isFinite(oldOrder) ? oldOrder : order}\n` +
+      ownersYaml(owners) +
       `initials: ${q(initials)}\n` +
       `tint: ${q(tint)}\n` +
       `ink: ${q(ink)}\n` +
@@ -310,8 +386,11 @@ const BUILDERS = {
       `bio:\n  zh: ${q(bioZh)}\n  en: ${q(bioEn)}\n`;
     const linkYaml = (l) => `  - { platform: ${l.platform}, ${l.url ? `url: ${q(l.url)}` : `text: ${q(l.text)}`}${l.label ? `, label: ${q(l.label)}` : ''} }`;
     if (links.length) yaml += `links:\n` + links.map(linkYaml).join('\n') + '\n';
-    const note = existsSync(`src/content/authors/${id}.yaml`) ? ` ⚠️ 覆盖已存在的作者 ${id}` : '';
-    return { id, dir: 'authors', yaml, title: `${nameZh} / ${nameEn}${note}` };
+    const note = !existing ? '' : verified ? ` (更新作者 ${id})` : ` ⚠️ 待核实:覆盖作者 ${id}`;
+    const notice = verified ? '' :
+      `⚠️ **待核实身份**:这条投稿会覆盖已有作者 \`${id}\`,但投稿账号 \`${issueAuthor || '未知'}\` 不在它的 owners 里(现有:${loginList(existing.owners)})。` +
+      `维护者确认是作者本人后再合并;合并后该账号会加入 owners,以后用它更新无需再核实。`;
+    return { id, dir: 'authors', yaml, title: `${nameZh} / ${nameEn}${note}`, notice };
   },
 
   async work() {
@@ -329,12 +408,17 @@ const BUILDERS = {
     if (!titleZh || !titleEn) fail('缺少标题(中/英)。 / Missing title.');
     if (!descZh || !descEn) fail('缺少描述(中/英)。 / Missing description.');
     const id = `${slugify(titleEn, 'work')}-${issueNumber}`;
+    // 作品挂在谁名下由投稿人自己填,所以同样核对账号:不在该作者 owners 里的标待核实。
+    // 作品 PR 不改作者文件,确认是本人后要把账号加进作者 owners 需维护者手动补。
+    const authorOwners = readEntry(`src/content/authors/${authorId}.yaml`).owners;
+    const verified = byMaintainer || ownsIt(authorOwners);
     const coverUrl = imageUrlFrom(field('封面') || field('cover'));
-    const cover = coverUrl ? await downloadImage(coverUrl, 'works', id) : '';
+    const cover = coverUrl ? await downloadImage(coverUrl, 'works', id, '封面 Cover') : '';
     // 可选外链:作品卡上的「查看」按钮。取第一个 URL,没有则留空。
     const link = extractUrl(field('作品链接') || field('work link') || field('链接') || field('link'));
     let yaml =
       `order: ${order}\n` +
+      ownersYaml(issueAuthor && !byMaintainer ? [issueAuthor] : []) +
       `authorId: ${q(authorId)}\n` +
       `type: ${q(type)}\n` +
       `version: ${q(version)}\n` +
@@ -343,7 +427,10 @@ const BUILDERS = {
       `desc:\n  zh: ${q(descZh)}\n  en: ${q(descEn)}\n`;
     if (cover) yaml += `cover: ${q(cover)}\n`;
     if (link) yaml += `link: ${q(link)}\n`;
-    return { id, dir: 'works', yaml, title: `${titleZh} / ${titleEn}` };
+    const notice = verified ? '' :
+      `⚠️ **待核实身份**:作品挂在作者 \`${authorId}\` 名下,但投稿账号 \`${issueAuthor || '未知'}\` 不在该作者的 owners 里(现有:${loginList(authorOwners)})。` +
+      `维护者确认是作者本人后再合并;确认后可顺手把该账号加进 \`src/content/authors/${authorId}.yaml\` 的 owners。`;
+    return { id, dir: 'works', yaml, title: `${titleZh} / ${titleEn}${verified ? '' : ' ⚠️ 待核实'}`, notice };
   },
 };
 
@@ -351,7 +438,7 @@ const BUILDERS = {
 const build = BUILDERS[KIND];
 if (!build) fail(`未知投稿类型 KIND="${KIND}"。`);
 
-const { id, dir, yaml, title } = await build();
+const { id, dir, yaml, title, notice = '' } = await build();
 const path = `src/content/${dir}/${id}.yaml`;
 mkdirSync(dirname(path), { recursive: true });
 writeFileSync(path, yaml);
@@ -361,4 +448,6 @@ setOutput('kind', KIND);
 setOutput('id', id);
 setOutput('path', path);
 setOutput('title', title);
+setOutput('notice', notice);
+setOutput('labels', [`${KIND}-submission`, ...(notice ? ['needs-verification'] : [])].join(','));
 console.log(`Wrote ${path}\n${yaml}`);

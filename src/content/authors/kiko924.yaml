@@ -1,20 +1,23 @@
-order: 11
-initials: K
-tint: '--color-neutral-300'
-ink: '--color-neutral-900'
-avatar: '/images/authors/kiko924.jpg'
-name: { zh: 'Kiko924', en: 'Kiko924' }
-handle: '@kiko924'
+order: 1030
+initials: "後"
+tint: "--color-accent-2-300"
+ink: "--color-accent-2-900"
+avatar: "/images/authors/kiko924.png"
+name:
+  zh: "後期型Kiko"
+  en: "Kiko924"
+handle: "@kiko924"
 skills:
-  zh: [原厂车辆, 改装定制, 涂装设计]
-  en: [Factory cars, Custom tuning, Livery design]
+  zh:
+    - "原厂车辆，改装定制，涂装设计"
+  en:
+    - "Stock cars"
+    - "Tuned Cars"
+    - "Livery Design"
 bio:
-  zh: >-
-    Assetto Corsa 车辆模组制作与完善者,主做公开的原厂车辆模组,可接改装定制与涂装设计。
-    代表作:Sally 版保时捷 996。
-  en: >-
-    Assetto Corsa vehicle-mod creator and finisher, focused on public
-    factory-spec cars and open to custom tuning and livery commissions.
-    Notable: the "Sally" Porsche 996.
+  zh: "Assetto Corsa 车辆模组制作与完善者,主做公开的原厂车辆模组以及展厅地图设计,可接改装定制与涂装设计。"
+  en: "Mainly work on Assetto Corsa vehicle and map mods."
 links:
-  - { platform: bilibili, url: 'https://space.bilibili.com/488192660' }
+  - { platform: bilibili, url: "https://space.bilibili.com/488192660?spm_id_from=333.1007.0.0" }
+  - { platform: afdian, url: "https://ifdian.net/a/kk060924" }
+  - { platform: other, url: "Personal QQ Account : 2381097483" }

@@ -29,8 +29,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # 固定检出默认分支的**最新**提交,而不是触发本次 run 的那个提交。
+      # 连续合并多个 PR 时,push 事件可能晚到:较旧提交的部署会排在较新提交之后
+      # 跑完,把线上覆盖回旧版本(2026-09-11 合并 #31/#33 时就发生过,#31 的
+      # 更新因此没有上线)。concurrency 让部署串行,再配合这里总是构建 main 的
+      # 最新提交,无论哪个 run 最后完成,线上都是最新内容。
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
 
       # 官方 Astro action:自动识别包管理器、装依赖、astro build、
       # 并把 dist/ 打包成 Pages artifact。node-version 显式固定为 20。

@@ -57,7 +57,9 @@ const q = (s) => JSON.stringify(String(s)); // safe YAML double-quoted scalar
 const slugify = (s, fallback) =>
   (String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || fallback);
 const firstChar = (s) => Array.from(String(s).trim())[0] || '?';
-const splitList = (s) => String(s).split(/[,,、\n]+/).map((x) => x.trim()).filter(Boolean);
+// 列表分隔:半角逗号、全角逗号「，」、顿号「、」、半/全角分号、换行。字符用 \u 转义写 ——
+// 以前这里本想写全角逗号,实际是两个半角逗号(肉眼看不出),中文技能整串不拆,成了一个长标签。
+const splitList = (s) => String(s).split(/[,\uFF0C\u3001;\uFF1B\n]+/).map((x) => x.trim()).filter(Boolean);
 const currentMonth = () => new Date().toISOString().slice(0, 7);
 
 // 作者外链平台识别(与 src/data/link-platforms.js 保持一致)——用于「其他链接」里
@@ -89,6 +91,39 @@ function detectPlatform(name, url) {
   if (LINK_NAMES[n]) return LINK_NAMES[n];
   for (const [key, res] of LINK_DOMAINS) if (res.some((re) => re.test(url))) return key;
   return 'other';
+}
+
+/* ── URL 规范化 ─────────────────────────────────────────────────────────── */
+// 入库前去掉的追踪参数:B 站网页 / App 分享会带 spm_id_from、vd_source(关联分享者账号)等,
+// 和链接指向的内容无关。只删这些已知参数,其余查询参数原样保留。
+const TRACKING_PARAM = /^(?:spm_id_from|vd_source|from_spmid|share_(?:source|medium|plat|session_id|tag|from)|unique_k|utm_[a-z_]+)$/i;
+function cleanUrl(raw) {
+  let url;
+  try { url = new URL(raw); } catch { return raw; }
+  const drop = [...url.searchParams.keys()].filter((k) => TRACKING_PARAM.test(k));
+  if (!drop.length) return raw; // 没有要删的就原样返回,不让 URL 序列化改写字符串
+  for (const k of drop) url.searchParams.delete(k);
+  return url.toString();
+}
+
+/** 从一段文字里取出第一个 http(s) 网址并去掉追踪参数。兼容 B 站 App 的分享文案
+ *  「【标题-哔哩哔哩】 https://b23.tv/xxx」;没写协议但形如 space.bilibili.com/123 的补上 https://。
+ *  取不到返回 ''(群号、「QQ群123」这类纯文字不会被当成网址)。 */
+function extractUrl(text) {
+  const t = String(text || '').trim();
+  const m = t.match(/https?:\/\/[^\s<>"'()\uFF08\uFF09\u3010\u3011\u300C\u300D]+/i);
+  if (m) return cleanUrl(m[0].replace(/[.,;:!?\uFF0C\u3002\uFF1B\uFF1A\uFF01\uFF1F\u3001]+$/, ''));
+  if (/^[a-z0-9-]+(?:\.[a-z0-9-]+)*\.[a-z]{2,}(?:[/?#]\S*)?$/i.test(t)) return cleanUrl(`https://${t}`);
+  return '';
+}
+
+/** QQ 群:加群链接或纯群号二选一。链接 → { url };群号 → { text }(作者页显示为点击复制的群号)。
+ *  群号前允许带字,如「QQ群1108776355」「群号:555433599」。两样都不是返回 null。 */
+function qqEntry(value) {
+  const url = extractUrl(value);
+  if (url) return { platform: 'qq', url };
+  const num = String(value).match(/\d{5,12}/);
+  return num ? { platform: 'qq', text: num[0] } : null;
 }
 
 /** Extract the first image URL from a textarea value (markdown / <img> / bare). */
@@ -180,7 +215,7 @@ const BUILDERS = {
     const type = serverTypeFrom(field('类型') || field('category') || field('分类'));
     // 两类:接入地址(ip:port 纯文本)与主页(URL)。
     const address = (field('接入地址') || field('地址') || field('address')).split(/\s/)[0].trim();
-    const homepage = imageUrlFrom(field('主页') || field('介绍') || field('homepage'));
+    const homepage = extractUrl(field('主页') || field('介绍') || field('homepage'));
     const id = `${slugify(nameEn, 'server')}-${issueNumber}`;
     let yaml =
       `order: ${order}\n` +
@@ -212,27 +247,55 @@ const BUILDERS = {
     const avatar = avatarUrl ? await downloadImage(avatarUrl, 'authors', id) : '';
     // 外链:每个平台一个专属输入框(平台由填哪个框决定,投稿人无需写平台名);
     // 「其他链接」textarea 每行 "名称 | 链接",按名称/域名归类。
+    // 每条外链二选一:url(http/https 网址)或 text(纯文本,如 QQ 群号),schema 里同样校验。
     const links = [];
-    const pushLink = (platform, val) => { const u = String(val || '').trim(); if (u) links.push({ platform, url: u }); };
-    pushLink('bilibili', field('bilibili'));
-    pushLink('afdian', field('afdian'));
-    pushLink('weibo', field('weibo'));
-    pushLink('qq', field('qq'));
-    pushLink('youtube', field('youtube'));
-    pushLink('patreon', field('patreon'));
-    pushLink('x', field('twitter'));
-    pushLink('discord', field('discord'));
-    pushLink('github', field('github'));
-    pushLink('website', field('website'));
+    const addUrlField = (platform, token, label) => {
+      const raw = field(token);
+      if (!raw) return;
+      const url = extractUrl(raw);
+      if (!url) fail(`「${label}」需要填网址(http/https 开头),现在填的是:${raw} / "${label}" must be a URL.`);
+      links.push({ platform, url });
+    };
+    addUrlField('bilibili', 'bilibili', 'Bilibili');
+    addUrlField('afdian', 'afdian', '爱发电 Afdian');
+    addUrlField('weibo', 'weibo', '微博 Weibo');
+    const qqRaw = field('qq');
+    if (qqRaw) {
+      const qq = qqEntry(qqRaw);
+      if (!qq) fail(`「QQ 群」请填加群链接或群号,现在填的是:${qqRaw} / "QQ Group" must be an invite link or a group number.`);
+      links.push(qq);
+    }
+    addUrlField('youtube', 'youtube', 'YouTube');
+    addUrlField('patreon', 'patreon', 'Patreon');
+    addUrlField('x', 'twitter', 'X (Twitter)');
+    addUrlField('discord', 'discord', 'Discord');
+    addUrlField('github', 'github', 'GitHub');
+    addUrlField('website', 'website', '个人主页 Website');
     for (const line of String(field('其他链接') || field('other', 'links')).split('\n')) {
       const t = line.trim();
       if (!t) continue;
-      const bar = t.indexOf('|');
-      const nm = bar === -1 ? '' : t.slice(0, bar).trim();
-      const url = (bar === -1 ? t : t.slice(bar + 1)).trim();
-      if (!url) continue;
-      const platform = detectPlatform(nm, url);
-      links.push(platform === 'other' && nm ? { platform, url, label: nm } : { platform, url });
+      const bar = t.search(/[|\uFF5C]/);
+      let nm = bar === -1 ? '' : t.slice(0, bar).trim();
+      let rest = (bar === -1 ? t : t.slice(bar + 1)).trim();
+      if (!rest) continue;
+      const url = extractUrl(rest);
+      if (url) {
+        const platform = detectPlatform(nm, url);
+        links.push(platform === 'other' && nm ? { platform, url, label: nm } : { platform, url });
+        continue;
+      }
+      // 没有网址:收成纯文本条目(个人 QQ 号、微信号等),作者页显示为点击复制的文字。
+      // 没用「|」时按「名称:值」拆,如 "Personal QQ Account : 2381097483"。
+      if (!nm) {
+        const m = rest.match(/^(.+?)\s*[:\uFF1A]\s*(.+)$/);
+        if (m) { nm = m[1].trim(); rest = m[2].trim(); }
+      }
+      if (nm && detectPlatform(nm, '') === 'qq') {
+        const qq = qqEntry(rest);
+        if (qq) { links.push(qq); continue; }
+      }
+      if (!nm) fail(`「其他链接」这一行没有网址,也没写名称:${t}。请写成「名称 | 链接」。 / Other links: "${t}" has no URL and no name — use "Name | URL".`);
+      links.push({ platform: 'other', label: nm, text: rest });
     }
     const listBlock = (k, arr) => `${k}:\n  zh:\n${arr.zh.map((x) => `    - ${q(x)}`).join('\n') || '    []'}\n  en:\n${arr.en.map((x) => `    - ${q(x)}`).join('\n') || '    []'}\n`;
     let yaml =
@@ -245,7 +308,8 @@ const BUILDERS = {
       `handle: ${q(handle)}\n` +
       listBlock('skills', { zh: skillsZh, en: skillsEn }) +
       `bio:\n  zh: ${q(bioZh)}\n  en: ${q(bioEn)}\n`;
-    if (links.length) yaml += `links:\n` + links.map((l) => `  - { platform: ${l.platform}, url: ${q(l.url)}${l.label ? `, label: ${q(l.label)}` : ''} }`).join('\n') + '\n';
+    const linkYaml = (l) => `  - { platform: ${l.platform}, ${l.url ? `url: ${q(l.url)}` : `text: ${q(l.text)}`}${l.label ? `, label: ${q(l.label)}` : ''} }`;
+    if (links.length) yaml += `links:\n` + links.map(linkYaml).join('\n') + '\n';
     const note = existsSync(`src/content/authors/${id}.yaml`) ? ` ⚠️ 覆盖已存在的作者 ${id}` : '';
     return { id, dir: 'authors', yaml, title: `${nameZh} / ${nameEn}${note}` };
   },
@@ -268,7 +332,7 @@ const BUILDERS = {
     const coverUrl = imageUrlFrom(field('封面') || field('cover'));
     const cover = coverUrl ? await downloadImage(coverUrl, 'works', id) : '';
     // 可选外链:作品卡上的「查看」按钮。取第一个 URL,没有则留空。
-    const link = imageUrlFrom(field('作品链接') || field('work link') || field('链接') || field('link'));
+    const link = extractUrl(field('作品链接') || field('work link') || field('链接') || field('link'));
     let yaml =
       `order: ${order}\n` +
       `authorId: ${q(authorId)}\n` +

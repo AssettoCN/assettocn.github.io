@@ -98,14 +98,18 @@ jobs:
               body: `✅ 已根据你的投稿生成 PR:${{ steps.cpr.outputs.pull-request-url }}\n审核合并后就会上线。`,
             });
 
+      # 报错信息里会带上投稿者填的原文,必须经环境变量传进脚本:若用 ${{ }} 直接拼进 JS
+      # 模板字符串,原文里的反引号或 ${ 就能跳出字符串执行任意代码(而这个 job 有写权限)。
       - name: Comment — needs fixing
         if: steps.convert.outputs.status == 'error'
         uses: actions/github-script@v7
+        env:
+          MESSAGE: ${{ steps.convert.outputs.message }}
         with:
           script: |
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: `⚠️ 暂时无法处理这条投稿:\n\n${{ toJSON(steps.convert.outputs.message) }}\n\n可以编辑本 issue 补全后再试。`,
+              body: `⚠️ 暂时无法处理这条投稿:\n\n${process.env.MESSAGE}\n\n可以编辑本 issue 补全后再试。`,
             });

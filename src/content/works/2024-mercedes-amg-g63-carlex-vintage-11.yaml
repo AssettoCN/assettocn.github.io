@@ -1,4 +1,5 @@
 order: 1011
+owners: ["CTA-MOD"]
 authorId: "cta-mod"
 type: "vehicle"
 version: "1.0"

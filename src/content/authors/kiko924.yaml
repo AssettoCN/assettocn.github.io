@@ -1,7 +1,8 @@
-order: 1030
+order: 11
+owners: ["Kiko-609"]
 initials: "後"
-tint: "--color-accent-2-300"
-ink: "--color-accent-2-900"
+tint: "--color-neutral-300"
+ink: "--color-neutral-900"
 avatar: "/images/authors/kiko924.png"
 name:
   zh: "後期型Kiko"

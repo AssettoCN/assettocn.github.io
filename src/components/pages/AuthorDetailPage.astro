@@ -56,19 +56,28 @@ const authorsHref = localizePath(lang, ROUTES.authors);
     <div>
       <h4 class="detail-h">{ui.detail.linksTitle}</h4>
       <div class="detail-links">
-        {sel.links.map((lk) => (
-          <a
-            class="btn btn-secondary detail-link"
-            href={lk.url || '#'}
-            target={lk.url && lk.url !== '#' ? '_blank' : undefined}
-            rel={lk.url && lk.url !== '#' ? 'noopener noreferrer' : undefined}
-          >
+        {/* url = 外链按钮;text = 纯文本(QQ 群号等),没有可跳转的地址,做成点击复制的按钮。
+            无 JS 时文字照样显示、可手动选中。 */}
+        {sel.links.map((lk) => lk.url ? (
+          <a class="btn btn-secondary detail-link" href={lk.url} target="_blank" rel="noopener noreferrer">
             <span class="detail-link__label">
               <Icon name={lk.icon} size={16} />
               {lk.label}
             </span>
             <Icon name="external" size={15} class="detail-link__ext" />
           </a>
+        ) : (
+          <button type="button" class="btn btn-secondary detail-link" data-copy={lk.text} title={ui.detail.copy}>
+            <span class="detail-link__label">
+              <Icon name={lk.icon} size={16} />
+              {lk.label}
+              <span class="detail-link__text">{lk.text}</span>
+            </span>
+            <span class="detail-link__ext" aria-live="polite">
+              <span class="detail-link__copy-icon"><Icon name="copy" size={15} /></span>
+              <span class="detail-link__copied">{ui.detail.copied}</span>
+            </span>
+          </button>
         ))}
       </div>
     </div>
@@ -81,6 +90,22 @@ const authorsHref = localizePath(lang, ROUTES.authors);
 
   <Comments lang={lang} term={`author:${sel.id}`} />
 </div>
+
+<script>
+  // 纯文本外链(QQ 群号等)点击复制。clipboard API 需要安全上下文(https / localhost),
+  // 不可用或被拒绝时什么都不做 —— 群号文字本身仍可手动选中复制。
+  document.querySelectorAll('[data-copy]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(btn.getAttribute('data-copy') || '');
+      } catch {
+        return;
+      }
+      btn.classList.add('is-copied');
+      setTimeout(() => btn.classList.remove('is-copied'), 1600);
+    });
+  });
+</script>
 
 <style>
   .detail-back { margin: var(--space-2) 0 var(--space-6); padding-left: 0; }
@@ -116,6 +141,10 @@ const authorsHref = localizePath(lang, ROUTES.authors);
   .detail-link { justify-content: space-between; }
   .detail-link__label { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
   .detail-link__ext { flex: none; opacity: .55; }
+  .detail-link__text { font-weight: 400; opacity: .75; user-select: all; }
+  .detail-link__copied { display: none; font-size: 12px; }
+  .detail-link.is-copied .detail-link__copy-icon { display: none; }
+  .detail-link.is-copied .detail-link__copied { display: inline; }
   .detail-works-title { font-size: 22px; margin: var(--space-8) 0 var(--space-4); }
 
   @media (max-width: 720px) {

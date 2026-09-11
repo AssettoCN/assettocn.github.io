@@ -16,6 +16,29 @@ const serverTypeKeys = Object.keys(SERVER_TYPE) as [string, ...string[]];
 // 作者外链平台的合法取值,取自 link-platforms.js。
 const linkPlatformKeys = Object.keys(LINK_PLATFORM) as [string, ...string[]];
 
+// 外链 / 主页类字段:必须是 http(s) 网址。以前不校验,QQ 群号、B 站分享文案被原样写进
+// href,线上点开就是 404 —— 现在这类数据在构建期直接报错。
+const httpUrl = z.string().regex(/^https?:\/\/\S+$/, '必须是 http(s) 开头的网址');
+
+// 作者外链,每条二选一:url = 网址,渲染成外链按钮;text = 纯文本(QQ 群号、个人 QQ 号…),
+// 渲染成点击复制的按钮。text 只给 qq(群号)和带 label 的 other 用。
+const authorLink = z
+  .object({
+    platform: z.enum(linkPlatformKeys),
+    url: httpUrl.optional(),
+    text: z.string().min(1).optional(),
+    label: z.string().optional(),
+  })
+  .superRefine((lk, ctx) => {
+    if (Boolean(lk.url) === Boolean(lk.text)) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: '每条外链要么填 url(网址),要么填 text(如 QQ 群号),二选一' });
+    } else if (lk.text && lk.platform === 'qq' && !/^\d{5,12}$/.test(lk.text)) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['text'], message: 'QQ 群的 text 只能是群号(5–12 位数字)' });
+    } else if (lk.text && lk.platform !== 'qq' && !(lk.platform === 'other' && lk.label)) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['text'], message: '纯文本外链只支持 qq(群号)或带 label 的 other' });
+    }
+  });
+
 // 作者集合:src/content/authors/<id>.yaml —— 文件名即作者 id(详情页 URL)。
 const authors = defineCollection({
   loader: glob({ pattern: '**/*.yaml', base: './src/content/authors' }),
@@ -31,13 +54,8 @@ const authors = defineCollection({
     bio: bilingual,
     // 外链改为按平台模板化:platform 取自 link-platforms.js(决定图标+默认显示名),
     // label 仅在 platform: other 时用来自定义显示名(其余平台留空即用平台默认名)。
-    links: z
-      .array(z.object({
-        platform: z.enum(linkPlatformKeys),
-        url: z.string().default('#'),
-        label: z.string().optional(),
-      }))
-      .default([]),
+    // url / text 二选一,见上面的 authorLink。
+    links: z.array(authorLink).default([]),
   }),
 });
 
@@ -53,7 +71,7 @@ const works = defineCollection({
     title: bilingual,
     desc: bilingual,
     cover: z.string().optional(),          // 封面图,填 '/images/xxx.jpg'
-    link: z.string().optional(),           // 作品外链(B站/爱发电/网盘等),卡片显示「查看」按钮
+    link: httpUrl.optional(),              // 作品外链(B站/爱发电/网盘等),卡片显示「查看」按钮
   }),
 });
 
@@ -68,7 +86,7 @@ const servers = defineCollection({
     mode: bilingual,                       // 细分玩法文案,自由文本
     max: z.number(),                       // 最大容量(静态,仅展示"最多 N 人")
     online: z.boolean().default(true),
-    homepage: z.string().optional(),       // 介绍/主页(非接入地址),如 https://srp.udstu.com
+    homepage: httpUrl.optional(),          // 介绍/主页(非接入地址),如 https://srp.udstu.com
     address: z.string().optional(),        // 实际接入地址 ip:port,如 120.26.18.63:8410
   }),
 });

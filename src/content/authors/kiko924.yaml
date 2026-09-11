@@ -9,7 +9,9 @@ name:
 handle: "@kiko924"
 skills:
   zh:
-    - "原厂车辆，改装定制，涂装设计"
+    - "原厂车辆"
+    - "改装定制"
+    - "涂装设计"
   en:
     - "Stock cars"
     - "Tuned Cars"
@@ -18,6 +20,6 @@ bio:
   zh: "Assetto Corsa 车辆模组制作与完善者,主做公开的原厂车辆模组以及展厅地图设计,可接改装定制与涂装设计。"
   en: "Mainly work on Assetto Corsa vehicle and map mods."
 links:
-  - { platform: bilibili, url: "https://space.bilibili.com/488192660?spm_id_from=333.1007.0.0" }
+  - { platform: bilibili, url: "https://space.bilibili.com/488192660" }
   - { platform: afdian, url: "https://ifdian.net/a/kk060924" }
-  - { platform: other, url: "Personal QQ Account : 2381097483" }
+  - { platform: other, text: "2381097483", label: "Personal QQ Account" }

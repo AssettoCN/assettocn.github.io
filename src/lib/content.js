@@ -65,7 +65,7 @@ function resolveAuthorEntry(entry, lang, works) {
     // 外链按平台解析:platform → 图标 + 默认显示名;label 仅覆盖显示名(other 用)。
     links: a.links.map((lk) => {
       const p = LINK_PLATFORM[lk.platform] ?? LINK_PLATFORM.other;
-      return { platform: lk.platform, url: lk.url, icon: p.icon, label: lk.label || p.label[lang] };
+      return { platform: lk.platform, url: lk.url, text: lk.text, icon: p.icon, label: lk.label || p.label[lang] };
     }),
     official: entry.id === OFFICIAL_ID,
     workCount: count,

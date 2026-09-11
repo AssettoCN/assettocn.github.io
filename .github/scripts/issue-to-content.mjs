@@ -200,8 +200,34 @@ function sniffImage(buf) {
   if (buf.length >= 12 && buf.toString('latin1', 0, 4) === 'RIFF' && buf.toString('latin1', 8, 12) === 'WEBP') return 'webp';
   return '';
 }
+/** 从文件头读宽高(已由 sniffImage 认出格式)。读不出返回 null。 */
+function imageSize(buf, ext) {
+  try {
+    if (ext === 'png') return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20) };
+    if (ext === 'jpg') {
+      for (let i = 2; i + 9 < buf.length;) {
+        if (buf[i] !== 0xff) return null;
+        const marker = buf[i + 1];
+        if (marker === 0xff) { i++; continue; } // 填充字节
+        // SOF0–SOF15 带尺寸;C4(DHT)、C8(JPG)、CC(DAC)不是
+        if (marker >= 0xc0 && marker <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(marker)) return { width: buf.readUInt16BE(i + 7), height: buf.readUInt16BE(i + 5) };
+        if ((marker >= 0xd0 && marker <= 0xd9) || marker === 0x01) { i += 2; continue; } // 无长度的标记
+        i += 2 + buf.readUInt16BE(i + 2);
+      }
+      return null;
+    }
+    if (ext === 'webp') {
+      const chunk = buf.toString('latin1', 12, 16);
+      if (chunk === 'VP8X') return { width: 1 + buf.readUIntLE(24, 3), height: 1 + buf.readUIntLE(27, 3) };
+      if (chunk === 'VP8L') { const b = buf.readUInt32LE(21); return { width: (b & 0x3fff) + 1, height: ((b >>> 14) & 0x3fff) + 1 }; }
+      if (chunk === 'VP8 ') return { width: buf.readUInt16LE(26) & 0x3fff, height: buf.readUInt16LE(28) & 0x3fff };
+    }
+  } catch { /* 文件头被截断 */ }
+  return null;
+}
 
-/** 下载投稿图到 public/images/<dir>/<id>.<ext>,返回站内路径;不合规直接 fail(label 是表单里的字段名)。 */
+/** 下载投稿图到 public/images/<dir>/<id>.<ext>,返回 { src: 站内路径, size: { width, height } | null };
+ *  不合规直接 fail(label 是表单里的字段名)。 */
 async function downloadImage(raw, dir, id, label) {
   let url = null;
   try { url = new URL(raw); } catch { /* 下面统一报错 */ }
@@ -231,7 +257,7 @@ async function downloadImage(raw, dir, id, label) {
   for (const other of IMAGE_EXTS) if (other !== ext) rmSync(`public/images/${dir}/${id}.${other}`, { force: true });
   writeFileSync(path, buf);
   downloaded.push({ label, dir, path, source: url.href });
-  return `/images/${dir}/${id}.${ext}`;
+  return { src: `/images/${dir}/${id}.${ext}`, size: imageSize(buf, ext) };
 }
 
 /** Map a server-category dropdown value (e.g. "漂移 Drift") to a SERVER_TYPE key.
@@ -263,20 +289,32 @@ const BUILDERS = {
     if (!titleZh || !titleEn) fail('缺少标题(中文或英文)。 / Missing title (zh or en).');
     if (!by) fail('缺少投稿者 handle。 / Missing submitter handle.');
     if (!by.startsWith('@')) by = '@' + by;
-    const ALLOWED = ['4/3', '1/1', '3/4', '16/9'];
-    let ratio = field('ratio') || field('比例');
-    if (!ALLOWED.includes(ratio)) ratio = '4/3';
+    // 拍摄信息(可选):专有名词不分中英,都参与画廊页的搜索。
+    const car = field('车型') || field('car');
+    const track = field('赛道') || field('track');
+    const ppfilter = field('滤镜') || field('ppfilter');
     const url = imageUrlFrom(field('screenshot') || field('截图'));
     if (!url) fail('没找到截图,请把图片拖进「截图」框上传。 / No screenshot image found.');
     const id = `${slugify(titleEn, 'shot')}-${issueNumber}`;
-    const cover = await downloadImage(url, 'gallery', id, '截图 Screenshot');
+    const { src: cover, size } = await downloadImage(url, 'gallery', id, '截图 Screenshot');
+    // 卡片按 ratio 定高、图片 object-fit: cover,比例不对就会被裁掉一截。以前让投稿者从
+    // 4/3、16/9 等四个里选(默认 4/3),16:9 的截图选错就被裁;现在按图片实际宽高算,约成最简比。
+    const gcd = (a, b) => (b ? gcd(b, a % b) : a);
+    let ratio = '16/9';
+    if (size && size.width && size.height) { const g = gcd(size.width, size.height); ratio = `${size.width / g}/${size.height / g}`; }
+    else warn('读不出截图的宽高,画面比例先按 16/9 填了,合并前请核对 ratio');
     const yaml =
       `order: ${order}\n` +
       `ratio: ${q(ratio)}\n` +
       `by: ${q(by)}\n` +
       `title:\n  zh: ${q(titleZh)}\n  en: ${q(titleEn)}\n` +
-      `cover: ${q(cover)}\n`;
-    const fields = [['标题', pair(titleZh, titleEn)], ['投稿者', by], ['比例', ratio]];
+      `cover: ${q(cover)}\n` +
+      (car ? `car: ${q(car)}\n` : '') +
+      (track ? `track: ${q(track)}\n` : '') +
+      (ppfilter ? `ppfilter: ${q(ppfilter)}\n` : '');
+    if (!car && !track && !ppfilter) warn('没填车型、赛道和滤镜,这张截图在画廊里搜不到');
+    const fields = [['标题', pair(titleZh, titleEn)], ['投稿者', by], ['车型', car], ['赛道', track], ['滤镜', ppfilter],
+      ['画面比例', size ? `${ratio}(${size.width}×${size.height})` : ratio]];
     return { id, dir: 'gallery', yaml, title: `${titleZh} / ${titleEn}`, name: pair(titleZh, titleEn), fields };
   },
 
@@ -336,7 +374,7 @@ const BUILDERS = {
     const ink = (existing && existing.scalar('ink')) || newInk;
     // 可选头像图:传了就下载到 public/images/authors/;没传留空 → 前端回退到字母头像
     const avatarUrl = imageUrlFrom(field('头像图片') || field('avatar', 'image'));
-    const avatar = avatarUrl ? await downloadImage(avatarUrl, 'authors', id, '头像图片 Avatar') : '';
+    const avatar = avatarUrl ? (await downloadImage(avatarUrl, 'authors', id, '头像图片 Avatar')).src : '';
     // 外链:每个平台一个专属输入框(平台由填哪个框决定,投稿人无需写平台名);
     // 「其他链接」textarea 每行 "名称 | 链接",按名称/域名归类。
     // 每条外链二选一:url(http/https 网址)或 text(纯文本,如 QQ 群号),schema 里同样校验。
@@ -436,7 +474,7 @@ const BUILDERS = {
     const authorOwners = readEntry(`src/content/authors/${authorId}.yaml`).owners;
     const verified = byMaintainer || ownsIt(authorOwners);
     const coverUrl = imageUrlFrom(field('封面') || field('cover'));
-    const cover = coverUrl ? await downloadImage(coverUrl, 'works', id, '封面 Cover') : '';
+    const cover = coverUrl ? (await downloadImage(coverUrl, 'works', id, '封面 Cover')).src : '';
     // 可选外链:作品卡上的「查看」按钮。取第一个 URL,没有则留空。
     const link = extractUrl(field('作品链接') || field('work link') || field('链接') || field('link'));
     let yaml =

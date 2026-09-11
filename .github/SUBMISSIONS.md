@@ -44,7 +44,9 @@
   - `owners` 为空(维护者手工收录的作者)= 任何人来改都要核实。
 - **作品必须挂在已收录的作者名下**:脚本会检查 `src/content/authors/<authorId>.yaml`
   是否存在,不存在则不开 PR、改为在 issue 里提示先投稿作者。
-- 服务器收录默认 `online: true`、`players: 0`、`ping: '—'`;作者头像底色自动分配。
+- 服务器收录默认 `online: true`;作者头像底色自动分配。
+- 截图的 `ratio` 按图片实际宽高自动算(约成最简比,如 `16/9`),不让投稿者选:画廊卡片按它定高、
+  图片 `object-fit: cover`,比例不对会被裁。`car` / `track` / `ppfilter` 选填,都参与画廊搜索。
 - 字段靠「表单标题里的关键词」匹配(如中文名需同时含「名称」和「中文」),
   改表单 label 时保留这些关键词即可。
 - 图片只收 GitHub 附件(`github.com/user-attachments/…`),按文件头只放行 PNG / JPG / WebP、

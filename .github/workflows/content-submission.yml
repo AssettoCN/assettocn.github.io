@@ -60,6 +60,8 @@ jobs:
           # 用于核对「更新已有作者 / 作品挂在谁名下」的账号归属,见脚本里的 owners
           ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
           ISSUE_AUTHOR_ASSOCIATION: ${{ github.event.issue.author_association }}
+          # 给下面「Write PR description」用的摘要;放在 runner.temp,不能进工作区(否则会被提交进 PR)
+          REVIEW_FILE: ${{ runner.temp }}/submission-review.json
         run: node .github/scripts/issue-to-content.mjs
 
       # 上一步是原样下载投稿图(转换脚本刻意零依赖),这里统一规范尺寸和体积。
@@ -73,6 +75,17 @@ jobs:
           npm ci --no-audit --no-fund
           node scripts/optimize-images.mjs
 
+      # PR 描述:字段表、图片预览、自动检查出的问题(标签没拆开、纯文本外链、图片超预算、待核实)。
+      # 放在压图之后,报告的图片体积才是最终提交的大小。
+      - name: Write PR description
+        if: steps.convert.outputs.status == 'ok'
+        env:
+          REVIEW_FILE: ${{ runner.temp }}/submission-review.json
+          PR_BODY_FILE: ${{ runner.temp }}/pr-body.md
+        run: node .github/scripts/pr-body.mjs
+
+      # 仓库只开 squash / rebase 合并,单提交的 PR squash 后标题就是这里的 commit-message,
+      # 所以它就是 main 上留下的那条历史:写清 add / update,并带 closes 关闭原 issue。
       - name: Open pull request
         id: cpr
         if: steps.convert.outputs.status == 'ok'
@@ -80,21 +93,11 @@ jobs:
         with:
           base: ${{ github.event.repository.default_branch }}
           branch: submission/${{ steps.convert.outputs.kind }}-issue-${{ github.event.issue.number }}
-          commit-message: "${{ steps.convert.outputs.kind }}: add ${{ steps.convert.outputs.id }} (closes #${{ github.event.issue.number }})"
+          commit-message: "${{ steps.convert.outputs.kind }}: ${{ steps.convert.outputs.action }} ${{ steps.convert.outputs.id }} (closes #${{ github.event.issue.number }})"
           title: "${{ steps.convert.outputs.kind }}: ${{ steps.convert.outputs.title }} (#${{ github.event.issue.number }})"
           # 账号对不上时脚本会多给一个 needs-verification(见 notice)
           labels: ${{ steps.convert.outputs.labels }}
-          body: |
-            自动生成自投稿 #${{ github.event.issue.number }}(类型:${{ steps.convert.outputs.kind }})。
-            Auto-generated from submission #${{ github.event.issue.number }} (kind: ${{ steps.convert.outputs.kind }}).
-
-            - 条目 / entry: `${{ steps.convert.outputs.path }}`
-            - 投稿账号 / submitted by: `${{ github.event.issue.user.login }}`
-
-            ${{ steps.convert.outputs.notice }}
-
-            审核合并即上线;合并会自动关闭原 issue。
-            Merge to publish; merging closes the original issue.
+          body-path: ${{ runner.temp }}/pr-body.md
 
       # 状态评论。报错信息里会带上投稿者填的原文,必须经环境变量传进脚本:若用 ${{ }} 直接拼进 JS
       # 模板字符串,原文里的反引号或 ${ 就能跳出字符串执行任意代码(而这个 job 有写权限)。
@@ -126,3 +129,25 @@ jobs:
               return;
             }
             await github.rest.issues.createComment({ ...issue, body });
+
+      # 表单默认标题只有「[Work] 」这样的前缀,投稿者多半不改,issue 列表里分不清谁是谁
+      # (前 15 条里有 8 条是这样)。标题还是默认值才改成解析出的名称,自己写了标题的不动。
+      # 用 GITHUB_TOKEN 改标题不会再触发本工作流(GitHub 不让它产生的事件启动新 run)。
+      - name: Name the issue after the submission
+        if: steps.convert.outputs.status == 'ok'
+        continue-on-error: true
+        uses: actions/github-script@v7
+        env:
+          TITLE: ${{ github.event.issue.title }}
+          NAME: ${{ steps.convert.outputs.name }}
+        with:
+          script: |
+            const { TITLE, NAME } = process.env;
+            const prefix = (TITLE.match(/^\s*(\[[A-Za-z]+\])\s*$/) || [])[1];
+            if (!prefix || !NAME.trim()) return;
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              title: `${prefix} ${NAME.trim()}`,
+            });

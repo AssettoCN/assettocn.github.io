@@ -18,8 +18,12 @@
    触发 `workflows/content-submission.yml`(只处理**开着的** issue;合并关闭后再编辑不会重跑)。
 3. 工作流按标签判断类型,跑 `scripts/issue-to-content.mjs`:解析表单、
    (gallery/work)下载图片进 `public/images/<dir>/`、生成内容 YAML。
-4. `peter-evans/create-pull-request` 开 PR,并在原 issue 回帖 PR 链接(结果和上一条回帖相同就不再重复发)。
-5. 维护者**审核合并 = 通过**;网站按新内容重建,内容上线,原 issue 关闭。
+4. 仓库根目录的 `scripts/optimize-images.mjs` 压图,本目录的 `scripts/pr-body.mjs` 写 PR 描述:字段表、图片预览,
+   以及自动检查出的问题(标签像一句话没拆开、纯文本外链、压完仍超预算的图、待核实身份)。
+5. `peter-evans/create-pull-request` 开 PR,在原 issue 回帖 PR 链接(结果和上一条回帖相同就不再重复发);
+   issue 标题还是表单默认的「[Work] 」之类时,改成解析出的名称。
+6. 维护者**审核合并 = 通过**(squash,一条投稿在 main 上只留一个提交,分支自动删除);
+   网站按新内容重建,内容上线,原 issue 关闭。
 
 一个脚本 + 一个工作流 + 每类一个表单;新增字段只改脚本里对应 kind 的 builder。
 
@@ -64,6 +68,12 @@
    **“Allow GitHub Actions to create and approve pull requests”**,否则 Action 无权开 PR。
    > 若此项**灰色不可勾**,是被**组织**策略锁住了:去 Organization → Settings → Actions →
    > General 里开(需组织 Owner)。或改用 PAT / GitHub App token 传给 create-pull-request 绕过。
-3. `src/data/site.js` 的 `repo` 需填成 `'owner/repo'`(本仓库已填
+3. **合并方式**:Settings → General → Pull Requests 里取消「Allow merge commits」、保留 squash
+   (和 rebase),并勾选「Automatically delete head branches」。bot 的 PR 只有一个提交,squash 后
+   main 上的提交信息就是 `work: add <id> (closes #N) (#PR)`,已合并的 `submission/*` 分支自动删掉。
+   ```bash
+   gh api -X PATCH repos/AssettoCN/assettocn.github.io -F allow_merge_commit=false -F delete_branch_on_merge=true
+   ```
+4. `src/data/site.js` 的 `repo` 需填成 `'owner/repo'`(本仓库已填
    `AssettoCN/assettocn.github.io`),四个投稿按钮才会指向 Issue 表单;留空则按钮保持占位状态。
-4. 投稿**强制需要 GitHub 账号**(拖图上传 / 提 issue 都要登录)——这是设计上的门槛。
+5. 投稿**强制需要 GitHub 账号**(拖图上传 / 提 issue 都要登录)——这是设计上的门槛。

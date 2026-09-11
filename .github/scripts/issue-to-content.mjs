@@ -5,7 +5,8 @@
 // parses the matching Issue Form, (for gallery/work) downloads the attached
 // image into public/images/<dir>/, writes the content YAML under
 // src/content/<dir>/<id>.yaml, and reports back via GITHUB_OUTPUT:
-//   status=ok|error, kind, id, path, title, message, notice, labels
+//   status=ok|error, kind, id, path, title, name, action, message, notice, labels
+// and, when REVIEW_FILE is set, a JSON summary for .github/scripts/pr-body.mjs.
 //
 // Field values are located by AND-matching distinctive tokens against each
 // form heading (e.g. name_zh needs both '名称' and '中文'), so bilingual labels
@@ -29,6 +30,9 @@ function setOutput(key, value) {
   appendFileSync(out, `${key}<<${d}\n${v}\n${d}\n`);
 }
 function hash(s) { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return h; }
+// 给审核者看的提示(写进 PR 描述的「自动检查」),不拦投稿。
+const warnings = [];
+const warn = (msg) => warnings.push(msg);
 function fail(message) {
   setOutput('status', 'error');
   setOutput('kind', KIND);
@@ -64,6 +68,14 @@ const firstChar = (s) => Array.from(String(s).trim())[0] || '?';
 // 列表分隔:半角逗号、全角逗号「，」、顿号「、」、半/全角分号、换行。字符用 \u 转义写 ——
 // 以前这里本想写全角逗号,实际是两个半角逗号(肉眼看不出),中文技能整串不拆,成了一个长标签。
 const splitList = (s) => String(s).split(/[,\uFF0C\u3001;\uFF1B\n]+/).map((x) => x.trim()).filter(Boolean);
+/** \u6807\u7B7E\u8FC7\u957F\u6216\u5E26\u53E5\u672B\u6807\u70B9,\u591A\u534A\u662F\u4E00\u53E5\u8BDD\u6CA1\u7528\u9017\u53F7\u5206\u5F00(\u5982\u300C\u7279\u65AF\u62C9\u548C\u851A\u6765\u4E13\u7CBE\u3002\u3002\u3002\uFF1F\u4F1A\u5199extension\u300D)\u3002 */
+function checkTags(label, tags, maxChars) {
+  for (const t of tags) {
+    if (Array.from(t).length > maxChars || /[\u3002\uFF01\uFF1F!?\u2026]/.test(t)) warn(`\u300C${label}\u300D\u91CC\u7684\u6807\u7B7E\u300C${t}\u300D\u8F83\u957F\u6216\u5E26\u53E5\u672B\u6807\u70B9,\u53EF\u80FD\u662F\u4E00\u53E5\u8BDD\u6CA1\u6309\u9017\u53F7\u5206\u5F00`);
+  }
+}
+/** \u4E2D\u82F1\u6587\u76F8\u540C\u65F6\u53EA\u663E\u793A\u4E00\u6B21 */
+const pair = (zh, en) => (zh.trim().toLowerCase() === en.trim().toLowerCase() ? zh : `${zh} / ${en}`);
 const currentMonth = () => new Date().toISOString().slice(0, 7);
 
 // 作者外链平台识别(与 src/data/link-platforms.js 保持一致)——用于「其他链接」里
@@ -176,6 +188,7 @@ function imageUrlFrom(value) {
 //   不看 Content-Type 和链接后缀 —— 以前一个 .svg / .html 链接会原样存进来;
 // - 下载失败直接报错。以前是退回引用远程链接,但附件链接会跳到带时效签名的地址,迟早失效。
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024; // GitHub 图片附件本身的上限也是 10MB
+const downloaded = []; // { label, dir, path, source } —— PR 描述里做预览和体积检查
 const IMAGE_EXTS = ['png', 'jpg', 'webp'];
 const isGitHubAttachment = (u) =>
   u.protocol === 'https:' &&
@@ -217,6 +230,7 @@ async function downloadImage(raw, dir, id, label) {
   // 同一 id 换了格式重传(作者更新头像时 jpg → png)要删掉旧文件,否则旧图一直留在仓库里。
   for (const other of IMAGE_EXTS) if (other !== ext) rmSync(`public/images/${dir}/${id}.${other}`, { force: true });
   writeFileSync(path, buf);
+  downloaded.push({ label, dir, path, source: url.href });
   return `/images/${dir}/${id}.${ext}`;
 }
 
@@ -262,7 +276,8 @@ const BUILDERS = {
       `by: ${q(by)}\n` +
       `title:\n  zh: ${q(titleZh)}\n  en: ${q(titleEn)}\n` +
       `cover: ${q(cover)}\n`;
-    return { id, dir: 'gallery', yaml, title: `${titleZh} / ${titleEn}` };
+    const fields = [['标题', pair(titleZh, titleEn)], ['投稿者', by], ['比例', ratio]];
+    return { id, dir: 'gallery', yaml, title: `${titleZh} / ${titleEn}`, name: pair(titleZh, titleEn), fields };
   },
 
   async server() {
@@ -290,7 +305,9 @@ const BUILDERS = {
       `online: true\n`;
     if (homepage) yaml += `homepage: ${q(homepage)}\n`;
     if (address) yaml += `address: ${q(address)}\n`;
-    return { id, dir: 'servers', yaml, title: `${nameZh} / ${nameEn}` };
+    const fields = [['名称', pair(nameZh, nameEn)], ['类型', type], ['区域', pair(regionZh, regionEn)], ['模式', pair(modeZh, modeEn)],
+      ['最大人数', max], ['接入地址', address], ['主页', homepage]];
+    return { id, dir: 'servers', yaml, title: `${nameZh} / ${nameEn}`, name: pair(nameZh, nameEn), fields };
   },
 
   async author() {
@@ -370,8 +387,11 @@ const BUILDERS = {
         if (qq) { links.push(qq); continue; }
       }
       if (!nm) fail(`「其他链接」这一行没有网址,也没写名称:${t}。请写成「名称 | 链接」。 / Other links: "${t}" has no URL and no name — use "Name | URL".`);
+      warn(`外链「${nm}」不是网址,作者页上会显示为点击复制的文字:${rest}`);
       links.push({ platform: 'other', label: nm, text: rest });
     }
+    checkTags('擅长(中文)', skillsZh, 12);
+    checkTags('Skills (English)', skillsEn, 32);
     const listBlock = (k, arr) => `${k}:\n  zh:\n${arr.zh.map((x) => `    - ${q(x)}`).join('\n') || '    []'}\n  en:\n${arr.en.map((x) => `    - ${q(x)}`).join('\n') || '    []'}\n`;
     let yaml =
       `order: ${Number.isFinite(oldOrder) ? oldOrder : order}\n` +
@@ -390,7 +410,10 @@ const BUILDERS = {
     const notice = verified ? '' :
       `⚠️ **待核实身份**:这条投稿会覆盖已有作者 \`${id}\`,但投稿账号 \`${issueAuthor || '未知'}\` 不在它的 owners 里(现有:${loginList(existing.owners)})。` +
       `维护者确认是作者本人后再合并;合并后该账号会加入 owners,以后用它更新无需再核实。`;
-    return { id, dir: 'authors', yaml, title: `${nameZh} / ${nameEn}${note}`, notice };
+    const fields = [['名字', pair(nameZh, nameEn)], ['Handle', handle], ['头像文字', initials],
+      ['擅长(中文)', skillsZh.join(' · ')], ['Skills (English)', skillsEn.join(' · ')], ['简介(中文)', bioZh], ['Bio (English)', bioEn],
+      ['外链', links.map((l) => `${l.platform}${l.label ? `(${l.label})` : ''}: ${l.url || l.text}`).join('\n')]];
+    return { id, dir: 'authors', yaml, title: `${nameZh} / ${nameEn}${note}`, name: pair(nameZh, nameEn), notice, fields, update: Boolean(existing) };
   },
 
   async work() {
@@ -430,7 +453,9 @@ const BUILDERS = {
     const notice = verified ? '' :
       `⚠️ **待核实身份**:作品挂在作者 \`${authorId}\` 名下,但投稿账号 \`${issueAuthor || '未知'}\` 不在该作者的 owners 里(现有:${loginList(authorOwners)})。` +
       `维护者确认是作者本人后再合并;确认后可顺手把该账号加进 \`src/content/authors/${authorId}.yaml\` 的 owners。`;
-    return { id, dir: 'works', yaml, title: `${titleZh} / ${titleEn}${verified ? '' : ' ⚠️ 待核实'}`, notice };
+    const fields = [['作者', authorId], ['类型', type], ['版本', version], ['标题', pair(titleZh, titleEn)],
+      ['描述(中文)', descZh], ['Description (English)', descEn], ['作品链接', link]];
+    return { id, dir: 'works', yaml, title: `${titleZh} / ${titleEn}${verified ? '' : ' ⚠️ 待核实'}`, name: pair(titleZh, titleEn), notice, fields };
   },
 };
 
@@ -438,16 +463,24 @@ const BUILDERS = {
 const build = BUILDERS[KIND];
 if (!build) fail(`未知投稿类型 KIND="${KIND}"。`);
 
-const { id, dir, yaml, title, notice = '' } = await build();
+const { id, dir, yaml, title, name, notice = '', fields = [], update = false } = await build();
 const path = `src/content/${dir}/${id}.yaml`;
 mkdirSync(dirname(path), { recursive: true });
 writeFileSync(path, yaml);
+if (process.env.REVIEW_FILE) {
+  writeFileSync(process.env.REVIEW_FILE, JSON.stringify({
+    kind: KIND, id, path, issue: issueNumber, submitter: issueAuthor, update, notice,
+    fields: fields.filter(([, v]) => String(v ?? '').trim()), warnings, images: downloaded,
+  }, null, 2));
+}
 
 setOutput('status', 'ok');
 setOutput('kind', KIND);
 setOutput('id', id);
 setOutput('path', path);
 setOutput('title', title);
+setOutput('name', name);
+setOutput('action', update ? 'update' : 'add');
 setOutput('notice', notice);
 setOutput('labels', [`${KIND}-submission`, ...(notice ? ['needs-verification'] : [])].join(','));
 console.log(`Wrote ${path}\n${yaml}`);

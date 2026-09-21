@@ -68,13 +68,13 @@ const firstChar = (s) => Array.from(String(s).trim())[0] || '?';
 // 列表分隔:半角逗号、全角逗号「，」、顿号「、」、半/全角分号、换行。字符用 \u 转义写 ——
 // 以前这里本想写全角逗号,实际是两个半角逗号(肉眼看不出),中文技能整串不拆,成了一个长标签。
 const splitList = (s) => String(s).split(/[,\uFF0C\u3001;\uFF1B\n]+/).map((x) => x.trim()).filter(Boolean);
-/** \u6807\u7B7E\u8FC7\u957F\u6216\u5E26\u53E5\u672B\u6807\u70B9,\u591A\u534A\u662F\u4E00\u53E5\u8BDD\u6CA1\u7528\u9017\u53F7\u5206\u5F00(\u5982\u300C\u7279\u65AF\u62C9\u548C\u851A\u6765\u4E13\u7CBE\u3002\u3002\u3002\uFF1F\u4F1A\u5199extension\u300D)\u3002 */
+/** 标签过长或带句末标点,多半是一句话没用逗号分开(如「特斯拉和蔚来专精。。。？会写extension」)。 */
 function checkTags(label, tags, maxChars) {
   for (const t of tags) {
-    if (Array.from(t).length > maxChars || /[\u3002\uFF01\uFF1F!?\u2026]/.test(t)) warn(`\u300C${label}\u300D\u91CC\u7684\u6807\u7B7E\u300C${t}\u300D\u8F83\u957F\u6216\u5E26\u53E5\u672B\u6807\u70B9,\u53EF\u80FD\u662F\u4E00\u53E5\u8BDD\u6CA1\u6309\u9017\u53F7\u5206\u5F00`);
+    if (Array.from(t).length > maxChars || /[\u3002\uFF01\uFF1F!?\u2026]/.test(t)) warn(`「${label}」里的标签「${t}」较长或带句末标点,可能是一句话没按逗号分开`);
   }
 }
-/** \u4E2D\u82F1\u6587\u76F8\u540C\u65F6\u53EA\u663E\u793A\u4E00\u6B21 */
+/** 中英文相同时只显示一次 */
 const pair = (zh, en) => (zh.trim().toLowerCase() === en.trim().toLowerCase() ? zh : `${zh} / ${en}`);
 const currentMonth = () => new Date().toISOString().slice(0, 7);
 
@@ -187,6 +187,10 @@ function imageUrlFrom(value) {
 // - 按文件头认格式,只放行 png / jpg / webp(和 optimize-images.mjs 能处理的一致),
 //   不看 Content-Type 和链接后缀 —— 以前一个 .svg / .html 链接会原样存进来;
 // - 下载失败直接报错。以前是退回引用远程链接,但附件链接会跳到带时效签名的地址,迟早失效。
+// 不校验跳转后的地址:附件链接会 302 到 GitHub 自己的存储(现在是
+// github-production-user-asset-*.s3.amazonaws.com),跳到哪由 GitHub 决定、随时会变,投稿者
+// 控制不了。之前这里写死只认 githubusercontent.com,把 2026-09-13 的 #39 #40 两条投稿全挡了。
+// 安全性靠上面两条:链接必须是 GitHub 附件,内容必须是按文件头认出的 png/jpg/webp 且不超过 10MB。
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024; // GitHub 图片附件本身的上限也是 10MB
 const downloaded = []; // { label, dir, path, source } —— PR 描述里做预览和体积检查
 const IMAGE_EXTS = ['png', 'jpg', 'webp'];
@@ -238,8 +242,6 @@ async function downloadImage(raw, dir, id, label) {
   try {
     res = await fetch(url, { redirect: 'follow' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const host = new URL(res.url || url).hostname; // 跳转后的地址也必须还在 GitHub
-    if (host !== 'github.com' && !host.endsWith('.githubusercontent.com')) throw new Error(`redirected to ${host}`);
   } catch (e) {
     fail(`「${label}」图片下载失败(${e.message}),请重新上传后编辑本 issue 再试。 / "${label}": image download failed (${e.message}).`);
   }

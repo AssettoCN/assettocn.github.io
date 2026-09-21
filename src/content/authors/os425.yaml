@@ -1,0 +1,21 @@
+order: 1040
+owners: ["OldSantana425"]
+initials: "O"
+tint: "--color-accent-2-300"
+ink: "--color-accent-2-900"
+avatar: "/images/authors/os425.jpg"
+name:
+  zh: "OS"
+  en: "OS"
+handle: "@OS425"
+skills:
+  zh:
+    - "冷门车"
+  en:
+    - "Rare cars"
+bio:
+  zh: "业余爱好者，主要制作车辆mod，不定期更新"
+  en: "Assetto corsa cars modding, update not regularly"
+links:
+  - { platform: bilibili, url: "https://space.bilibili.com/12914071" }
+  - { platform: patreon, url: "https://www.patreon.com/c/Old_Santana" }

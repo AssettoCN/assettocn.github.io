@@ -16,12 +16,19 @@
 // Run from repo root:
 //   node scripts/optimize-images.mjs            # rewrite in place
 //   node scripts/optimize-images.mjs --dry-run  # report only, touch nothing
+//   node scripts/optimize-images.mjs public/images/works/x.jpg …  # only these files
 import { readdirSync, statSync, existsSync, renameSync, unlinkSync } from 'node:fs';
 import sharp from 'sharp';
 import { BUDGET } from './image-budget.mjs';
 const QUALITY = 82;
 const ROOT = 'public/images';
 const DRY = process.argv.includes('--dry-run');
+// 传了路径就只处理这些文件。投稿工作流只传本次新下载的图:以前每次都扫全目录,
+// 压不进预算的旧图(如 kiko924.png)每次都被重压一遍,小一两个字节也会混进投稿 PR。
+// 不传路径时照旧扫描整个 public/images。
+const args = process.argv.slice(2).filter((a) => !a.startsWith('--')).map((p) => p.replace(/^\.\//, ''));
+const only = args.length ? new Set(args) : null;
+const matched = new Set();
 
 const kb = (bytes) => bytes / 1024;
 const fmt = (bytes) => `${kb(bytes).toFixed(0)}KB`;
@@ -36,6 +43,8 @@ for (const [dir, budget] of Object.entries(BUDGET)) {
   for (const file of readdirSync(base).sort()) {
     if (!/\.(jpe?g|png|webp)$/i.test(file)) continue;
     const path = `${base}/${file}`;
+    if (only && !only.has(path)) continue;
+    matched.add(path);
     const before = statSync(path).size;
     const meta = await sharp(path).metadata();
     const longest = Math.max(meta.width ?? 0, meta.height ?? 0);
@@ -81,6 +90,8 @@ for (const [dir, budget] of Object.entries(BUDGET)) {
     saved += before - after;
   }
 }
+
+if (only) for (const p of only) if (!matched.has(p)) console.log(`  skip   ${p}  不存在,或不在预算目录内`);
 
 console.log(`\n${DRY ? '[dry-run] ' : ''}${touched} file(s)${DRY ? ' would be' : ''} optimised` +
   (saved > 0 ? `, ${fmt(saved)} saved` : ''));

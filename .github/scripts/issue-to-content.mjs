@@ -5,7 +5,7 @@
 // parses the matching Issue Form, (for gallery/work) downloads the attached
 // image into public/images/<dir>/, writes the content YAML under
 // src/content/<dir>/<id>.yaml, and reports back via GITHUB_OUTPUT:
-//   status=ok|error, kind, id, path, title, name, action, message, notice, labels
+//   status=ok|error, kind, id, path, title, name, action, images, message, notice, labels
 // and, when REVIEW_FILE is set, a JSON summary for .github/scripts/pr-body.mjs.
 //
 // Field values are located by AND-matching distinctive tokens against each
@@ -521,6 +521,7 @@ setOutput('path', path);
 setOutput('title', title);
 setOutput('name', name);
 setOutput('action', update ? 'update' : 'add');
+setOutput('images', downloaded.map((d) => d.path).join('\n')); // 本次下载的图,工作流只压这些
 setOutput('notice', notice);
 setOutput('labels', [`${KIND}-submission`, ...(notice ? ['needs-verification'] : [])].join(','));
 console.log(`Wrote ${path}\n${yaml}`);

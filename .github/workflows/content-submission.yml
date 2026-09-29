@@ -66,14 +66,19 @@ jobs:
 
       # 上一步是原样下载投稿图(转换脚本刻意零依赖),这里统一规范尺寸和体积。
       # 没有这一步,投稿者拖进表单的原图会原封不动进仓库——曾经有过一张 1080px /
-      # 833KB 的头像,而它只渲染到 104px。脚本是幂等的,已达标的图不会被重编码。
+      # 833KB 的头像,而它只渲染到 104px。
+      # 只压本次投稿下载的图(images 输出),不扫整个目录:压不进预算的旧图每次都会被
+      # 重压,小一两个字节也会混进这个 PR(#41 就带进了 kiko924.png)。没图就整步跳过。
+      # 路径都由 slug 拼成(字母、数字、连字符),按空白拆分传参是安全的。
       # continue-on-error:优化失败不该拦住投稿,PR 照开,大不了人工再压一次。
       - name: Optimise downloaded images
-        if: steps.convert.outputs.status == 'ok'
+        if: steps.convert.outputs.status == 'ok' && steps.convert.outputs.images != ''
         continue-on-error: true
+        env:
+          IMAGES: ${{ steps.convert.outputs.images }}
         run: |
           npm ci --no-audit --no-fund
-          node scripts/optimize-images.mjs
+          node scripts/optimize-images.mjs $IMAGES
 
       # PR 描述:字段表、图片预览、自动检查出的问题(标签没拆开、纯文本外链、图片超预算、待核实)。
       # 放在压图之后,报告的图片体积才是最终提交的大小。

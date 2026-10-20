@@ -1,0 +1,14 @@
+order: 1042
+owners: ["OldSantana425"]
+authorId: "os425"
+type: "vehicle"
+version: "V1.0"
+updated: "2026-09"
+title:
+  zh: "2014阿斯顿马丁DB10"
+  en: "2014 Aston Martin DB10"
+desc:
+  zh: "EXTRA_A = 左侧车门开关\n\nEXTRA_B = 右侧车门开关\n\nEXTRA_C = 引擎盖开关\n\nEXTRA_D = 后备箱开关"
+  en: "The car was unveiled by Sam Mendes and Barbara Broccoli, the director and producer of Spectre respectively, the 24th James Bond film produced by Eon Productions. The unveiling took place as part of the official press launch of the film on the 007 Stage at Pinewood Studios, near London, on 4 December 2014. Mendes introduced the car as \"the first cast member.\"\n\nShortly after the unveiling ceremony in Pinewood Studios, Aston Martin also took part in the launch of the Bond in Motion exhibition at the London Film Museum in Covent Garden, London. The car manufacturer celebrated their fifty-year partnership with Bond films franchise, which started with the DB5 being used in the 1964 film Goldfinger."
+cover: "/images/works/2014-aston-martin-db10-42.jpg"
+link: "https://www.bilibili.com/opus/1247208092754509832"
